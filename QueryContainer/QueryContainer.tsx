@@ -157,8 +157,8 @@ export const QueryContainer = forwardRef<any, React.PropsWithChildren<QueryConta
     service
   } = inProps;
 
-  const [selectedRows, setSelectedRows] = useState();
-  const [selectedRowKeys, setSelectedRowKeys] = useState();
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
 
   const { loading, page } = service || {};
