@@ -7,6 +7,7 @@ import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
 import ProCard, { ProCardProps } from '@ant-design/pro-card';
 
 import { renderFormItem } from '../Form/renderFormItem';
+import { Rule } from 'rc-field-form/lib/interface';
 
 export type FieldType = 'text'
   | 'password'
@@ -56,6 +57,12 @@ export type Field = {
   createHidden?: boolean
 
   /**
+   * 是否允许留空白
+   * 默认true
+   */
+  whitespace?: boolean
+
+  /**
    * 自定渲染整个字段
    * @param args 当前字段配置信息
    * @param pageOptions 页面提供的参数
@@ -91,27 +98,43 @@ export type PersistContainerProps = {
   /**
    * 表单props
    */
-  form?: ProFormProps
+  form?: Omit<ProFormProps, 'onFinish'>
 
   /**
    * 表单字段信息
    */
   fieldGroups?: Array<FieldGroup>
 
+  onFinish: (values, pageOptions) => Promise<void>
+
   location?: Location
 }
 
 function renderField(args: Field, index, pageOptions) {
-  const { renderField: renderFieldComponent, subFieldGroups, formListProps, createHidden, editDisabled, ...field } = args;
+  const { renderField: renderFieldComponent, subFieldGroups, formListProps, createHidden, editDisabled, whitespace = true, rules = [], ...field } = args;
+
+  const newRules: Rule[] = [];
+  if (field.required) {
+    newRules.push({ required: true, message: `${field.label} 是必填字段` });
+  }
+  if (whitespace && ['text', 'textarea'].includes(field.type || '')) {
+    rules.push({
+      whitespace
+    });
+  }
+
+  const fieldOptions: Field = {
+    width: 'md',
+    disabled: pageOptions.updated && editDisabled,
+    hidden: pageOptions.created && createHidden,
+    rules: newRules,
+    ...field
+  };
+
   if (renderFieldComponent) {
     return (
       <React.Fragment key={index}>
-        {renderFieldComponent({
-          width: 'md',
-          disabled: pageOptions.updated && editDisabled,
-          hidden: pageOptions.created && createHidden,
-          ...field
-        }, pageOptions)}
+        {renderFieldComponent(fieldOptions, pageOptions)}
       </React.Fragment>
     );
   }
@@ -124,12 +147,7 @@ function renderField(args: Field, index, pageOptions) {
   }
   return (
     <React.Fragment key={index}>
-      {renderFormItem({
-        width: 'md',
-        disabled: pageOptions.updated && editDisabled,
-        hidden: pageOptions.created && createHidden,
-        ...field
-      })}
+      {renderFormItem(fieldOptions)}
     </React.Fragment>
   );
 }
@@ -155,6 +173,8 @@ export const PersistContainer = withRouter(function PersistContainer(inProps: Pr
 
     fieldGroups = [],
 
+    onFinish,
+
     children
   } = inProps;
 
@@ -165,10 +185,14 @@ export const PersistContainer = withRouter(function PersistContainer(inProps: Pr
     updated: pathname.endsWith('updated')
   };
 
+  async function handleFinish(values) {
+    onFinish && await onFinish(values, pageOptions);
+  }
+
   return (
     <PageContainer {...container}>
       <ProCard size="small" bordered={false} {...card}>
-        <ProForm {...form}>
+        <ProForm {...form} onFinish={handleFinish}>
           {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
         </ProForm>
       </ProCard>
