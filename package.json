@@ -15,6 +15,7 @@
     "@ant-design/icons": "^4.6.2",
     "@ant-design/pro-card": "^1.12.0",
     "@ant-design/pro-descriptions": "^1.7.9",
+    "@ant-design/pro-field": "^1.16.0",
     "@ant-design/pro-form": "^1.24.0",
     "@ant-design/pro-layout": "^6.18.1",
     "@ant-design/pro-table": "^2.37.0",
@@ -26,6 +27,7 @@
     "antd": "^4.15.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
     "typescript": "^4.2.4"
   }
 }

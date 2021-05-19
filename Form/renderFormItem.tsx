@@ -1,5 +1,5 @@
-import React from 'react';
-import { Field } from './PersistContainer';
+import React, { ReactNode } from 'react';
+import { Field } from '../PersistContainer';
 import {
   ProFormCaptcha,
   ProFormCheckbox,
@@ -19,6 +19,8 @@ import {
   ProFormUploadButton,
   ProFormUploadDragger
 } from '@ant-design/pro-form';
+import { ProFormAutoComplete } from './ProFormAutoComplete';
+import { createProFormField } from './createProFormField';
 
 export function renderText(props) {
   return (
@@ -116,9 +118,18 @@ export function renderUploadButton(props) {
   );
 }
 
-export function renderSelect(props) {
+/**
+ * 渲染 select
+ * @param options select option 支持对象，对象的key作为 option value，对象value作为option label
+ * @param props
+ */
+export function renderSelect({ fieldProps = {}, ...props }: any) {
+  const newFieldProps = {
+    ...fieldProps,
+  };
+
   return (
-    <ProFormSelect {...props}/>
+    <ProFormSelect fieldProps={newFieldProps} {...props}/>
   );
 }
 
@@ -128,8 +139,25 @@ export function renderDigit(props) {
   );
 }
 
-export function renderFieldComponent({ type = 'text', ...props }: Field) {
-  let element;
+export function renderAutoComplete({ fieldProps = {}, ...props }: any) {
+  const newFieldProps = {
+    ...fieldProps,
+  };
+
+  return (
+    <ProFormAutoComplete {...props} fieldProps={newFieldProps}/>
+  );
+}
+
+
+export function renderFormItem({ type = 'text', render, ...props }: Field) {
+  let element: ReactNode = undefined;
+  if (render) {
+    const ProFormCustom = createProFormField<any>(render);
+    return (
+      <ProFormCustom {...props}/>
+    );
+  }
   switch (type) {
     case 'text':
       element = renderText(props);
@@ -184,6 +212,9 @@ export function renderFieldComponent({ type = 'text', ...props }: Field) {
       break;
     case 'digit':
       element = renderDigit(props);
+      break;
+    case 'autoComplete':
+      element = renderAutoComplete(props);
       break;
   }
   return element;
