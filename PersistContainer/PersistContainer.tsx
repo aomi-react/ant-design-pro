@@ -8,7 +8,6 @@ import ProCard, { ProCardProps } from '@ant-design/pro-card';
 
 import { renderFormItem } from '../Form/renderFormItem';
 
-
 export type FieldType = 'text'
   | 'password'
   | 'captcha'
@@ -45,8 +44,7 @@ export type Field = {
   /**
    * form list props 当 subFieldGroups 存在时有效
    */
-  formListProps?: ProFormListProps
-
+  formListProps?: Omit<ProFormListProps, 'name' | 'children'>
   /**
    * 编辑时禁用
    */
@@ -119,7 +117,7 @@ function renderField(args: Field, index, pageOptions) {
   }
   if (Array.isArray(subFieldGroups) && subFieldGroups.length > 0) {
     return (
-      <ProFormList key={index} name={field.name || 'list'} {...formListProps}>
+      <ProFormList key={index} {...formListProps} name={field.name || 'list'}>
         {subFieldGroups.map((item, idx) => renderFieldGroup(item, idx, pageOptions))}
       </ProFormList>
     );
