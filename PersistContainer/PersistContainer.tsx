@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from 'react';
+import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProForm, { ProFormList, ProFormListProps, ProFormProps } from '@ant-design/pro-form';
@@ -8,6 +9,7 @@ import ProCard, { ProCardProps } from '@ant-design/pro-card';
 
 import { renderFormItem } from '../Form/renderFormItem';
 import { Rule } from 'rc-field-form/lib/interface';
+import { navigationServices } from '@aomi/mobx-history';
 
 export type FieldType = 'text'
   | 'password'
@@ -107,6 +109,8 @@ export type PersistContainerProps = {
 
   onFinish: (values, pageOptions) => Promise<void>
 
+  getInitialValues?: (data: any) => any
+
   location?: Location
 }
 
@@ -163,7 +167,7 @@ function renderFieldGroup({ fields, ...props }, index, pageOptions) {
 /**
  * 新增、编辑页面
  */
-export const PersistContainer = withRouter(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
+export const PersistContainer = observer(withRouter(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
   const {
     container,
     card,
@@ -174,29 +178,48 @@ export const PersistContainer = withRouter(function PersistContainer(inProps: Pr
     fieldGroups = [],
 
     onFinish,
+    getInitialValues,
 
     children
   } = inProps;
 
-  const { pathname = '' } = location || {};
+  const { pathname = '', params = undefined } = (location as any) || {};
 
   const pageOptions = {
     created: pathname.endsWith('create'),
-    updated: pathname.endsWith('updated')
+    updated: pathname.endsWith('update')
   };
+
+  if (pageOptions.updated && !params) {
+    console.warn('进入更新页面,但是没有发现需要编辑的数据.自动返回上一页');
+    navigationServices.goBack();
+  }
 
   async function handleFinish(values) {
     onFinish && await onFinish(values, pageOptions);
   }
 
+  function initialValues() {
+    if (getInitialValues) {
+      return getInitialValues({
+        params: params || {},
+        pageOptions,
+      });
+    }
+    if (Array.isArray(params?.selectedRows)) {
+      return params.selectedRows[0] || {};
+    }
+    return params;
+  }
+
   return (
     <PageContainer {...container}>
       <ProCard size="small" bordered={false} {...card}>
-        <ProForm {...form} onFinish={handleFinish}>
+        <ProForm {...form} onFinish={handleFinish} initialValues={initialValues()}>
           {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
         </ProForm>
       </ProCard>
       {children}
     </PageContainer>
   );
-});
+}));

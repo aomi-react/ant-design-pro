@@ -1,4 +1,5 @@
 import React, { forwardRef, ReactElement, useState } from 'react';
+import { observer } from 'mobx-react';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProTable, { ProTableProps } from '@ant-design/pro-table';
 import { ParamsType } from '@ant-design/pro-provider';
@@ -147,7 +148,7 @@ function getActionButtons({
   return newActionButtons;
 }
 
-export const QueryContainer = forwardRef<any, React.PropsWithChildren<QueryContainerProps<any, any>>>(function QueryContainer(inProps, ref) {
+export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<QueryContainerProps<any, any>>>(function QueryContainer(inProps, ref) {
   const {
     onAdd, addUri, addAuthorities, onEdit, editUri, editAuthorities, onDel, delAuthorities, renderActionButtons,
 
@@ -276,4 +277,4 @@ export const QueryContainer = forwardRef<any, React.PropsWithChildren<QueryConta
       />
     </PageContainer>
   );
-});
+}));
