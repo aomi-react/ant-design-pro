@@ -163,7 +163,7 @@ export function renderCascader({ fieldProps = {}, ...props }: any) {
 export function renderFormItem({ type = 'text', render, ...props }: Field) {
   let element: ReactNode = undefined;
   if (render) {
-    const ProFormCustom = createProFormField<any>(render);
+    const ProFormCustom = createProFormField<any>({ render });
     return (
       <ProFormCustom {...props}/>
     );

@@ -4,11 +4,11 @@ import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
 import { createProFormField } from '../createProFormField';
 
 
-function renderFormItem(text, props: ProFieldFCRenderProps) {
+function render(text, props: ProFieldFCRenderProps) {
   return (
-    <AutoComplete {...props.fieldProps}/>
+    <AutoComplete {...props} {...props.fieldProps}/>
   );
 }
 
-export const ProFormAutoComplete = createProFormField<AutoCompleteProps>(renderFormItem);
+export const ProFormAutoComplete = createProFormField<AutoCompleteProps>({ render });
 

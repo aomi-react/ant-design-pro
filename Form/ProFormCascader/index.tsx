@@ -4,11 +4,11 @@ import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
 import { createProFormField } from '../createProFormField';
 
 
-function renderFormItem(text, props: ProFieldFCRenderProps) {
+function render(text, props: ProFieldFCRenderProps) {
   return (
-    <Cascader {...props.fieldProps}/>
+    <Cascader {...props} {...props.fieldProps}/>
   );
 }
 
-export const ProFormCascader = createProFormField<CascaderProps>(renderFormItem);
+export const ProFormCascader = createProFormField<CascaderProps>({ render });
 
