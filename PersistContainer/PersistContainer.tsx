@@ -124,12 +124,12 @@ export type PersistContainerProps = {
 function renderField(args: Field, index, pageOptions) {
   const { renderField: renderFieldComponent, subFieldGroups, formListProps, createHidden, editDisabled, whitespace = true, rules = [], ...field } = args;
 
-  const newRules: Rule[] = [];
+  const newRules: Rule[] = [...rules];
   if (field.required) {
     newRules.push({ required: true, message: `${field.label} 是必填字段` });
   }
   if (whitespace && ['text', 'textarea'].includes(field.type || '')) {
-    rules.push({
+    newRules.push({
       whitespace
     });
   }
