@@ -87,6 +87,13 @@ export type FieldGroup = {
 } & GroupProps
 
 export type PersistContainerProps = {
+
+  createTitle?: React.ReactNode | false;
+  createSubTitle?: React.ReactNode | false;
+
+  editTitle?: React.ReactNode | false;
+  editSubTitle?: React.ReactNode | false;
+
   /**
    * page container props
    */
@@ -169,6 +176,12 @@ function renderFieldGroup({ fields, ...props }, index, pageOptions) {
  */
 export const PersistContainer: React.FC<PersistContainerProps> = observer(withRouter(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
   const {
+
+    createTitle,
+    createSubTitle,
+    editTitle,
+    editSubTitle,
+
     container,
     card,
     form,
@@ -212,8 +225,11 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     return params;
   }
 
+  const title = pageOptions.created ? createTitle : editTitle;
+  const subtitle = pageOptions.created ? createSubTitle : editSubTitle;
+
   return (
-    <PageContainer {...container}>
+    <PageContainer title={title} subTitle={subtitle} {...container}>
       <ProCard size="small" bordered={false} {...card}>
         <ProForm {...form} onFinish={handleFinish} initialValues={initialValues()}>
           {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
