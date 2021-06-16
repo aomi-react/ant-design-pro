@@ -22,6 +22,7 @@ import {
 import { ProFormAutoComplete } from './ProFormAutoComplete';
 import { createProFormField } from './createProFormField';
 import { ProFormCascader } from './ProFormCascader';
+import { ProFormInputFeeRate } from './ProFormInputFeeRate';
 
 export function renderText(props) {
   return (
@@ -160,6 +161,16 @@ export function renderCascader({ fieldProps = {}, ...props }: any) {
   );
 }
 
+export function renderFeeRate({ fieldProps = {}, ...props }: any) {
+  const newFieldProps = {
+    ...fieldProps,
+  };
+
+  return (
+    <ProFormInputFeeRate {...props} fieldProps={newFieldProps}/>
+  );
+}
+
 export function renderFormItem({ type = 'text', render, ...props }: Field) {
   let element: ReactNode = undefined;
   if (render) {
@@ -228,6 +239,9 @@ export function renderFormItem({ type = 'text', render, ...props }: Field) {
       break;
     case 'cascader':
       element = renderCascader(props);
+      break;
+    case 'feeRate':
+      element = renderFeeRate(props);
       break;
   }
   return element;

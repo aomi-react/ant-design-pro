@@ -21,6 +21,7 @@
     "@ant-design/pro-table": "^2.37.0",
     "@aomi/common-service": "^1.0.1",
     "@aomi/mobx-history": "^1.0.2",
+    "@aomi/react-antd": "^1.0.0-Alpha.1",
     "@aomi/utils": "^1.0.1",
     "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.5",

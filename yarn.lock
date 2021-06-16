@@ -165,6 +165,11 @@
   resolved "https://registry.yarnpkg.com/@aomi/mobx-history/-/mobx-history-1.0.2.tgz#6cddc4b19f0bbc8291db2043010e75394a2c5d44"
   integrity sha512-42ZiC6V06PVUVCjPDP2tBtNUrxBbpVizjdpgDBJG10BGrSWQh7Rjjk19JuSs48vNyZTNJPIRc9hd3zsa7FDk7A==
 
+"@aomi/react-antd@^1.0.0-Alpha.1":
+  version "1.0.0-Alpha.1"
+  resolved "https://registry.yarnpkg.com/@aomi/react-antd/-/react-antd-1.0.0-Alpha.1.tgz#2c5af3e6d38cb436e66c13af9988a124215e5c90"
+  integrity sha512-bG3f0ytavv2LuhoY9m2Vm+1KJCTxcQkkxzWpPLgv1Hm1iWrkBJIlGKgwuKCtyT5hFoacOnVKRfD1X7eB10dA6w==
+
 "@aomi/utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@aomi/utils/-/utils-1.0.1.tgz#2c0ca46676f1a8713dff513885b59c1ef754988e"

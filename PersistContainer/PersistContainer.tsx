@@ -32,6 +32,9 @@ export type FieldType = 'text'
   | 'autoComplete'
   | 'cascader'
 
+  // 自定义组件
+  | 'feeRate'
+
 export type Field = {
   /**
    * 字段类型
