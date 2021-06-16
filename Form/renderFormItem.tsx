@@ -21,6 +21,7 @@ import {
 } from '@ant-design/pro-form';
 import { ProFormAutoComplete } from './ProFormAutoComplete';
 import { createProFormField } from './createProFormField';
+import { ProFormCascader } from './ProFormCascader';
 
 export function renderText(props) {
   return (
@@ -149,6 +150,15 @@ export function renderAutoComplete({ fieldProps = {}, ...props }: any) {
   );
 }
 
+export function renderCascader({ fieldProps = {}, ...props }: any) {
+  const newFieldProps = {
+    ...fieldProps,
+  };
+
+  return (
+    <ProFormCascader {...props} fieldProps={newFieldProps}/>
+  );
+}
 
 export function renderFormItem({ type = 'text', render, ...props }: Field) {
   let element: ReactNode = undefined;
@@ -215,6 +225,9 @@ export function renderFormItem({ type = 'text', render, ...props }: Field) {
       break;
     case 'autoComplete':
       element = renderAutoComplete(props);
+      break;
+    case 'cascader':
+      element = renderCascader(props);
       break;
   }
   return element;

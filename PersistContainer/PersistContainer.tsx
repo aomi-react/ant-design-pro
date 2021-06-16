@@ -30,6 +30,7 @@ export type FieldType = 'text'
   | 'select'
   | 'digit'
   | 'autoComplete'
+  | 'cascader'
 
 export type Field = {
   /**
