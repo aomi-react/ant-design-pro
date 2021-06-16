@@ -167,7 +167,7 @@ function renderFieldGroup({ fields, ...props }, index, pageOptions) {
 /**
  * 新增、编辑页面
  */
-export const PersistContainer = observer(withRouter(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
+export const PersistContainer: React.FC<PersistContainerProps> = observer(withRouter(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
   const {
     container,
     card,
