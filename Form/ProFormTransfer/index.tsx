@@ -5,7 +5,7 @@ import { Transfer, TransferProps } from 'antd';
 
 
 function render(text, props: ProFieldFCRenderProps) {
-  return (<Transfer {...props} {...props.fieldProps} />);
+  return (<Transfer {...props} {...props.fieldProps} targetKeys={props.value}/>);
 }
 
 export const ProFormTransfer = createProFormField<TransferProps<any>>({ render });
