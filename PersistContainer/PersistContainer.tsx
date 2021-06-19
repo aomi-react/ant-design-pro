@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
-import ProForm, { ProFormList, ProFormListProps, ProFormProps } from '@ant-design/pro-form';
+import ProForm, { ProFormDependency, ProFormList, ProFormListProps, ProFormProps } from '@ant-design/pro-form';
 import { GroupProps, ProFormItemProps } from '@ant-design/pro-form/es/interface';
 import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
 import ProCard, { ProCardProps } from '@ant-design/pro-card';
@@ -46,6 +46,10 @@ export type Field = {
    */
   name: string | Array<string | number>
   /**
+   * 依赖的字段名称
+   */
+  dependencyName?: Array<string | Array<string | number>>
+  /**
    * 数组字段配置
    */
   subFieldGroups?: Array<FieldGroup>
@@ -75,6 +79,16 @@ export type Field = {
    * @param pageOptions 页面提供的参数
    */
   renderField?: (args: Field, pageOptions: any) => React.ReactNode
+
+  /**
+   * 渲染带有依赖关系的字段
+   * 使用ProFormDependency组件包裹
+   * 当使用该值时,dependencyName 字段必填
+   * @param args 当前field参数
+   * @param pageOptions 页面参数
+   * @param dependencyFieldValues 依赖的字段值
+   */
+  renderDependencyField?: (args: Field, pageOptions: any, dependencyFieldValues: Record<string, any>) => React.ReactNode
 
   /**
    * 自定义渲染field
@@ -132,7 +146,7 @@ export type PersistContainerProps = {
 }
 
 function renderField(args: Field, index, pageOptions) {
-  const { renderField: renderFieldComponent, subFieldGroups, formListProps, createHidden, editDisabled, whitespace = true, rules = [], ...field } = args;
+  const { renderDependencyField, renderField: renderFieldComponent, subFieldGroups, dependencyName, formListProps, createHidden, editDisabled, whitespace = true, rules = [], ...field } = args;
 
   const newRules: Rule[] = [...rules];
   if (field.required) {
@@ -151,6 +165,14 @@ function renderField(args: Field, index, pageOptions) {
     rules: newRules,
     ...field
   };
+
+  if (renderDependencyField) {
+    return (
+      <ProFormDependency name={dependencyName || []} key={index}>
+        {(dependencyFieldValues) => renderDependencyField(args, pageOptions, dependencyFieldValues)}
+      </ProFormDependency>
+    );
+  }
 
   if (renderFieldComponent) {
     return (
