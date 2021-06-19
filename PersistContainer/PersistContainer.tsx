@@ -44,7 +44,7 @@ export type Field = {
   /**
    * 字段名称
    */
-  name: string
+  name: string | Array<string | number>
   /**
    * 数组字段配置
    */
