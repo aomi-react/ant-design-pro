@@ -246,11 +246,11 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     initialValues = getInitialValues({
       params: params || {},
       pageOptions,
-    });
+    }) || {};
   } else if (Array.isArray(params?.selectedRows)) {
     initialValues = params.selectedRows[0] || {};
   } else {
-    initialValues = params;
+    initialValues = params || {};
   }
 
   async function handleFinish(values) {
@@ -262,7 +262,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
 
   return (
     <PageContainer title={title} subTitle={subtitle} {...container}>
-      <ProCard size="small" bordered={false} {...card}>
+      <ProCard bordered={false} {...card}>
         <ProForm {...form} onFinish={handleFinish} initialValues={initialValues}>
           {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
         </ProForm>
