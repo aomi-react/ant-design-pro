@@ -23,6 +23,7 @@ import { ProFormAutoComplete } from './ProFormAutoComplete';
 import { createProFormField } from './createProFormField';
 import { ProFormCascader } from './ProFormCascader';
 import { ProFormInputFeeRate } from './ProFormInputFeeRate';
+import { ProFormTransfer } from './ProFormTransfer';
 
 export function renderText(props) {
   return (
@@ -171,6 +172,12 @@ export function renderFeeRate({ fieldProps = {}, ...props }: any) {
   );
 }
 
+export function renderTransfer(props) {
+  return (
+    <ProFormTransfer {...props}/>
+  );
+}
+
 export function renderFormItem({ type = 'text', render, ...props }: Field) {
   let element: ReactNode = undefined;
   if (render) {
@@ -242,6 +249,9 @@ export function renderFormItem({ type = 'text', render, ...props }: Field) {
       break;
     case 'feeRate':
       element = renderFeeRate(props);
+      break;
+    case 'transfer':
+      element = renderTransfer(props);
       break;
   }
   return element;

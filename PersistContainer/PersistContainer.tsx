@@ -30,10 +30,11 @@ export type FieldType = 'text'
   | 'uploadButton'
   | 'select'
   | 'digit'
-  | 'autoComplete'
-  | 'cascader'
 
   // 自定义组件
+  | 'autoComplete'
+  | 'cascader'
+  | 'transfer'
   | 'feeRate'
 
 export type Field = {
