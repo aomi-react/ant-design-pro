@@ -91,6 +91,11 @@ export type FieldGroup = {
   fields: Array<Field>
 } & GroupProps
 
+export type PageOptions = {
+  created: boolean
+  updated: boolean
+}
+
 export type PersistContainerProps = {
 
   createTitle?: React.ReactNode | false;
@@ -119,9 +124,9 @@ export type PersistContainerProps = {
    */
   fieldGroups?: Array<FieldGroup>
 
-  onFinish: (values, pageOptions) => Promise<void>
+  onFinish: (values, pageOptions: PageOptions) => Promise<void>
 
-  getInitialValues?: (data: any) => any
+  getInitialValues?: (data: { params: any, pageOptions: PageOptions }) => any
 
   location?: Location
 }
