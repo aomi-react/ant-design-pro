@@ -10,6 +10,7 @@ import ProCard, { ProCardProps } from '@ant-design/pro-card';
 import { renderFormItem } from '../Form/renderFormItem';
 import { Rule } from 'rc-field-form/lib/interface';
 import { navigationServices } from '@aomi/mobx-history';
+import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 
 export type FieldType = 'text'
   | 'password'
@@ -212,21 +213,20 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     navigationServices.goBack();
   }
 
-  async function handleFinish(values) {
-    onFinish && await onFinish(values, pageOptions);
+  let initialValues = {};
+  if (getInitialValues) {
+    initialValues = getInitialValues({
+      params: params || {},
+      pageOptions,
+    });
+  } else if (Array.isArray(params?.selectedRows)) {
+    initialValues = params.selectedRows[0] || {};
+  } else {
+    initialValues = params;
   }
 
-  function initialValues() {
-    if (getInitialValues) {
-      return getInitialValues({
-        params: params || {},
-        pageOptions,
-      });
-    }
-    if (Array.isArray(params?.selectedRows)) {
-      return params.selectedRows[0] || {};
-    }
-    return params;
+  async function handleFinish(values) {
+    onFinish && await onFinish(ObjectUtils.deepmerge(initialValues, values), pageOptions);
   }
 
   const title = pageOptions.created ? createTitle : editTitle;
@@ -235,7 +235,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
   return (
     <PageContainer title={title} subTitle={subtitle} {...container}>
       <ProCard size="small" bordered={false} {...card}>
-        <ProForm {...form} onFinish={handleFinish} initialValues={initialValues()}>
+        <ProForm {...form} onFinish={handleFinish} initialValues={initialValues}>
           {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
         </ProForm>
       </ProCard>
