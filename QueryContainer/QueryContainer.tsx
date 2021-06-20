@@ -5,16 +5,20 @@ import ProTable, { ProTableProps } from '@ant-design/pro-table';
 import { ParamsType } from '@ant-design/pro-provider';
 import { BaseService } from '@aomi/common-service/BaseService';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
-import { hasAuthorities } from '@aomi/utils/hasAuthorities';
-import { Button, TablePaginationConfig } from 'antd';
+import { Button, ButtonProps, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { navigationServices } from '@aomi/mobx-history';
 import { DEFAULT_PAGE } from '@aomi/common-service/Page';
 import { TableRowSelection } from '@ant-design/pro-table/es/typing';
+import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 
 export interface QueryContainerState<T> {
   selectedRowKeys: Array<string>
   selectedRows: Array<T>
+}
+
+export type ActionButtonProps = ButtonProps & {
+  authorities?: string | Array<string>
 }
 
 export interface QueryContainerProps<T, U extends ParamsType> {
@@ -59,8 +63,14 @@ export interface QueryContainerProps<T, U extends ParamsType> {
    * 渲染动作组按钮
    * 组件当前State值
    * @param state
+   * @deprecated 请使用{@link getActionButtonProps}
    */
   renderActionButtons?: (state: QueryContainerState<T>) => Array<ReactElement>
+  /**
+   * 获取按钮组件的props
+   * @param state 页面状态参数
+   */
+  getActionButtonProps?: (state: QueryContainerState<T>) => Array<ActionButtonProps>
 
   container?: PageContainerProps
 
@@ -117,164 +127,190 @@ function getActionButtons({
                             onEdit, editUri, editAuthorities,
                             onDel, delAuthorities,
                             service,
-                            renderActionButtons
+                            renderActionButtons,
+                            getActionButtonProps
                           }) {
   const state = { selectedRows, selectedRowKeys };
   const newActionButtons: Array<React.ReactNode> = [];
-  renderActionButtons && newActionButtons.push(...renderActionButtons(state));
-  if ((onAdd || addUri) && hasAuthorities(addAuthorities)) {
-    newActionButtons.push(
-      <Button key="add" type="primary" onClick={() => handleAdd(state, onAdd, addUri)}>
+  if (renderActionButtons) {
+    console.warn(`[Aomi React Pro Ant Design] renderActionButtons 方法已经过时,请使用 getActionButtonProps`);
+    newActionButtons.push(...renderActionButtons(state));
+  }
+
+  const buttonProps: Array<ActionButtonProps> = [];
+  getActionButtonProps && buttonProps.push(...getActionButtonProps(state));
+
+  (onAdd || addUri) && buttonProps.push({
+    authorities: addAuthorities,
+    type: 'primary',
+    onClick: () => handleAdd(state, onAdd, addUri),
+    children: (
+      <>
         <PlusOutlined/> {'新增'}
-      </Button>
-    );
-  }
-  if ((onEdit || editUri) && hasAuthorities(editAuthorities)) {
-    const disabled = selectedRowKeys.length !== 1;
-    newActionButtons.push(
-      <Button key="edit" type="primary" onClick={() => handleEdit(state, onEdit, editUri)} disabled={disabled}>
+      </>
+    )
+  });
+
+  (onEdit || editUri) && buttonProps.push({
+    authorities: editAuthorities,
+    disabled: selectedRowKeys.length !== 1,
+    type: 'primary',
+    onClick: () => handleEdit(state, onEdit, editUri),
+    children: (
+      <>
         <EditOutlined/> {'编辑'}
-      </Button>
-    );
-  }
-  if (onDel && hasAuthorities(delAuthorities)) {
-    const disabled = selectedRowKeys.length <= 0;
-    newActionButtons.push(
-      <Button key="del" danger onClick={() => handleDel(state, onDel, service, setSelectedRows, setSelectedRowKeys)} disabled={disabled}>
+      </>
+    )
+  });
+
+  onDel && buttonProps.push({
+    authorities: delAuthorities,
+    danger: true,
+    onClick: () => handleDel(state, onDel, service, setSelectedRows, setSelectedRowKeys),
+    disabled: selectedRowKeys.length <= 0,
+    children: (
+      <>
         <DeleteOutlined/> {'删除'}
-      </Button>
-    );
-  }
-  return newActionButtons;
+      </>
+    )
+  });
+
+  return newActionButtons.concat(
+    buttonProps.filter(item => hasAuthorities(item.authorities)).map(({ authorities, ...item }, idx) => (
+      <Button key={idx} {...item}/>
+    ))
+  );
 }
 
 export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<QueryContainerProps<any, any>>>(function QueryContainer(inProps, ref) {
-  const {
-    onAdd, addUri, addAuthorities, onEdit, editUri, editAuthorities, onDel, delAuthorities, renderActionButtons,
+    const {
+      onAdd, addUri, addAuthorities, onEdit, editUri, editAuthorities, onDel, delAuthorities, renderActionButtons, getActionButtonProps,
 
 
-    container,
-    table,
-    service
-  } = inProps;
+      container,
+      table,
+      service
+    } = inProps;
 
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
 
-  const { loading, page } = service || {};
+    const { loading, page } = service || {};
 
-  const { content, number = 0, size = 10, totalElements = 0 } = page || DEFAULT_PAGE;
+    const { content, number = 0, size = 10, totalElements = 0 } = page || DEFAULT_PAGE;
 
-  const { rowSelection, pagination, search = {}, options, ...other } = table || {};
+    const { rowSelection, pagination, search = {}, options, ...other } = table || {};
 
-  const newRowSelection: TableRowSelection = {
-    type: 'radio',
-    ...rowSelection,
-    onChange: handleRowSelected
-  };
+    const newRowSelection: TableRowSelection = {
+      type: 'radio',
+      ...rowSelection,
+      onChange: handleRowSelected
+    };
 
-  const newPagination: TablePaginationConfig = {
-    current: number + 1,
-    total: totalElements,
-    pageSize: size,
-    showQuickJumper: true,
-    showSizeChanger: true,
-    defaultPageSize: 10,
-    size: 'small',
-    pageSizeOptions: ['10', '20', '30', '40', '50', '60', '70', '80', '90', '100', '500', '1000'],
-    onChange: handlePageChange,
-    onShowSizeChange: handlePageChange,
-    hideOnSinglePage: false,
-    ...pagination
-  };
+    const newPagination: TablePaginationConfig = {
+      current: number + 1,
+      total: totalElements,
+      pageSize: size,
+      showQuickJumper: true,
+      showSizeChanger: true,
+      defaultPageSize: 10,
+      size: 'small',
+      pageSizeOptions: ['10', '20', '30', '40', '50', '60', '70', '80', '90', '100', '500', '1000'],
+      onChange: handlePageChange,
+      onShowSizeChange: handlePageChange,
+      hideOnSinglePage: false,
+      ...pagination
+    };
 
-  const tableProps = ObjectUtils.deepmerge(other, {
-    form: {
-      submitter: {
-        submitButtonProps: {
-          loading,
+    const tableProps = ObjectUtils.deepmerge(other, {
+      form: {
+        submitter: {
+          submitButtonProps: {
+            loading,
+          },
         },
       },
-    },
-  });
+    });
 
-  // search
-  const newSearch = {
-    defaultCollapsed: false,
-    ...search
-  };
+    // search
+    const newSearch = {
+      defaultCollapsed: false,
+      ...search
+    };
 
 
-  function handleRowSelected(selectedRowKeys, selectedRows) {
-    setSelectedRows(selectedRows);
-    setSelectedRowKeys(selectedRowKeys);
+    function handleRowSelected(selectedRowKeys, selectedRows) {
+      setSelectedRows(selectedRows);
+      setSelectedRowKeys(selectedRowKeys);
 
-    if (rowSelection && rowSelection.onChange) {
-      rowSelection.onChange(selectedRows, selectedRows);
+      if (rowSelection && rowSelection.onChange) {
+        rowSelection.onChange(selectedRows, selectedRows);
+      }
     }
-  }
 
-  async function handlePageChange(page, size) {
-    console.log(`next page -> ${page - 1}, next page size -> ${size}`);
-    if (service) {
-      const { query, searchParams } = service;
-      await query({
-        ...searchParams,
-        page: page - 1,
-        size
-      });
+    async function handlePageChange(page, size) {
+      console.log(`next page -> ${page - 1}, next page size -> ${size}`);
+      if (service) {
+        const { query, searchParams } = service;
+        await query({
+          ...searchParams,
+          page: page - 1,
+          size
+        });
+      }
     }
-  }
 
 
-  function handleSearch(params) {
-    if (service) {
-      service.query(params);
+    function handleSearch(params) {
+      if (service) {
+        service.query(params);
+      }
     }
-  }
 
 
-  function handleReset() {
-    handleSearch({});
-  }
-
-  function handleReload() {
-    if (service) {
-      handleSearch(service.searchParams || {});
+    function handleReset() {
+      handleSearch({});
     }
-  }
 
-  return (
-    <PageContainer style={{ whiteSpace: 'nowrap' }}
-                   {...container}
-    >
-      <ProTable rowKey="id"
-                size="small"
-                bordered
-                dateFormatter={false}
-                scroll={{
-                  x: true,
-                  scrollToFirstRowOnChange: true
-                }}
-                loading={loading}
-                dataSource={content}
-                onSubmit={handleSearch}
-                onReset={handleReset}
-                pagination={newPagination}
-                options={{ ...options, reload: handleReload }}
-                search={newSearch}
-                rowSelection={newRowSelection}
-                toolBarRender={() => getActionButtons({
-                  selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys,
-                  onAdd, addUri, addAuthorities,
-                  onEdit, editUri, editAuthorities,
-                  onDel, delAuthorities,
-                  service,
-                  renderActionButtons
-                })}
-                {...tableProps}
-      />
-    </PageContainer>
-  );
-}));
+    function handleReload() {
+      if (service) {
+        handleSearch(service.searchParams || {});
+      }
+    }
+
+    return (
+      <PageContainer style={{ whiteSpace: 'nowrap' }}
+                     {...container}
+      >
+        <ProTable rowKey="id"
+                  size="small"
+                  bordered
+                  dateFormatter={false}
+                  scroll={{
+                    x: true,
+                    scrollToFirstRowOnChange: true
+                  }}
+                  loading={loading}
+                  dataSource={content}
+                  onSubmit={handleSearch}
+                  onReset={handleReset}
+                  pagination={newPagination}
+                  options={{ fullScreen: true, ...options, reload: handleReload }}
+                  search={newSearch}
+                  rowSelection={newRowSelection}
+                  toolBarRender={() => getActionButtons({
+                    selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys,
+                    onAdd, addUri, addAuthorities,
+                    onEdit, editUri, editAuthorities,
+                    onDel, delAuthorities,
+                    service,
+                    renderActionButtons,
+                    getActionButtonProps
+                  })}
+                  {...tableProps}
+        />
+      </PageContainer>
+    );
+  }
+));
