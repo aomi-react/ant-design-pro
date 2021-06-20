@@ -24,6 +24,7 @@ import { createProFormField } from './createProFormField';
 import { ProFormCascader } from './ProFormCascader';
 import { ProFormInputFeeRate } from './ProFormInputFeeRate';
 import { ProFormTransfer } from './ProFormTransfer';
+import { ProFormInputNumber } from './ProFormInputNumber';
 
 export function renderText(props) {
   return (
@@ -178,6 +179,12 @@ export function renderTransfer(props) {
   );
 }
 
+export function renderInputNumber(props) {
+  return (
+    <ProFormInputNumber {...props}/>
+  );
+}
+
 export function renderFormItem({ type = 'text', render, ...props }: Field) {
   let element: ReactNode = undefined;
   if (render) {
@@ -252,6 +259,9 @@ export function renderFormItem({ type = 'text', render, ...props }: Field) {
       break;
     case 'transfer':
       element = renderTransfer(props);
+      break;
+    case 'number':
+      element = renderInputNumber(props);
       break;
   }
   return element;

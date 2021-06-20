@@ -36,6 +36,7 @@ export type FieldType = 'text'
   | 'cascader'
   | 'transfer'
   | 'feeRate'
+  | 'number'
 
 export type Field = {
   /**
