@@ -189,7 +189,9 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
 
       container,
       table,
-      service
+      service,
+
+      children
     } = inProps;
 
     const [selectedRows, setSelectedRows] = useState([]);
@@ -310,6 +312,7 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
                   })}
                   {...tableProps}
         />
+        {children}
       </PageContainer>
     );
   }
