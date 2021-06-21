@@ -8,7 +8,6 @@ import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 import { Button, ButtonProps, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { navigationServices } from '@aomi/mobx-history';
-import { DEFAULT_PAGE } from '@aomi/common-service/Page';
 import { TableRowSelection } from '@ant-design/pro-table/es/typing';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 
@@ -197,10 +196,7 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
     const [selectedRows, setSelectedRows] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-
-    const { loading, page } = service || {};
-
-    const { content, number = 0, size = 10, totalElements = 0 } = page || DEFAULT_PAGE;
+    const { loading } = service || {};
 
     const { rowSelection, pagination, search = {}, options, ...other } = table || {};
 
@@ -211,16 +207,12 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
     };
 
     const newPagination: TablePaginationConfig = {
-      current: number + 1,
-      total: totalElements,
-      pageSize: size,
       showQuickJumper: true,
       showSizeChanger: true,
+      defaultCurrent: 1,
       defaultPageSize: 10,
       size: 'small',
       pageSizeOptions: ['10', '20', '30', '40', '50', '60', '70', '80', '90', '100', '500', '1000'],
-      onChange: handlePageChange,
-      onShowSizeChange: handlePageChange,
       hideOnSinglePage: false,
       ...pagination
     };
@@ -231,6 +223,9 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
           submitButtonProps: {
             loading,
           },
+          resetButtonProps: {
+            loading
+          }
         },
       },
     });
@@ -251,28 +246,34 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
       }
     }
 
-    async function handlePageChange(page, size) {
-      console.log(`next page -> ${page - 1}, next page size -> ${size}`);
+    async function handleSearch(params: { pageSize: number; current: number; } & any, sort?, filter?) {
+      console.log('查询查询', params, sort, filter);
       if (service) {
-        const { query, searchParams } = service;
-        await query({
-          ...searchParams,
-          page: page - 1,
-          size
+        await service.query({
+          pageSize: newPagination.defaultPageSize,
+          current: newPagination.defaultCurrent,
+          ...params,
+          page: params.current - 1,
+          size: params.pageSize
         });
+        const { page } = service;
+        return {
+          data: page.content,
+          success: true,
+          total: page.totalElements
+        };
       }
-    }
 
-
-    function handleSearch(params) {
-      if (service) {
-        service.query(params);
-      }
+      return {
+        data: [],
+        success: true,
+        total: 0
+      };
     }
 
 
     function handleReset() {
-      handleSearch({});
+      handleSearch({ pageSize: newPagination.defaultPageSize, current: newPagination.defaultCurrent });
     }
 
     function handleReload() {
@@ -294,8 +295,7 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
                     scrollToFirstRowOnChange: true
                   }}
                   loading={loading}
-                  dataSource={content}
-                  onSubmit={handleSearch}
+                  request={handleSearch}
                   onReset={handleReset}
                   pagination={newPagination}
                   options={{ fullScreen: true, ...options, reload: handleReload }}
