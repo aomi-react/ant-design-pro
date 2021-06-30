@@ -150,6 +150,10 @@ export type PersistContainerProps = {
 function renderField(args: Field, index, pageOptions) {
   const { renderDependencyField, renderField: renderFieldComponent, subFieldGroups, dependencyName, formListProps, createHidden, editDisabled, whitespace = true, rules = [], ...field } = args;
 
+  if (createHidden && pageOptions.created) {
+    return undefined;
+  }
+
   const newRules: Rule[] = [...rules];
   if (field.required) {
     newRules.push({ required: true, message: `${field.label} 是必填字段` });
@@ -163,7 +167,6 @@ function renderField(args: Field, index, pageOptions) {
   const fieldOptions: Field = {
     width: 'md',
     disabled: pageOptions.updated && editDisabled,
-    hidden: pageOptions.created && createHidden,
     rules: newRules,
     ...field
   };
