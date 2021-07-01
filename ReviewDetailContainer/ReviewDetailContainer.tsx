@@ -3,10 +3,10 @@ import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
-import ProDescriptions, { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
+import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
 import ProCard, { ProCardTabsProps } from '@ant-design/pro-card';
 
-import { Col, Row, Steps } from 'antd';
+import { Button, Col, Row, Steps } from 'antd';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 import { MomentDateUtil } from '@aomi/utils/MomentDateUtil';
 import { MehOutlined, SmileOutlined } from '@ant-design/icons';
@@ -16,6 +16,16 @@ import { ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewS
 import { ReviewStatus } from '@aomi/common-service/ReviewService/ReviewStatus';
 import { Review } from '@aomi/common-service/ReviewService/Review';
 import { navigationServices } from '@aomi/mobx-history';
+import { ProCardTabPaneProps } from '@ant-design/pro-card/es/type';
+import { ModalForm } from '@ant-design/pro-form';
+import { renderText } from '../Form/renderFormItem';
+import { hasAuthorities } from '@aomi/utils/hasAuthorities';
+import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory';
+
+export type TabPaneProps = {
+  tabPaneProps: ProCardTabPaneProps
+  descriptionsProps: ProDescriptionsProps
+}
 
 export type ReviewDetailContainerProps<T> = {
   /**
@@ -24,19 +34,38 @@ export type ReviewDetailContainerProps<T> = {
   container?: PageContainerProps
 
   /**
-   * 详情列信息定义
-   */
-  columns?: ProDescriptionsItemProps<any, any>[];
-
-  /**
    * 是否是从查询页面跳转到该页面
    * 默认为true
    */
   fromQueryContainer?: boolean
 
+  /**
+   * 以tab形式展示数据
+   */
+  tabs?: ProCardTabsProps
+  /**
+   * 初始化激活的tab
+   */
+  tabActiveKey: string
+
+  getTabPaneProps: (review: Review<T>) => Array<TabPaneProps>
+
+  /**
+   * 审核需需要的权限
+   */
+  authorities?: Array<string>
+
+  /**
+   * 处理审核
+   * @param reviewHistory
+   */
+  onReview?: (reviewHistory: ReviewHistory & { id: string }) => Promise<void>
+
   location?: Location
 
   review?: Review<T>
+
+  reviewFormChildren?: any
 }
 
 
@@ -103,16 +132,23 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
     container,
 
     review,
+    onReview,
 
-    columns,
+    tabs,
+    tabActiveKey: initTabActiveKey,
+    getTabPaneProps,
 
+    authorities,
     fromQueryContainer = true,
 
     location = {},
-    children
+    children,
+    reviewFormChildren
   } = inProps;
 
-  const [tabActiveKey, setTabActiveKey] = useState('base');
+  const [tabActiveKey, setTabActiveKey] = useState(initTabActiveKey);
+  const [visible, setVisible] = useState(false);
+  const [result, setResult] = useState('');
 
   let reviewData: Review<any>;
 
@@ -126,33 +162,95 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   if (!reviewData) {
     console.warn('没有发现详情数据.自动返回上一页');
     navigationServices.goBack();
+    return undefined;
   }
 
-  const { before, after } = reviewData;
+  const { id, before, after, status } = reviewData;
 
-  const tabs: ProCardTabsProps = {
+  async function handleReview(formData) {
+    onReview && await onReview({
+      ...formData,
+      id,
+      result,
+    });
+  }
+
+  const extra: any = [];
+  if (hasAuthorities(authorities) && status !== ReviewStatus.FINISH) {
+    extra.push(
+      <Button key="0"
+              danger
+              type="primary"
+              onClick={() => {
+                setVisible(true);
+                setResult(ReviewResult.REJECTED);
+              }}
+      >
+        {ReviewResultText.REJECTED}
+      </Button>,
+      <Button key="1"
+              type="primary"
+              onClick={() => {
+                setVisible(true);
+                setResult(ReviewResult.RESOLVE);
+              }}
+      >
+        {ReviewResultText.RESOLVE}
+      </Button>
+    );
+  }
+
+
+  const newTabs: ProCardTabsProps = {
     tabPosition: 'top',
+    ...tabs,
     activeKey: tabActiveKey,
     onChange: setTabActiveKey,
   };
 
+  const tabPanes: Array<TabPaneProps> = getTabPaneProps(review);
+
   return (
-    <PageContainer subTitle={review.describe} content={renderHeader(reviewData)} {...container} >
-      <ProCard tabs={tabs}>
-        <Row gutter={30}>
-          <Col span={12}>
-            {before && (
-              <ProDescriptions title="变更前" columns={columns} dataSource={before}/>
-            )}
-          </Col>
-          <Col span={before ? 12 : 24}>
-            {after && (
-              <ProDescriptions title="变更后" columns={columns} dataSource={before}/>
-            )}
-          </Col>
-        </Row>
+    <PageContainer subTitle={reviewData.describe} content={renderHeader(reviewData)} {...container} >
+      <ProCard tabs={newTabs}>
+        {tabPanes.map(({ tabPaneProps, descriptionsProps }, idx) => (
+          <ProCard.TabPane {...tabPaneProps}>
+            <Row gutter={30}>
+              <Col span={12}>
+                {before && (
+                  <ProDescriptions column={2} title="变更前" dataSource={before} {...descriptionsProps}/>
+                )}
+              </Col>
+              <Col span={before ? 12 : 24}>
+                {after && (
+                  <ProDescriptions column={before ? 2 : 4} title="变更后" dataSource={after} {...descriptionsProps}/>
+                )}
+              </Col>
+            </Row>
+          </ProCard.TabPane>
+        ))}
       </ProCard>
       {children}
+      <ModalForm visible={visible}
+                 title={`执行审核 - ${ReviewResultText[this.state.result]}`}
+
+                 modalProps={{
+                   onCancel: () => setVisible(false),
+                 }}
+                 onFinish={handleReview}
+                 submitter={{
+                   searchConfig: {
+                     submitText: ReviewResultText[result],
+                   }
+                 }}
+      >
+        {renderText({
+          label: '审核结果说明',
+          name: 'resultDescribe',
+          required: true
+        })}
+        {reviewFormChildren}
+      </ModalForm>
     </PageContainer>
   );
 }));
