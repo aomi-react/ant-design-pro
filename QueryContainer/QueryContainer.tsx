@@ -6,7 +6,7 @@ import { ParamsType } from '@ant-design/pro-provider';
 import { BaseService } from '@aomi/common-service/BaseService';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 import { Button, ButtonProps, TablePaginationConfig } from 'antd';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { navigationServices } from '@aomi/mobx-history';
 import { TableRowSelection } from '@ant-design/pro-table/es/typing';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
@@ -25,6 +25,11 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   editAuthorities?: Array<string> | string
   delAuthorities?: Array<string> | string
 
+  /**
+   * 详情按钮点击
+   * @param state 当前页面state
+   */
+  onDetail?: (state: QueryContainerState<T>) => void
   /**
    * 新增按钮点击
    * @param state 当前页面state
@@ -84,6 +89,17 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   service?: BaseService<T>
 }
 
+function handleDetail(state, onDetail, detailUri) {
+  if (detailUri) {
+    navigationServices.push({
+      pathname: detailUri,
+      params: state
+    });
+    return;
+  }
+  onDetail && onDetail(state);
+}
+
 function handleAdd(state, onAdd, addUri) {
   if (addUri) {
     navigationServices.push({
@@ -128,6 +144,7 @@ function getActionButtons({
                             setSelectedRows,
                             selectedRowKeys,
                             setSelectedRowKeys,
+                            onDetail, detailUri,
                             onAdd, addUri, addAuthorities,
                             onEdit, editUri, editAuthorities, editDisabled,
                             onDel, delAuthorities,
@@ -144,6 +161,17 @@ function getActionButtons({
 
   const buttonProps: Array<ActionButtonProps> = [];
   getActionButtonProps && buttonProps.push(...getActionButtonProps(state));
+
+  (onDetail || detailUri) && buttonProps.push({
+    type: 'primary',
+    disabled: selectedRowKeys.length !== 1,
+    onClick: () => handleDetail(state, onDetail, detailUri),
+    children: (
+      <>
+        <InfoCircleOutlined/> {'详情'}
+      </>
+    )
+  });
 
   (onAdd || addUri) && buttonProps.push({
     authorities: addAuthorities,
@@ -181,14 +209,15 @@ function getActionButtons({
   });
 
   return newActionButtons.concat(
-    buttonProps.filter(item => hasAuthorities(item.authorities)).map(({ authorities, ...item }, idx) => (
+    buttonProps.filter(item => item.authorities ? hasAuthorities(item.authorities) : true).map(({ authorities, ...item }, idx) => (
       <Button key={idx} {...item}/>
     ))
   );
 }
 
-export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<QueryContainerProps<any, any>>>(function QueryContainer(inProps, ref) {
+export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(forwardRef<any, React.PropsWithChildren<QueryContainerProps<any, any>>>(function QueryContainer(inProps, ref) {
     const {
+      onDetail, detailUri,
       onAdd, addUri, addAuthorities,
       onEdit, editUri, editAuthorities, editDisabled,
       onDel, delAuthorities,
@@ -205,7 +234,7 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
     const [selectedRows, setSelectedRows] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-    const { loading } = service || {};
+    const { loading, page } = service || {};
 
     const { rowSelection, pagination, search = {}, options, ...other } = table || {};
 
@@ -303,6 +332,7 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
                     x: true,
                     scrollToFirstRowOnChange: true
                   }}
+                  dataSource={page?.content}
                   loading={loading}
                   request={handleSearch}
                   onReset={handleReset}
@@ -312,6 +342,7 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
                   rowSelection={newRowSelection}
                   toolBarRender={() => getActionButtons({
                     selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys,
+                    onDetail, detailUri,
                     onAdd, addUri, addAuthorities,
                     onEdit, editUri, editAuthorities, editDisabled,
                     onDel, delAuthorities,
