@@ -217,7 +217,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   const tabPanes: Array<TabPaneProps> = getTabPaneProps(review);
 
   return (
-    <PageContainer subTitle={reviewData.describe} content={renderHeader(reviewData)} {...container} >
+    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} {...container} >
       <ProCard tabs={newTabs}>
         {tabPanes.map(({ tabPaneProps, descriptionsProps }, idx) => (
           <ProCard.TabPane {...tabPaneProps}>
