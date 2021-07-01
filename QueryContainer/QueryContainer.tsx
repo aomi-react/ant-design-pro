@@ -59,6 +59,12 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   detailUri?: string
 
   /**
+   * 用户判断编辑按钮是否禁用
+   * @param state 当前页面状态
+   */
+  editDisabled?: (state: QueryContainerState<T>) => boolean
+
+  /**
    * 渲染动作组按钮
    * 组件当前State值
    * @param state
@@ -123,7 +129,7 @@ function getActionButtons({
                             selectedRowKeys,
                             setSelectedRowKeys,
                             onAdd, addUri, addAuthorities,
-                            onEdit, editUri, editAuthorities,
+                            onEdit, editUri, editAuthorities, editDisabled,
                             onDel, delAuthorities,
                             service,
                             renderActionButtons,
@@ -152,7 +158,7 @@ function getActionButtons({
 
   (onEdit || editUri) && buttonProps.push({
     authorities: editAuthorities,
-    disabled: selectedRowKeys.length !== 1,
+    disabled: editDisabled ? editDisabled(state) : selectedRowKeys.length !== 1,
     type: 'primary',
     onClick: () => handleEdit(state, onEdit, editUri),
     children: (
@@ -183,7 +189,10 @@ function getActionButtons({
 
 export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<QueryContainerProps<any, any>>>(function QueryContainer(inProps, ref) {
     const {
-      onAdd, addUri, addAuthorities, onEdit, editUri, editAuthorities, onDel, delAuthorities, renderActionButtons, getActionButtonProps,
+      onAdd, addUri, addAuthorities,
+      onEdit, editUri, editAuthorities, editDisabled,
+      onDel, delAuthorities,
+      renderActionButtons, getActionButtonProps,
 
 
       container,
@@ -304,7 +313,7 @@ export const QueryContainer = observer(forwardRef<any, React.PropsWithChildren<Q
                   toolBarRender={() => getActionButtons({
                     selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys,
                     onAdd, addUri, addAuthorities,
-                    onEdit, editUri, editAuthorities,
+                    onEdit, editUri, editAuthorities, editDisabled,
                     onDel, delAuthorities,
                     service,
                     renderActionButtons,
