@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 
@@ -127,7 +127,7 @@ function renderHeader<T>({ describe, histories, reviewProcess, result, status }:
 /**
  * 审核详情页面
  */
-export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = observer(withRouter(function DetailContainer(inProps) {
+export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = observer(withRouter(function ReviewDetailContainer(inProps) {
   const {
     container,
 
@@ -159,11 +159,17 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
     reviewData = review;
   }
 
+  useEffect(() => {
+    if (!reviewData) {
+      console.warn('没有发现详情数据.自动返回上一页');
+      navigationServices.goBack();
+    }
+  }, []);
+
   if (!reviewData) {
-    console.warn('没有发现详情数据.自动返回上一页');
-    navigationServices.goBack();
-    return undefined;
+    return <div/>;
   }
+
 
   const { id, before, after, status } = reviewData;
 
