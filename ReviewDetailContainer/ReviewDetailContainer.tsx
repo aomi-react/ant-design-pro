@@ -232,7 +232,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
       </ProCard>
       {children}
       <ModalForm visible={visible}
-                 title={`执行审核 - ${ReviewResultText[this.state.result]}`}
+                 title={`执行审核 - ${ReviewResultText[result]}`}
 
                  modalProps={{
                    onCancel: () => setVisible(false),
