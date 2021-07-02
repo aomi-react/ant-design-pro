@@ -147,7 +147,13 @@ export type PersistContainerProps = {
   location?: Location
 }
 
-function renderField(args: Field, index, pageOptions) {
+/**
+ * 渲染一个字段
+ * @param args 字段参数
+ * @param index 下标
+ * @param pageOptions 页面参数
+ */
+export function renderField(args: Field, index, pageOptions: PageOptions) {
   const { renderDependencyField, renderField: renderFieldComponent, subFieldGroups, dependencyName, formListProps, createHidden, editDisabled, whitespace = true, rules = [], ...field } = args;
 
   if (createHidden && pageOptions.created) {
@@ -200,7 +206,14 @@ function renderField(args: Field, index, pageOptions) {
   );
 }
 
-function renderFieldGroup({ fields, ...props }, index, pageOptions) {
+/**
+ * 渲染ProForm.Group
+ * @param fields 字段
+ * @param props 其他额皮质
+ * @param index 组所有
+ * @param pageOptions 页面选项
+ */
+export function renderFieldGroup({ fields, ...props }, index, pageOptions: PageOptions) {
   return (
     <ProForm.Group size={16} {...props} key={index}>
       {fields.map((item, idx) => renderField(item, idx, pageOptions))}
