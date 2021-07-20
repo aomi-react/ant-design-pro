@@ -6,7 +6,7 @@ import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
 import ProCard, { ProCardTabsProps } from '@ant-design/pro-card';
 
-import { Button, Col, Row, Steps } from 'antd';
+import { Button, Col, Row, Steps, Typography } from 'antd';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 import { MomentDateUtil } from '@aomi/utils/MomentDateUtil';
 import { MehOutlined, SmileOutlined } from '@ant-design/icons';
@@ -24,7 +24,8 @@ import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory'
 
 export type TabPaneProps = {
   tabPaneProps: ProCardTabPaneProps
-  descriptionsProps: ProDescriptionsProps
+  descriptionsProps?: Omit<ProDescriptionsProps, 'columns'>,
+  columnGroups: Array<ProDescriptionsProps>
 }
 
 export type ReviewDetailContainerProps<T> = {
@@ -219,18 +220,20 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   return (
     <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} {...container} >
       <ProCard tabs={newTabs}>
-        {tabPanes.map(({ tabPaneProps, descriptionsProps }, idx) => (
+        {tabPanes.map(({ tabPaneProps, descriptionsProps, columnGroups }, idx) => (
           <ProCard.TabPane {...tabPaneProps}>
             <Row gutter={30}>
               <Col span={12}>
-                {before && (
-                  <ProDescriptions column={2} title="变更前" dataSource={before} {...descriptionsProps}/>
-                )}
+                <Typography.Title level={3}>>{'变更前'}</Typography.Title>
+                {before && columnGroups.map((item, index) => (
+                  <ProDescriptions column={2} dataSource={before} {...descriptionsProps} key={index} {...item}/>
+                ))}
               </Col>
               <Col span={before ? 12 : 24}>
-                {after && (
-                  <ProDescriptions column={before ? 2 : 4} title="变更后" dataSource={after} {...descriptionsProps}/>
-                )}
+                <Typography.Title level={3}>>{'变更后'}</Typography.Title>
+                {after && columnGroups.map((item, index) => (
+                  <ProDescriptions column={before ? 2 : 4} dataSource={after} {...descriptionsProps} {...item}/>
+                ))}
               </Col>
             </Row>
           </ProCard.TabPane>
