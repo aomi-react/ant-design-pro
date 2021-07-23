@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
-import ProForm, { ProFormDependency, ProFormList, ProFormListProps, ProFormProps } from '@ant-design/pro-form';
+import ProForm, { ProFormDependency, ProFormList, ProFormListProps, ProFormProps, StepFormProps, StepsForm, StepsFormProps } from '@ant-design/pro-form';
 import { GroupProps, ProFormItemProps } from '@ant-design/pro-form/es/interface';
 import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
 import ProCard, { ProCardProps } from '@ant-design/pro-card';
@@ -140,6 +140,16 @@ export type PersistContainerProps = {
    */
   fieldGroups?: Array<FieldGroup>
 
+  /**
+   * 分步表单StepForm props
+   */
+  stepsForm?: Omit<StepsFormProps, 'onFinish'>
+
+  /**
+   * 分步
+   */
+  stepsFieldGroups?: Array<StepFormProps & { fieldGroups?: Array<FieldGroup> }>
+
   onFinish: (values, pageOptions: PageOptions) => Promise<void>
 
   getInitialValues?: (data: { params: any, pageOptions: PageOptions }) => any
@@ -235,6 +245,8 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     container,
     card,
     form,
+    stepsForm,
+    stepsFieldGroups = [],
 
     location,
 
@@ -280,9 +292,20 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
   return (
     <PageContainer title={title} subTitle={subtitle} {...container}>
       <ProCard bordered={false} {...card}>
-        <ProForm {...form} onFinish={handleFinish} initialValues={initialValues}>
-          {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
-        </ProForm>
+        {form && (
+          <ProForm {...form} onFinish={handleFinish} initialValues={initialValues}>
+            {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
+          </ProForm>
+        )}
+        {stepsForm && (
+          <StepsForm {...stepsForm} >
+            {stepsFieldGroups.map(({ fieldGroups = [], ...item }, index) => (
+              <StepsForm.StepForm {...item} key={index}>
+                {fieldGroups.map((group, idx) => renderFieldGroup(group, idx, pageOptions))}
+              </StepsForm.StepForm>
+            ))}
+          </StepsForm>
+        )}
       </ProCard>
       {children}
     </PageContainer>
