@@ -145,7 +145,7 @@ export type PersistContainerProps = {
   /**
    * 分步表单StepForm props
    */
-  stepsForm?: Omit<StepsFormProps, 'onFinish'>
+  stepsForm?: Omit<StepsFormProps, 'onFinish'> | boolean
 
   /**
    * 分步
@@ -291,6 +291,8 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
   const title = pageOptions.created ? createTitle : editTitle;
   const subtitle = pageOptions.created ? createSubTitle : editSubTitle;
 
+  const stepsFormProps = typeof stepsForm === 'boolean' ? {} : stepsForm;
+
   return (
     <PageContainer title={title} subTitle={subtitle} {...container}>
       <ProCard bordered={false} {...card}>
@@ -300,9 +302,9 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
           </ProForm>
         )}
         {stepsForm && (
-          <StepsForm {...stepsForm} >
+          <StepsForm {...stepsFormProps} >
             {stepsFieldGroups.map(({ fieldGroups = [], ...item }, index) => (
-              <StepsForm.StepForm {...item} key={index}>
+              <StepsForm.StepForm initialValues={initialValues}  {...item} key={index}>
                 {fieldGroups.map((group, idx) => renderFieldGroup(group, idx, pageOptions))}
               </StepsForm.StepForm>
             ))}
