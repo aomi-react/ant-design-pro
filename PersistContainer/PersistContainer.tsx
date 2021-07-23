@@ -112,7 +112,7 @@ export type PageOptions = {
   updated: boolean
 }
 
-export type StepsFieldGroups = Array<StepFormProps & { fieldGroups?: Array<FieldGroup> }>;
+export type StepsFieldGroup = StepFormProps & { fieldGroups?: Array<FieldGroup> };
 
 export type PersistContainerProps = {
 
@@ -150,7 +150,7 @@ export type PersistContainerProps = {
   /**
    * 分步
    */
-  stepsFieldGroups?: StepsFieldGroups
+  stepsFieldGroups?: Array<StepsFieldGroup>
 
   onFinish: (values, pageOptions: PageOptions) => Promise<void>
 
