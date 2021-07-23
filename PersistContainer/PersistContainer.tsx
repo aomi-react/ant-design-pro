@@ -112,6 +112,8 @@ export type PageOptions = {
   updated: boolean
 }
 
+export type StepsFieldGroups = Array<StepFormProps & { fieldGroups?: Array<FieldGroup> }>;
+
 export type PersistContainerProps = {
 
   createTitle?: React.ReactNode | false;
@@ -148,7 +150,7 @@ export type PersistContainerProps = {
   /**
    * 分步
    */
-  stepsFieldGroups?: Array<StepFormProps & { fieldGroups?: Array<FieldGroup> }>
+  stepsFieldGroups?: StepsFieldGroups
 
   onFinish: (values, pageOptions: PageOptions) => Promise<void>
 
