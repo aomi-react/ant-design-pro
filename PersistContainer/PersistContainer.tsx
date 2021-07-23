@@ -192,7 +192,7 @@ export function renderField(args: Field, index, pageOptions: PageOptions) {
   if (renderDependencyField) {
     return (
       <ProFormDependency name={dependencyName || []} key={index}>
-        {(dependencyFieldValues) => renderDependencyField(args, pageOptions, dependencyFieldValues)}
+        {(dependencyFieldValues) => renderDependencyField(fieldOptions, pageOptions, dependencyFieldValues)}
       </ProFormDependency>
     );
   }
