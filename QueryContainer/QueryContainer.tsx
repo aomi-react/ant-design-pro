@@ -17,7 +17,7 @@ export interface QueryContainerState<T> {
 }
 
 export type ActionButtonProps = ButtonProps & {
-  authorities?: string | Array<string>
+  authorities?: string | Array<string> | boolean
 }
 
 export interface QueryContainerProps<T, U extends ParamsType> {
