@@ -224,7 +224,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
           <ProCard.TabPane {...tabPaneProps}>
             <Row gutter={30}>
               <Col span={12}>
-                <Typography.Title level={4}>{'变更前'}</Typography.Title>
+                {before && <Typography.Title level={4}>{'变更前'}</Typography.Title>}
                 {before && columnGroups.map((item, index) => (
                   <ProDescriptions column={2} dataSource={before} {...descriptionsProps} key={index} {...item} editable={undefined}/>
                 ))}
