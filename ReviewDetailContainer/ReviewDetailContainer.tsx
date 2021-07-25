@@ -66,7 +66,12 @@ export type ReviewDetailContainerProps<T> = {
 
   review?: Review<T>
 
-  reviewFormChildren?: any
+  /**
+   * 选择审核表单
+   * @param review 审核记录信息
+   * @param result 审核结果
+   */
+  renderReviewFormChildren?: (review: Review<T>, result: ReviewResult) => React.ReactNode
 }
 
 
@@ -144,7 +149,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
 
     location = {},
     children,
-    reviewFormChildren
+    renderReviewFormChildren
   } = inProps;
 
   const [tabActiveKey, setTabActiveKey] = useState(initTabActiveKey);
@@ -258,7 +263,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
           name: 'resultDescribe',
           required: true
         })}
-        {reviewFormChildren}
+        {renderReviewFormChildren && renderReviewFormChildren(reviewData, result)}
       </ModalForm>
     </PageContainer>
   );
