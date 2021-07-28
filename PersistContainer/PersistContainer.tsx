@@ -302,7 +302,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
           </ProForm>
         )}
         {stepsForm && (
-          <StepsForm {...stepsFormProps} >
+          <StepsForm {...stepsFormProps} onFinish={handleFinish}>
             {stepsFieldGroups.map(({ fieldGroups = [], ...item }, index) => (
               <StepsForm.StepForm initialValues={initialValues}  {...item} key={index}>
                 {fieldGroups.map((group, idx) => renderFieldGroup(group, idx, pageOptions))}
