@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
@@ -114,6 +114,17 @@ export type PageOptions = {
 
 export type StepsFieldGroup = StepFormProps & { fieldGroups?: Array<FieldGroup> };
 
+export enum FormType {
+  /**
+   * 默认表单
+   */
+  DEFAULT,
+  /**
+   * 分步表单
+   */
+  STEP
+}
+
 export type PersistContainerProps = {
 
   createTitle?: React.ReactNode | false;
@@ -133,9 +144,15 @@ export type PersistContainerProps = {
   card?: ProCardProps
 
   /**
+   * 表单类型
+   * 单个表单和分布表单
+   */
+  formType?: FormType
+
+  /**
    * 表单props
    */
-  form?: Omit<ProFormProps, 'onFinish'>
+  formProps?: Omit<ProFormProps, 'onFinish'> | Omit<StepsFormProps, 'onFinish'>
 
   /**
    * 表单字段信息
@@ -143,12 +160,7 @@ export type PersistContainerProps = {
   fieldGroups?: Array<FieldGroup>
 
   /**
-   * 分步表单StepForm props
-   */
-  stepsForm?: Omit<StepsFormProps, 'onFinish'> | boolean
-
-  /**
-   * 分步
+   * 分步表单字段信息
    */
   stepsFieldGroups?: Array<StepsFieldGroup>
 
@@ -246,13 +258,13 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
 
     container,
     card,
-    form,
-    stepsForm,
+    formType = FormType.DEFAULT,
+    formProps,
+    fieldGroups = [],
     stepsFieldGroups = [],
 
     location,
 
-    fieldGroups = [],
 
     onFinish,
     getInitialValues,
@@ -267,10 +279,12 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     updated: pathname.endsWith('update')
   };
 
-  if (pageOptions.updated && !params) {
-    console.warn('进入更新页面,但是没有发现需要编辑的数据.自动返回上一页');
-    navigationServices.goBack();
-  }
+  useEffect(() => {
+    if (pageOptions.updated && !params) {
+      console.warn('进入更新页面,但是没有发现需要编辑的数据.自动返回上一页');
+      navigationServices.goBack();
+    }
+  }, []);
 
   let initialValues = {};
   if (getInitialValues) {
@@ -291,18 +305,16 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
   const title = pageOptions.created ? createTitle : editTitle;
   const subtitle = pageOptions.created ? createSubTitle : editSubTitle;
 
-  const stepsFormProps = typeof stepsForm === 'boolean' ? {} : stepsForm;
-
   return (
     <PageContainer title={title} subTitle={subtitle} {...container}>
       <ProCard bordered={false} {...card}>
-        {form && (
-          <ProForm {...form} onFinish={handleFinish} initialValues={initialValues}>
+        {formType === FormType.DEFAULT && (
+          <ProForm {...formProps} onFinish={handleFinish} initialValues={initialValues}>
             {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
           </ProForm>
         )}
-        {stepsForm && (
-          <StepsForm {...stepsFormProps} onFinish={handleFinish}>
+        {formType === FormType.STEP && (
+          <StepsForm {...formProps} onFinish={handleFinish}>
             {stepsFieldGroups.map(({ fieldGroups = [], ...item }, index) => (
               <StepsForm.StepForm initialValues={initialValues}  {...item} key={index}>
                 {fieldGroups.map((group, idx) => renderFieldGroup(group, idx, pageOptions))}
