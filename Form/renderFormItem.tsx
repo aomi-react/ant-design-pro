@@ -74,6 +74,12 @@ export function renderTimePicker(props) {
   );
 }
 
+export function renderTimeRangePicker(props) {
+  return (
+    <ProFormTimePicker.RangePicker {...props}/>
+  );
+}
+
 export function renderTextArea(props) {
   return (
     <ProFormTextArea {...props}/>
@@ -217,6 +223,9 @@ export function renderFormItem({ type = 'text', render, ...props }: Field) {
       break;
     case 'timePicker':
       element = renderTimePicker(props);
+      break;
+    case 'timeRangePicker':
+      element = renderTimeRangePicker(props);
       break;
     case 'textArea':
       element = renderTextArea(props);
