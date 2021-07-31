@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { Progress } from 'antd';
 import { ModalForm } from '@ant-design/pro-form';
 import { ProColumns } from '@ant-design/pro-table/lib/typing';
 
@@ -9,6 +9,7 @@ import { QueryContainer, QueryContainerProps, ActionButtonProps } from '../Query
 import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
 import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
 import { Review } from '@aomi/common-service/ReviewService/Review';
+import { ReviewStatus } from '@aomi/common-service/ReviewService/ReviewStatus';
 
 export type ReviewContainerProps<T, U> = {
   /**
@@ -38,6 +39,28 @@ const COMMON_COLUMNS: Array<ProColumns> = [
     valueEnum: ReviewStatusText,
   },
   {
+    title: '审核进度',
+    dataIndex: 'currentReviewUserIndex',
+    renderText: (currentReviewUserIndex, { reviewProcess, status, result }) => {
+      let proportion = 100;
+      let pstatus: any = 'active';
+
+      if (reviewProcess && reviewProcess.chain) {
+        proportion = (currentReviewUserIndex / reviewProcess.chain.length) * 100;
+      }
+
+      if (result === ReviewResult.RESOLVE) {
+        pstatus = 'success';
+      } else if (result === ReviewResult.REJECTED) {
+        pstatus = 'exception';
+      } else if (status === ReviewStatus.WAIT) {
+        pstatus = 'active';
+      }
+
+      return <Progress percent={proportion} width={35} type="line" status={pstatus}/>;
+    },
+  },
+  {
     title: '审核结果',
     dataIndex: 'result',
     valueEnum: ReviewResultText,
@@ -51,6 +74,8 @@ const COMMON_COLUMNS: Array<ProColumns> = [
     title: '当前审核人员或角色',
     dataIndex: 'reviewProcess',
     renderText: (reviewProcess, data) => {
+      if (!reviewProcess)
+        return '-';
       const { chain } = reviewProcess;
       const item = chain[data.currentReviewUserIndex];
       const { describe, role, user } = (item || {}) as any;
