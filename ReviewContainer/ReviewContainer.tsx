@@ -61,16 +61,6 @@ const COMMON_COLUMNS: Array<ProColumns> = [
     },
   },
   {
-    title: '审核结果',
-    dataIndex: 'result',
-    valueEnum: ReviewResultText,
-  },
-  {
-    title: '审核结果说明',
-    dataIndex: 'resultDescribe',
-    search: false,
-  },
-  {
     title: '当前审核人员或角色',
     dataIndex: 'reviewProcess',
     renderText: (reviewProcess, data) => {
@@ -92,6 +82,16 @@ const COMMON_COLUMNS: Array<ProColumns> = [
 
       return result;
     },
+    search: false,
+  },
+  {
+    title: '审核结果',
+    dataIndex: 'result',
+    valueEnum: ReviewResultText,
+  },
+  {
+    title: '审核结果说明',
+    dataIndex: 'resultDescribe',
     search: false,
   },
   {
