@@ -59,6 +59,7 @@ const COMMON_COLUMNS: Array<ProColumns> = [
 
       return <Progress percent={proportion} width={35} type="line" status={pstatus}/>;
     },
+    search: false
   },
   {
     title: '当前审核人员或角色',
