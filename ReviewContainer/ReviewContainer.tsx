@@ -34,6 +34,11 @@ export type ReviewContainerProps<T, U> = {
 
 const COMMON_COLUMNS: Array<ProColumns> = [
   {
+    title: '变更说明',
+    dataIndex: 'describe',
+    search: false
+  },
+  {
     title: '审核状态',
     dataIndex: 'status',
     valueEnum: ReviewStatusText,
