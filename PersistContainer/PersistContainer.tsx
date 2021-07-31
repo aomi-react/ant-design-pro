@@ -178,7 +178,7 @@ export type PersistContainerProps = {
  * @param index 下标
  * @param pageOptions 页面参数
  */
-export function renderField(args: Field, index, pageOptions: PageOptions) {
+export function renderField(args: Field, index, pageOptions: PageOptions = { created: true, updated: false }) {
   const { renderDependencyField, renderField: renderFieldComponent, subFieldGroups, dependencyName, formListProps, createHidden, editDisabled, whitespace = true, rules = [], ...field } = args;
 
   if (createHidden && pageOptions.created) {
@@ -238,7 +238,7 @@ export function renderField(args: Field, index, pageOptions: PageOptions) {
  * @param index 组所有
  * @param pageOptions 页面选项
  */
-export function renderFieldGroup({ fields, ...props }, index, pageOptions: PageOptions) {
+export function renderFieldGroup({ fields, ...props }, index, pageOptions: PageOptions = { created: true, updated: false }) {
   return (
     <ProForm.Group size={16} {...props} key={index}>
       {fields.map((item, idx) => renderField(item, idx, pageOptions))}
