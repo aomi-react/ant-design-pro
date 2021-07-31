@@ -3,7 +3,7 @@ import { Progress } from 'antd';
 import { ModalForm } from '@ant-design/pro-form';
 import { ProColumns } from '@ant-design/pro-table/lib/typing';
 
-import { ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewService/zh-cn';
+import { ResourceReviewStatusText, ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewService/zh-cn';
 
 import { QueryContainer, QueryContainerProps, ActionButtonProps } from '../QueryContainer';
 import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
@@ -33,6 +33,12 @@ export type ReviewContainerProps<T, U> = {
 } & QueryContainerProps<T, U>;
 
 const COMMON_COLUMNS: Array<ProColumns> = [
+  {
+    title: '资源状态',
+    dataIndex: 'resourceReviewStatus',
+    valueEnum: ResourceReviewStatusText,
+    search: false
+  },
   {
     title: '变更说明',
     dataIndex: 'describe',
