@@ -120,7 +120,7 @@ const COMMON_COLUMNS: Array<ProColumns> = [
   },
 ];
 
-const defaultFields = [{
+export const defaultFields = [{
   label: '审核结果说明',
   name: 'resultDescribe',
   required: true,

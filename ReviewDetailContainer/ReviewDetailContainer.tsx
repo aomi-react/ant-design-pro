@@ -18,9 +18,10 @@ import { Review } from '@aomi/common-service/ReviewService/Review';
 import { navigationServices } from '@aomi/mobx-history';
 import { ProCardTabPaneProps } from '@ant-design/pro-card/es/type';
 import { ModalForm } from '@ant-design/pro-form';
-import { renderText } from '../Form/renderFormItem';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory';
+import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
+import { defaultFields } from '../ReviewContainer/ReviewContainer';
 
 export type TabPaneProps = {
   tabPaneProps: ProCardTabPaneProps
@@ -66,12 +67,7 @@ export type ReviewDetailContainerProps<T> = {
 
   review?: Review<T>
 
-  /**
-   * 选择审核表单
-   * @param review 审核记录信息
-   * @param result 审核结果
-   */
-  renderReviewFormChildren?: (review: Review<T>, result: ReviewResult) => React.ReactNode
+  getReviewFieldGroups?: (review: Review<T>, defaultFields: Array<Field>) => Array<FieldGroup>
 }
 
 
@@ -149,7 +145,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
 
     location = {},
     children,
-    renderReviewFormChildren
+    getReviewFieldGroups
   } = inProps;
 
   const [tabActiveKey, setTabActiveKey] = useState(initTabActiveKey);
@@ -258,12 +254,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
                    }
                  }}
       >
-        {renderText({
-          label: '审核结果说明',
-          name: 'resultDescribe',
-          required: true
-        })}
-        {renderReviewFormChildren && renderReviewFormChildren(reviewData, result)}
+        {getReviewFieldGroups ? (getReviewFieldGroups(reviewData, defaultFields) || []).map((group, index) => renderFieldGroup(group, index)) : defaultFields.map((field, index) => renderField(field, index))}
       </ModalForm>
     </PageContainer>
   );
