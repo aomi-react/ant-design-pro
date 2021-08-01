@@ -67,7 +67,7 @@ export type ReviewDetailContainerProps<T> = {
 
   review?: Review<T>
 
-  getReviewFieldGroups?: (review: Review<T>, defaultFields: Array<Field>) => Array<FieldGroup>
+  getReviewFieldGroups?: (review: Review<T>, result: ReviewResult, defaultFields: Array<Field>) => Array<FieldGroup>
 }
 
 
@@ -254,7 +254,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
                    }
                  }}
       >
-        {getReviewFieldGroups ? (getReviewFieldGroups(reviewData, defaultFields) || []).map((group, index) => renderFieldGroup(group, index)) : defaultFields.map((field, index) => renderField(field, index))}
+        {getReviewFieldGroups ? (getReviewFieldGroups(reviewData, result, defaultFields) || []).map((group, index) => renderFieldGroup(group, index)) : defaultFields.map((field, index) => renderField(field, index))}
       </ModalForm>
     </PageContainer>
   );
