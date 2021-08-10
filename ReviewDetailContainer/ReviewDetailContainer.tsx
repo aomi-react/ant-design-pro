@@ -176,11 +176,19 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   const { id, before, after, status } = reviewData;
 
   async function handleReview(formData) {
-    onReview && await onReview({
-      ...formData,
-      id,
-      result,
-    });
+    if (onReview) {
+      try {
+        await onReview({
+          ...formData,
+          id,
+          result,
+        });
+      } catch (e) {
+        console.info('审核出现异常', e);
+        return;
+      }
+    }
+    setVisible(false);
   }
 
   const extra: any = [];
