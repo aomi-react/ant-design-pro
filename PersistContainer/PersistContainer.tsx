@@ -11,6 +11,7 @@ import { renderFormItem } from '../Form/renderFormItem';
 import { Rule } from 'rc-field-form/lib/interface';
 import { navigationServices } from '@aomi/mobx-history';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
+import { FormInstance } from 'antd';
 
 export type FieldType = 'text'
   | 'password'
@@ -91,7 +92,7 @@ export type Field = {
    * @param pageOptions 页面参数
    * @param dependencyFieldValues 依赖的字段值
    */
-  renderDependencyField?: (args: Field, pageOptions: any, dependencyFieldValues: Record<string, any>) => React.ReactNode
+  renderDependencyField?: <Values>(args: Field, pageOptions: any, dependencyFieldValues: Record<string, any>, form: FormInstance<Values>) => React.ReactNode
 
   /**
    * 自定义渲染field
@@ -205,7 +206,7 @@ export function renderField(args: Field, index, pageOptions: PageOptions = { cre
   if (renderDependencyField) {
     return (
       <ProFormDependency name={dependencyName || []} key={index}>
-        {(dependencyFieldValues) => renderDependencyField(fieldOptions, pageOptions, dependencyFieldValues)}
+        {(dependencyFieldValues, form) => renderDependencyField(fieldOptions, pageOptions, dependencyFieldValues, form)}
       </ProFormDependency>
     );
   }
