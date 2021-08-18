@@ -273,6 +273,7 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
     };
 
     const tableProps: ProTableProps<any, any> = ObjectUtils.deepmerge(other, {
+      columns,
       form: {
         submitter: {
           submitButtonProps: {
