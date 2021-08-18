@@ -289,6 +289,7 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
       tableProps.columns = [...columns, {
         title: ' ',
         valueType: 'option',
+        fixed: 'right',
         render: (text, record, _) => [
           <a
             key="detail"
@@ -387,8 +388,10 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
                   }}
                   {...tableProps}
         />
-        <Modal visible={detailModalProps.visible} onCancel={() => setDetailModalProps({ visible: false, record: {} })}>
-          {detailProps?.map((item, index) => <ProDescriptions {...item} key={index}/>)}
+        <Modal visible={detailModalProps.visible} onCancel={() => setDetailModalProps({ visible: false, record: {} })}
+               width="80%"
+        >
+          {detailProps?.map((item, index) => <ProDescriptions dataSource={detailModalProps.record} column={4} {...item} key={index}/>)}
         </Modal>
         {children}
       </PageContainer>
