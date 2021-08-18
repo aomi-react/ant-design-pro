@@ -5,13 +5,13 @@ import ProTable, { ProTableProps } from '@ant-design/pro-table';
 import { ParamsType } from '@ant-design/pro-provider';
 import { BaseService } from '@aomi/common-service/BaseService';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
-import { Button, ButtonProps, TablePaginationConfig } from 'antd';
+import { Button, ButtonProps, Modal, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { navigationServices } from '@aomi/mobx-history';
 import { TableRowSelection } from '@ant-design/pro-table/es/typing';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { Stats } from './Stats';
-import { ProDescriptionsProps } from '@ant-design/pro-descriptions';
+import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
 
 export interface QueryContainerState<T> {
   selectedRowKeys: Array<string>
@@ -74,6 +74,11 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   onDetail?: (state: QueryContainerState<T>) => void
 
   /**
+   * 详情显示属性,在column中显示详情按钮
+   */
+  detailProps?: Array<ProDescriptionsProps>
+
+  /**
    * 渲染动作组按钮
    * 组件当前State值
    * @param state
@@ -119,7 +124,6 @@ function handleAdd(state, onAdd, addUri) {
 }
 
 function handleEdit(state, onEdit, editUri) {
-
   if (editUri) {
     navigationServices.push({
       pathname: editUri,
@@ -238,15 +242,18 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
       statsColumns,
       statsProps,
 
+      detailProps,
+
       children
     } = inProps;
 
     const [selectedRows, setSelectedRows] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [detailModalProps, setDetailModalProps] = useState({ visible: false, record: {} });
 
     const { loading, page } = service || {};
 
-    const { rowSelection, pagination, search = {}, options, toolbar, ...other } = table || {};
+    const { rowSelection, pagination, search = {}, options, toolbar, columns = [], ...other } = table || {};
 
     const newRowSelection: TableRowSelection = {
       type: 'radio',
@@ -265,7 +272,7 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
       ...pagination
     };
 
-    const tableProps = ObjectUtils.deepmerge(other, {
+    const tableProps: ProTableProps<any, any> = ObjectUtils.deepmerge(other, {
       form: {
         submitter: {
           submitButtonProps: {
@@ -277,6 +284,19 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
         },
       },
     });
+    if (detailProps) {
+      tableProps.columns = [...columns, {
+        title: ' ',
+        valueType: 'option',
+        render: (text, record, _) => [
+          <a
+            key="detail"
+            onClick={() => setDetailModalProps({ visible: true, record })}>
+            {'详情'}
+          </a>,
+        ],
+      }];
+    }
 
     // search
     const newSearch = {
@@ -366,6 +386,9 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
                   }}
                   {...tableProps}
         />
+        <Modal visible={detailModalProps.visible} onCancel={() => setDetailModalProps({ visible: false, record: {} })}>
+          {detailProps?.map((item, index) => <ProDescriptions {...item} key={index}/>)}
+        </Modal>
         {children}
       </PageContainer>
     );
