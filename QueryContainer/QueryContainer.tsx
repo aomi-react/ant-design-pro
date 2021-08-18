@@ -10,6 +10,8 @@ import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '
 import { navigationServices } from '@aomi/mobx-history';
 import { TableRowSelection } from '@ant-design/pro-table/es/typing';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
+import { Stats } from './Stats';
+import { ProDescriptionsProps } from '@ant-design/pro-descriptions';
 
 export interface QueryContainerState<T> {
   selectedRowKeys: Array<string>
@@ -25,11 +27,7 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   editAuthorities?: Array<string> | string
   delAuthorities?: Array<string> | string
 
-  /**
-   * 详情按钮点击
-   * @param state 当前页面state
-   */
-  onDetail?: (state: QueryContainerState<T>) => void
+
   /**
    * 新增按钮点击
    * @param state 当前页面state
@@ -59,15 +57,21 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   editUri?: string
 
   /**
+   * 用户判断编辑按钮是否禁用
+   * @param state 当前页面状态
+   */
+  editDisabled?: (state: QueryContainerState<T>) => boolean
+
+  /**
    * 详情页面uri
    */
   detailUri?: string
 
   /**
-   * 用户判断编辑按钮是否禁用
-   * @param state 当前页面状态
+   * 详情按钮点击
+   * @param state 当前页面state
    */
-  editDisabled?: (state: QueryContainerState<T>) => boolean
+  onDetail?: (state: QueryContainerState<T>) => void
 
   /**
    * 渲染动作组按钮
@@ -87,6 +91,9 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   table?: ProTableProps<T, U>
 
   service?: BaseService<T>
+
+  statsColumns?: ProDescriptionsProps['columns']
+  statsProps?: ProDescriptionsProps
 }
 
 function handleDetail(state, onDetail, detailUri) {
@@ -228,6 +235,9 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
       table,
       service,
 
+      statsColumns,
+      statsProps,
+
       children
     } = inProps;
 
@@ -236,7 +246,7 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
 
     const { loading, page } = service || {};
 
-    const { rowSelection, pagination, search = {}, options, ...other } = table || {};
+    const { rowSelection, pagination, search = {}, options, toolbar, ...other } = table || {};
 
     const newRowSelection: TableRowSelection = {
       type: 'radio',
@@ -340,16 +350,20 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
                   options={{ fullScreen: true, ...options, reload: handleReload }}
                   search={newSearch}
                   rowSelection={newRowSelection}
-                  toolBarRender={() => getActionButtons({
-                    selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys,
-                    onDetail, detailUri,
-                    onAdd, addUri, addAuthorities,
-                    onEdit, editUri, editAuthorities, editDisabled,
-                    onDel, delAuthorities,
-                    service,
-                    renderActionButtons,
-                    getActionButtonProps
-                  })}
+                  tableExtraRender={() => <Stats dataSource={{ ...page, ...(page as any).value }} columns={statsColumns} {...statsProps}/>}
+                  toolbar={{
+                    actions: getActionButtons({
+                      selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys,
+                      onDetail, detailUri,
+                      onAdd, addUri, addAuthorities,
+                      onEdit, editUri, editAuthorities, editDisabled,
+                      onDel, delAuthorities,
+                      service,
+                      renderActionButtons,
+                      getActionButtonProps
+                    }),
+                    ...toolbar
+                  }}
                   {...tableProps}
         />
         {children}
