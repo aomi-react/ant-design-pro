@@ -97,6 +97,7 @@ export interface QueryContainerProps<T, U extends ParamsType> {
 
   service?: BaseService<T>
 
+  showStats?: boolean
   statsColumns?: ProDescriptionsProps['columns']
   statsProps?: ProDescriptionsProps
 }
@@ -239,6 +240,7 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
       table,
       service,
 
+      showStats = true,
       statsColumns,
       statsProps,
 
@@ -298,6 +300,9 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
           </a>,
         ],
       }];
+    }
+    if (showStats) {
+      tableProps.tableExtraRender = () => <Stats dataSource={{ ...page, ...(page as any)?.value }} columns={statsColumns} {...statsProps}/>;
     }
 
     // search
@@ -372,7 +377,6 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
                   options={{ fullScreen: true, ...options, reload: handleReload }}
                   search={newSearch}
                   rowSelection={newRowSelection}
-                  tableExtraRender={() => <Stats dataSource={{ ...page, ...(page as any)?.value }} columns={statsColumns} {...statsProps}/>}
                   toolbar={{
                     actions: getActionButtons({
                       selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys,
