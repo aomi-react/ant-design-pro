@@ -372,7 +372,7 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
                   options={{ fullScreen: true, ...options, reload: handleReload }}
                   search={newSearch}
                   rowSelection={newRowSelection}
-                  tableExtraRender={() => <Stats dataSource={{ ...page, ...(page as any).value }} columns={statsColumns} {...statsProps}/>}
+                  tableExtraRender={() => <Stats dataSource={{ ...page, ...(page as any)?.value }} columns={statsColumns} {...statsProps}/>}
                   toolbar={{
                     actions: getActionButtons({
                       selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys,
