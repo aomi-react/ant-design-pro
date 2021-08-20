@@ -1,11 +1,11 @@
-import React, { forwardRef, ReactElement, useState } from 'react';
+import React, { forwardRef, ReactElement, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProTable, { ProTableProps } from '@ant-design/pro-table';
 import { ParamsType } from '@ant-design/pro-provider';
 import { BaseService } from '@aomi/common-service/BaseService';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
-import { Button, ButtonProps, Modal, TablePaginationConfig } from 'antd';
+import { Button, ButtonProps, FormInstance, Modal, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { navigationServices } from '@aomi/mobx-history';
 import { TableRowSelection } from '@ant-design/pro-table/es/typing';
@@ -253,6 +253,8 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [detailModalProps, setDetailModalProps] = useState({ visible: false, record: {} });
 
+    const form = useRef<FormInstance>();
+
     const { loading, page } = service || {};
 
     const { rowSelection, pagination, search = {}, options, toolbar, columns = [], ...other } = table || {};
@@ -348,7 +350,8 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
 
 
     function handleReset() {
-      handleSearch({ pageSize: newPagination.defaultPageSize, current: newPagination.defaultCurrent });
+      const value = form.current?.getFieldsValue();
+      handleSearch({ pageSize: newPagination.defaultPageSize, current: newPagination.defaultCurrent, ...value });
     }
 
     function handleReload() {
@@ -369,12 +372,13 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
                     x: true,
                     scrollToFirstRowOnChange: true
                   }}
+                  formRef={form}
                   dataSource={page?.content}
                   loading={loading}
                   request={handleSearch}
                   onReset={handleReset}
                   pagination={newPagination}
-                  options={{ fullScreen: true, ...options, reload: handleReload }}
+                  options={{ fullScreen: true, reload: handleReload, ...options }}
                   search={newSearch}
                   rowSelection={newRowSelection}
                   toolbar={{
