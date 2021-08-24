@@ -127,7 +127,7 @@ export const defaultFields = [{
 }];
 
 export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = function ReviewContainer(props) {
-  const { reviewAuthorities, reviewTitle = '', onReview, columns = [], getColumns, getReviewFieldGroups, ...args } = props;
+  const { reviewAuthorities, reviewTitle = '', onReview, columns = [], getColumns, getReviewFieldGroups, table: argsTable, ...args } = props;
 
   const [state, setState] = useState({
     visible: false,
@@ -137,6 +137,7 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
   });
 
   const table = {
+    ...argsTable,
     columns: getColumns ? getColumns(COMMON_COLUMNS) : columns.concat(COMMON_COLUMNS),
   };
 
