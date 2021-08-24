@@ -2,8 +2,8 @@ import React, { PropsWithChildren, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
-import ProForm, { ProFormDependency, ProFormList, ProFormListProps, ProFormProps, StepFormProps, StepsForm, StepsFormProps } from '@ant-design/pro-form';
-import { GroupProps, ProFormItemProps } from '@ant-design/pro-form/es/interface';
+import ProForm, { ProFormDependency, ProFormItemProps, ProFormList, ProFormListProps, ProFormProps, StepFormProps, StepsForm, StepsFormProps } from '@ant-design/pro-form';
+import { GroupProps } from '@ant-design/pro-form/es/interface';
 import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
 import ProCard, { ProCardProps } from '@ant-design/pro-card';
 
