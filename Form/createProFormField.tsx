@@ -1,9 +1,9 @@
 import React from 'react';
 import createField from '@ant-design/pro-form/es/BaseForm/createField';
 import ProField from '@ant-design/pro-field';
-import { ProFormItemProps } from '@ant-design/pro-form/es/interface';
 import { ProFieldValueObjectType, ProFieldValueType } from '@ant-design/pro-utils';
 import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
+import { ProFormItemProps } from '@ant-design/pro-form';
 
 
 export type Args = {
