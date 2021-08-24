@@ -23,10 +23,20 @@ import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory'
 import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
 import { defaultFields } from '../ReviewContainer/ReviewContainer';
 
-export type TabPaneProps = {
+export type TabPaneProps<T> = {
   tabPaneProps: ProCardTabPaneProps
-  descriptionsProps?: Omit<ProDescriptionsProps, 'columns'>,
-  columnGroups: Array<ProDescriptionsProps>
+
+  descriptionsProps?: Omit<ProDescriptionsProps<T>, 'columns'>,
+  /**
+   * Descriptions 配置 加自定义render配置
+   * 自定义渲染整个内容
+   *
+   * @param options 渲染参数选项
+   * @param before 是否是变更前
+   * @param after 是否是变更后
+   * @param review 审核对象数据
+   */
+  columnGroups?: Array<ProDescriptionsProps<T> & { render?: (options: { before?: boolean, after?: boolean, review: T }) => React.ReactNode }>
 }
 
 export type ReviewDetailContainerProps<T> = {
@@ -50,7 +60,7 @@ export type ReviewDetailContainerProps<T> = {
    */
   tabActiveKey: string
 
-  getTabPaneProps: (review: Review<T>) => Array<TabPaneProps>
+  getTabPaneProps: (review: Review<T>) => Array<TabPaneProps<T>>
 
   /**
    * 审核需需要的权限
@@ -224,7 +234,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
     onChange: setTabActiveKey,
   };
 
-  const tabPanes: Array<TabPaneProps> = getTabPaneProps(review);
+  const tabPanes: Array<TabPaneProps<any>> = getTabPaneProps(review);
 
   return (
     <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} {...container} >
@@ -234,14 +244,14 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
             <Row gutter={30}>
               <Col span={12}>
                 {before && <Typography.Title level={4}>{'变更前'}</Typography.Title>}
-                {before && columnGroups.map((item, index) => (
-                  <ProDescriptions column={2} dataSource={before} {...descriptionsProps} key={index} {...item} editable={undefined}/>
+                {before && columnGroups?.map(({ render, ...item }, index) => (
+                  render ? render({ before: true, review: reviewData }) : <ProDescriptions column={2} dataSource={before} {...descriptionsProps} key={index} {...item} editable={undefined}/>
                 ))}
               </Col>
               <Col span={before ? 12 : 24}>
                 <Typography.Title level={4}>{'变更后'}</Typography.Title>
-                {after && columnGroups.map((item, index) => (
-                  <ProDescriptions column={before ? 2 : 4} dataSource={after} {...descriptionsProps} key={index} {...item}/>
+                {after && columnGroups?.map(({ render, ...item }, index) => (
+                  render ? render({ after: true, review: reviewData }) : <ProDescriptions column={before ? 2 : 4} dataSource={after} {...descriptionsProps} key={index} {...item}/>
                 ))}
               </Col>
             </Row>
