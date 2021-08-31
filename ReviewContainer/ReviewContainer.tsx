@@ -5,7 +5,7 @@ import { ProColumns } from '@ant-design/pro-table/lib/typing';
 
 import { ResourceReviewStatusText, ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewService/zh-cn';
 
-import { QueryContainer, QueryContainerProps, ActionButtonProps } from '../QueryContainer';
+import { ActionButtonProps, QueryContainer, QueryContainerProps } from '../QueryContainer';
 import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
 import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
 import { Review } from '@aomi/common-service/ReviewService/Review';
@@ -28,7 +28,13 @@ export type ReviewContainerProps<T, U> = {
 
   getColumns?: (defaultColumns: ProColumns<T, U>[]) => ProColumns<T, U>[]
 
-  getReviewFieldGroups?: (review: Review<T>, defaultFields: Array<Field>) => Array<FieldGroup>
+  /**
+   * 获取审核表单字段
+   * @param review 审核记录信息
+   * @param result 审核结果
+   * @param defaultFields 默认字段
+   */
+  getReviewFieldGroups?: (review: Review<T>, result: ReviewResult, defaultFields: Array<Field>) => Array<FieldGroup>
 
   /**
    * 获取动作按钮
@@ -143,7 +149,7 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
 
   const [state, setState] = useState({
     visible: false,
-    result: '',
+    result: ReviewResult.REJECTED,
     id: '',
     review: null
   });
@@ -209,7 +215,7 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
         ...state,
       });
     }
-    setState({ visible: false, id: '', result: '', review: null });
+    setState({ visible: false, id: '', result: ReviewResult.REJECTED, review: null });
   }
 
   return (
@@ -228,7 +234,7 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
           },
           submitButtonProps: {},
         }}>
-        {getReviewFieldGroups ? (getReviewFieldGroups(state.review as any, defaultFields) || []).map((group, index) => renderFieldGroup(group, index)) : defaultFields.map((field, index) => renderField(field, index))}
+        {getReviewFieldGroups ? (getReviewFieldGroups(state.review as any, state.result, defaultFields) || []).map((group, index) => renderFieldGroup(group, index)) : defaultFields.map((field, index) => renderField(field, index))}
       </ModalForm>
     </QueryContainer>
   );
