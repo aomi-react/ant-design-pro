@@ -308,7 +308,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
   const subtitle = pageOptions.created ? createSubTitle : editSubTitle;
 
   return (
-    <PageContainer title={title} subTitle={subtitle} {...container}>
+    <PageContainer title={title} subTitle={subtitle} onBack={navigationServices.goBack} {...container}>
       <ProCard bordered={false} {...card}>
         {formType === FormType.DEFAULT && (
           <ProForm {...formProps} onFinish={handleFinish} initialValues={initialValues}>
