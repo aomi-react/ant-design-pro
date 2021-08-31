@@ -30,7 +30,13 @@ export type ReviewContainerProps<T, U> = {
 
   getReviewFieldGroups?: (review: Review<T>, defaultFields: Array<Field>) => Array<FieldGroup>
 
-} & QueryContainerProps<T, U>;
+  /**
+   * 获取动作按钮
+   * @param review 审核记录信息
+   */
+  getActionButtonProps?: (review: Review<T>) => Array<ActionButtonProps>
+
+} & Omit<QueryContainerProps<T, U>, 'getActionButtonProps'>;
 
 const COMMON_COLUMNS: Array<ProColumns> = [
   {
@@ -127,7 +133,13 @@ export const defaultFields = [{
 }];
 
 export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = function ReviewContainer(props) {
-  const { reviewAuthorities, reviewTitle = '', onReview, columns = [], getColumns, getReviewFieldGroups, table: argsTable, ...args } = props;
+  const {
+    reviewAuthorities, reviewTitle = '', onReview, columns = [],
+    getColumns,
+    getReviewFieldGroups,
+    getActionButtonProps: argsGetActionButtonProps,
+    table: argsTable, ...args
+  } = props;
 
   const [state, setState] = useState({
     visible: false,
@@ -151,7 +163,9 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
     } else {
       disabled = true;
     }
+    const userButtons = argsGetActionButtonProps ? argsGetActionButtonProps(review) : [];
     return [
+      ...userButtons,
       {
         children: '同意',
         type: 'primary',
@@ -199,7 +213,7 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
   }
 
   return (
-    <QueryContainer table={table} getActionButtonProps={getActionButtonProps} {...args}>
+    <QueryContainer table={table} {...args} getActionButtonProps={getActionButtonProps}>
       <ModalForm
         visible={state.visible}
         title={`${reviewTitle ? `${reviewTitle} -` : ''}${ReviewResultText[state.result]}`}
