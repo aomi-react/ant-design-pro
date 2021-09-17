@@ -136,6 +136,11 @@ export type PersistContainerProps = {
   editSubTitle?: React.ReactNode | false;
 
   /**
+   * 创建合并的数据删除 id 字段
+   */
+  createRemoveId?: boolean
+
+  /**
    * page container props
    */
   container?: PageContainerProps
@@ -258,6 +263,8 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     editTitle,
     editSubTitle,
 
+    createRemoveId = true,
+
     container,
     card,
     formType = FormType.DEFAULT,
@@ -298,6 +305,10 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     initialValues = params.selectedRows[0] || {};
   } else {
     initialValues = params || {};
+  }
+  if (pageOptions.created && createRemoveId) {
+    console.info('新增页面,移除初始化数据中的ID字段');
+    Reflect.deleteProperty(initialValues, 'id');
   }
 
   async function handleFinish(values) {
