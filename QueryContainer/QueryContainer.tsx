@@ -76,7 +76,7 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   /**
    * 详情显示属性,在column中显示详情按钮
    */
-  detailProps?: Array<ProDescriptionsProps>
+  detailProps?: Array<ProDescriptionsProps> | ((record) => Array<ProDescriptionsProps>)
 
   /**
    * 渲染动作组按钮
@@ -400,7 +400,10 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
         <Modal visible={detailModalProps.visible} onCancel={() => setDetailModalProps({ visible: false, record: {} })}
                width="80%"
         >
-          {detailProps?.map((item, index) => <ProDescriptions dataSource={detailModalProps.record} column={4} {...item} key={index}/>)}
+          {(typeof detailProps === 'function' ? detailProps(detailModalProps.record) : detailProps)?.map((item, index) => (
+            <ProDescriptions dataSource={detailModalProps.record} column={4} {...item}
+                             key={index}/>
+          ))}
         </Modal>
         {children}
       </PageContainer>
