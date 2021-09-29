@@ -7,7 +7,7 @@ import {
   ProFormDateRangePicker,
   ProFormDateTimePicker,
   ProFormDateTimeRangePicker,
-  ProFormDigit,
+  ProFormDigit, ProFormMoney,
   ProFormRadio,
   ProFormRate,
   ProFormSelect,
@@ -135,7 +135,7 @@ export function renderUploadButton(props) {
  */
 export function renderSelect({ fieldProps = {}, ...props }: any) {
   const newFieldProps = {
-    ...fieldProps,
+    ...fieldProps
   };
 
   return (
@@ -149,9 +149,15 @@ export function renderDigit(props) {
   );
 }
 
+export function renderMoney(props) {
+  return (
+    <ProFormMoney {...props}/>
+  );
+}
+
 export function renderAutoComplete({ fieldProps = {}, ...props }: any) {
   const newFieldProps = {
-    ...fieldProps,
+    ...fieldProps
   };
 
   return (
@@ -161,7 +167,7 @@ export function renderAutoComplete({ fieldProps = {}, ...props }: any) {
 
 export function renderCascader({ fieldProps = {}, ...props }: any) {
   const newFieldProps = {
-    ...fieldProps,
+    ...fieldProps
   };
 
   return (
@@ -171,7 +177,7 @@ export function renderCascader({ fieldProps = {}, ...props }: any) {
 
 export function renderFeeRate({ fieldProps = {}, ...props }: any) {
   const newFieldProps = {
-    ...fieldProps,
+    ...fieldProps
   };
 
   return (
@@ -256,6 +262,9 @@ export function renderFormItem({ type = 'text', render, ...props }: Field) {
       break;
     case 'digit':
       element = renderDigit(props);
+      break;
+    case 'money':
+      element = renderMoney(props);
       break;
     case 'autoComplete':
       element = renderAutoComplete(props);
