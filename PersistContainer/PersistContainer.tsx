@@ -104,7 +104,7 @@ export type Field = {
    * 各个组件对应的props,请根据type参考对应的组件属性
    */
   [key: string]: any
-} | Omit<ProFormItemProps, 'type'>
+} & Omit<ProFormItemProps, 'type'>
 
 export type FieldGroup = {
   fields: Array<Field>

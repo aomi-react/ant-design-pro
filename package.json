@@ -1,6 +1,6 @@
 {
   "name": "@aomi/react-pro-ant-design",
-  "version": "1.0.0-Alpha.55",
+  "version": "1.0.0-Alpha.57",
   "main": "index.js",
   "repository": "git@github.com:aomi-web/react-pro-ant-design.git",
   "author": "sean <sean.snow@live.com>",
@@ -17,7 +17,7 @@
     "@ant-design/pro-descriptions": "^1.10.5",
     "@ant-design/pro-field": "^1.27.1",
     "@ant-design/pro-form": "^1.49.3",
-    "@ant-design/pro-layout": "^6.31.2",
+    "@ant-design/pro-layout": "^6.27.2",
     "@ant-design/pro-table": "^2.58.1",
     "@aomi/common-service": "1.0.5-Alpha.19",
     "@aomi/mobx-history": "^1.0.4",

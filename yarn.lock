@@ -80,7 +80,7 @@
     rc-util "^5.0.6"
     use-media-antd-query "^1.0.6"
 
-"@ant-design/pro-layout@^6.31.2":
+"@ant-design/pro-layout@^6.27.2":
   version "6.31.2"
   resolved "https://registry.yarnpkg.com/@ant-design/pro-layout/-/pro-layout-6.31.2.tgz#1ee30f3f2501a12640266bc47915e8d58decd9c5"
   integrity sha512-bOSApSvL9bFqz1Bw7ECO9z4OFHf7UN/td9GqpAIXvp2y9FM4ns7kG6BBu63AhZptYbnlIlQEBM0U3FOZwMbyzQ==
