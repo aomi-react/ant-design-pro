@@ -10,5 +10,5 @@ function render(text, props: ProFieldFCRenderProps) {
   );
 }
 
-export const ProFormCascader = createProFormField<CascaderProps>({ render });
+export const ProFormCascader = createProFormField<CascaderProps<any>>({ render });
 
