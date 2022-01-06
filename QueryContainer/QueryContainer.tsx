@@ -14,8 +14,8 @@ import { Stats } from './Stats';
 import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
 
 export interface QueryContainerState<T> {
-  selectedRowKeys: Array<string>
-  selectedRows: Array<T>
+  selectedRowKeys: Array<string>;
+  selectedRows: Array<T>;
 }
 
 export type ActionButtonProps = ButtonProps & {
@@ -23,60 +23,60 @@ export type ActionButtonProps = ButtonProps & {
 }
 
 export interface QueryContainerProps<T, U extends ParamsType> {
-  addAuthorities?: Array<string> | string
-  editAuthorities?: Array<string> | string
-  delAuthorities?: Array<string> | string
+  addAuthorities?: Array<string> | string;
+  editAuthorities?: Array<string> | string;
+  delAuthorities?: Array<string> | string;
 
 
   /**
    * 新增按钮点击
    * @param state 当前页面state
    */
-  onAdd?: (state: QueryContainerState<T>) => void
+  onAdd?: (state: QueryContainerState<T>) => void;
   /**
    * 编辑按钮点击
    * @param state 当前页面state
    */
-  onEdit?: (state: QueryContainerState<T>) => void
+  onEdit?: (state: QueryContainerState<T>) => void;
   /**
    * 删除按钮页面点击.
    * 当存在该值时,service中的del方法不会执行。否则执行service中的del方法
    * @param keys 当前选择的数据keys
    * @param state 当前页面state
    */
-  onDel?: (keys: string | Array<string>, state: QueryContainerState<T>, handleResetRowKeys: () => void) => void
+  onDel?: (keys: string | Array<string>, state: QueryContainerState<T>, handleResetRowKeys: () => void) => void;
 
   /**
    * 新增页面uri
    */
-  addUri?: string
+  addUri?: string;
 
   /**
    * 编辑页面uri
    */
-  editUri?: string
+  editUri?: string;
 
   /**
    * 用户判断编辑按钮是否禁用
    * @param state 当前页面状态
    */
-  editDisabled?: (state: QueryContainerState<T>) => boolean
+  editDisabled?: (state: QueryContainerState<T>) => boolean;
 
   /**
    * 详情页面uri
    */
-  detailUri?: string
+  detailUri?: string;
 
   /**
    * 详情按钮点击
    * @param state 当前页面state
    */
-  onDetail?: (state: QueryContainerState<T>) => void
+  onDetail?: (state: QueryContainerState<T>) => void;
 
   /**
    * 详情显示属性,在column中显示详情按钮
    */
-  detailProps?: Array<ProDescriptionsProps> | ((record) => Array<ProDescriptionsProps>)
+  detailProps?: Array<ProDescriptionsProps> | ((record) => Array<ProDescriptionsProps>);
 
   /**
    * 渲染动作组按钮
@@ -84,22 +84,22 @@ export interface QueryContainerProps<T, U extends ParamsType> {
    * @param state
    * @deprecated 请使用{@link getActionButtonProps}
    */
-  renderActionButtons?: (state: QueryContainerState<T>) => Array<ReactElement>
+  renderActionButtons?: (state: QueryContainerState<T>) => Array<ReactElement>;
   /**
    * 获取按钮组件的props
    * @param state 页面状态参数
    */
-  getActionButtonProps?: (state: QueryContainerState<T>) => Array<ActionButtonProps>
+  getActionButtonProps?: (state: QueryContainerState<T>) => Array<ActionButtonProps>;
 
-  container?: PageContainerProps
+  container?: PageContainerProps;
 
-  table?: ProTableProps<T, U>
+  table?: ProTableProps<T, U>;
 
-  service?: BaseService<T>
+  service?: BaseService<T>;
 
-  showStats?: boolean
-  statsColumns?: ProDescriptionsProps['columns']
-  statsProps?: ProDescriptionsProps
+  showStats?: boolean;
+  statsColumns?: ProDescriptionsProps['columns'];
+  statsProps?: ProDescriptionsProps;
 }
 
 function handleDetail(state, onDetail, detailUri) {
@@ -281,13 +281,13 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
       form: {
         submitter: {
           submitButtonProps: {
-            loading,
+            loading
           },
           resetButtonProps: {
             loading
           }
-        },
-      },
+        }
+      }
     });
     if (detailProps) {
       tableProps.columns = [...columns, {
@@ -299,8 +299,8 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
             key="detail"
             onClick={() => setDetailModalProps({ visible: true, record })}>
             {'详情'}
-          </a>,
-        ],
+          </a>
+        ]
       }];
     }
     if (showStats) {
@@ -349,14 +349,14 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
     }
 
 
-    function handleReset() {
+    async function handleReset() {
       const value = form.current?.getFieldsValue();
-      handleSearch({ pageSize: newPagination.defaultPageSize, current: newPagination.defaultCurrent, ...value });
+      await handleSearch({ pageSize: newPagination.defaultPageSize, current: newPagination.defaultCurrent, ...value });
     }
 
-    function handleReload() {
+    async function handleReload() {
       if (service) {
-        handleSearch(service.searchParams || {});
+        await handleSearch(service.searchParams || {});
       }
     }
 
