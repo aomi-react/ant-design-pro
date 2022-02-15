@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, useEffect } from 'react';
 import { observer } from 'mobx-react';
+import { useLocation } from 'react-router-dom';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProForm, { ProFormDependency, ProFormItemProps, ProFormList, ProFormListProps, ProFormProps, StepFormProps, StepsForm, StepsFormProps } from '@ant-design/pro-form';
 import { GroupProps } from '@ant-design/pro-form/es/interface';
@@ -11,7 +12,6 @@ import { Rule } from 'rc-field-form/lib/interface';
 import { navigationServices } from '@aomi/react-router/Navigation';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 import { FormInstance } from 'antd';
-import { withRouter } from '@aomi/react-router/withRouter';
 
 export type FieldType = 'text'
   | 'password'
@@ -256,7 +256,7 @@ export function renderFieldGroup({ fields, ...props }, index, pageOptions: PageO
 /**
  * 新增、编辑页面
  */
-export const PersistContainer: React.FC<PersistContainerProps> = observer(withRouter(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
+export const PersistContainer: React.FC<PersistContainerProps> = observer(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
   const {
 
     createTitle,
@@ -273,16 +273,15 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     fieldGroups = [],
     stepsFieldGroups = [],
 
-    location,
-
-
     onFinish,
     getInitialValues,
 
     children
   } = inProps;
 
-  const { pathname = '', params = undefined } = (location as any) || {};
+  const location = useLocation();
+
+  const { pathname = '', state: params = undefined } = (location as any) || {};
 
   const pageOptions = {
     created: pathname.endsWith('create'),
@@ -340,4 +339,4 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
       {children}
     </PageContainer>
   );
-}));
+});

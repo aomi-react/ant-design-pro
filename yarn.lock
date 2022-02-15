@@ -181,10 +181,10 @@
   resolved "https://registry.yarnpkg.com/@aomi/react-antd/-/react-antd-1.0.0-Alpha.11.tgz#697222040253fb9e0ec67810eb64715ade5e5733"
   integrity sha512-8XZLwN7/G+Wx9LvylweggJc4kmcPM/pSVfUjzp3MgNBZb61qYRsJqqV0d71hkLGize7VMNZS6t4ZanSCaGtsYg==
 
-"@aomi/react-router@^0.0.1-Alpha.1":
-  version "0.0.1-Alpha.1"
-  resolved "https://registry.yarnpkg.com/@aomi/react-router/-/react-router-0.0.1-Alpha.1.tgz#2a9479b28741a5c5401b4b755a12ffe213cc09dc"
-  integrity sha512-t2+KuDOaUnV83Qx/9F2teCql6gFprgjygPu13CkdLUrsOyMMB0Tl5JMVngPyXqxU+l4XzvzchC3VEljlMud45g==
+"@aomi/react-router@^0.0.1-Alpha.2":
+  version "0.0.1-Alpha.2"
+  resolved "https://registry.yarnpkg.com/@aomi/react-router/-/react-router-0.0.1-Alpha.2.tgz#f1cf9769684d082ffde644bebeff826c1c9deee0"
+  integrity sha512-JQXPvwnIAT/xUfqIl3KauopIgGSbQ49Ox2PR2PVz9IoT+h8QE73hpUHLFsTQDg9ZJcrqkqe2IQNAuYr7vefecQ==
 
 "@aomi/utils@^1.0.1-Alpha.3":
   version "1.0.1-Alpha.3"

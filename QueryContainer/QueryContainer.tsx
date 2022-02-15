@@ -362,7 +362,7 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
 
     return (
       <PageContainer style={{ whiteSpace: 'nowrap' }}
-                     onBack={navigationServices.goBack}
+                     onBack={navigationServices.back}
                      {...container}
       >
         <ProTable rowKey="id"
