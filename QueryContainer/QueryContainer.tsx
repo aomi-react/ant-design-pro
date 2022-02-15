@@ -118,7 +118,7 @@ function handleAdd(state, onAdd, addUri) {
     navigationServices.push({
       pathname: addUri,
       params: state
-    });
+    }, { state });
     return;
   }
   onAdd && onAdd(state);
@@ -129,7 +129,7 @@ function handleEdit(state, onEdit, editUri) {
     navigationServices.push({
       pathname: editUri,
       params: state
-    });
+    }, { state });
     return;
   }
   onEdit && onEdit(state);
