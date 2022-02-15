@@ -1,6 +1,5 @@
 import React, { PropsWithChildren, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProForm, { ProFormDependency, ProFormItemProps, ProFormList, ProFormListProps, ProFormProps, StepFormProps, StepsForm, StepsFormProps } from '@ant-design/pro-form';
 import { GroupProps } from '@ant-design/pro-form/es/interface';
@@ -9,9 +8,10 @@ import ProCard, { ProCardProps } from '@ant-design/pro-card';
 
 import { renderFormItem } from '../Form/renderFormItem';
 import { Rule } from 'rc-field-form/lib/interface';
-import { navigationServices } from '@aomi/mobx-history';
+import { navigationServices } from '@aomi/react-router/Navigation';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 import { FormInstance } from 'antd';
+import { withRouter } from '@aomi/react-router/withRouter';
 
 export type FieldType = 'text'
   | 'password'
@@ -292,7 +292,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
   useEffect(() => {
     if (pageOptions.updated && !params) {
       console.warn('进入更新页面,但是没有发现需要编辑的数据.自动返回上一页');
-      navigationServices.goBack();
+      navigationServices.back();
     }
   }, []);
 
@@ -320,7 +320,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
   const subtitle = pageOptions.created ? createSubTitle : editSubTitle;
 
   return (
-    <PageContainer title={title} subTitle={subtitle} onBack={navigationServices.goBack} {...container}>
+    <PageContainer title={title} subTitle={subtitle} onBack={navigationServices.back} {...container}>
       <ProCard bordered={false} {...card}>
         {formType === FormType.DEFAULT && (
           <ProForm {...formProps} onFinish={handleFinish} initialValues={initialValues}>

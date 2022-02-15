@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
 
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
@@ -15,13 +14,14 @@ import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
 import { ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewService/zh-cn';
 import { ReviewStatus } from '@aomi/common-service/ReviewService/ReviewStatus';
 import { Review } from '@aomi/common-service/ReviewService/Review';
-import { navigationServices } from '@aomi/mobx-history';
+import { navigationServices } from '@aomi/react-router/Navigation';
 import { ProCardTabPaneProps } from '@ant-design/pro-card/es/type';
 import { ModalForm } from '@ant-design/pro-form';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory';
 import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
 import { defaultFields } from '../ReviewContainer/ReviewContainer';
+import { withRouter } from '@aomi/react-router/withRouter';
 
 export type TabPaneProps<T> = {
   tabPaneProps: ProCardTabPaneProps

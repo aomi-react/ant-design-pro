@@ -7,7 +7,7 @@ import { BaseService } from '@aomi/common-service/BaseService';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 import { Button, ButtonProps, FormInstance, Modal, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { navigationServices } from '@aomi/mobx-history';
+import { navigationServices } from '@aomi/react-router/Navigation';
 import { TableRowSelection } from '@ant-design/pro-table/es/typing';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { Stats } from './Stats';
