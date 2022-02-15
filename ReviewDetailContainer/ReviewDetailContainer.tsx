@@ -174,7 +174,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   useEffect(() => {
     if (!reviewData) {
       console.warn('没有发现详情数据.自动返回上一页');
-      navigationServices.goBack();
+      navigationServices.back();
     }
   }, []);
 
@@ -237,7 +237,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   const tabPanes: Array<TabPaneProps<any>> = getTabPaneProps(review);
 
   return (
-    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} onBack={navigationServices.goBack} {...container} >
+    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} onBack={navigationServices.back} {...container} >
       <ProCard tabs={newTabs}>
         {tabPanes.map(({ tabPaneProps, descriptionsProps, columnGroups }, idx) => (
           <ProCard.TabPane {...tabPaneProps}>
