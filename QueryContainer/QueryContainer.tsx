@@ -115,10 +115,7 @@ function handleDetail(state, onDetail, detailUri) {
 
 function handleAdd(state, onAdd, addUri) {
   if (addUri) {
-    navigationServices.push({
-      pathname: addUri,
-      params: state
-    }, { state });
+    navigationServices.push(addUri, { state });
     return;
   }
   onAdd && onAdd(state);
@@ -126,10 +123,7 @@ function handleAdd(state, onAdd, addUri) {
 
 function handleEdit(state, onEdit, editUri) {
   if (editUri) {
-    navigationServices.push({
-      pathname: editUri,
-      params: state
-    }, { state });
+    navigationServices.push(editUri, { state });
     return;
   }
   onEdit && onEdit(state);
