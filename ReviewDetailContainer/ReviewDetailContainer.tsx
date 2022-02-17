@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
+import { useLocation } from 'react-router-dom';
 
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
@@ -21,7 +22,6 @@ import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory';
 import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
 import { defaultFields } from '../ReviewContainer/ReviewContainer';
-import { withRouter } from '@aomi/react-router/withRouter';
 
 export type TabPaneProps<T> = {
   tabPaneProps: ProCardTabPaneProps
@@ -72,8 +72,6 @@ export type ReviewDetailContainerProps<T> = {
    * @param reviewHistory
    */
   onReview?: (reviewHistory: ReviewHistory & { id: string }) => Promise<void>
-
-  location?: Location
 
   review?: Review<T>
 
@@ -139,7 +137,7 @@ function renderHeader<T>({ describe, histories, reviewProcess, result, status }:
 /**
  * 审核详情页面
  */
-export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = observer(withRouter(function ReviewDetailContainer(inProps) {
+export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = observer(function ReviewDetailContainer(inProps) {
   const {
     container,
 
@@ -153,22 +151,23 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
     authorities,
     fromQueryContainer = true,
 
-    location = {},
     children,
     getReviewFieldGroups
   } = inProps;
 
   const [tabActiveKey, setTabActiveKey] = useState(initTabActiveKey);
   const [visible, setVisible] = useState(false);
-  const [result, setResult] = useState('');
+  const [result, setResult] = useState<ReviewResult>(ReviewResult.REJECTED);
 
   let reviewData: Review<any>;
 
+  const location = useLocation();
+
   if (fromQueryContainer) {
-    const { selectedRows = [] } = location.params || {};
+    const { selectedRows = [] }: any = location.state || {};
     reviewData = selectedRows[0];
   } else {
-    reviewData = review;
+    reviewData = review as any;
   }
 
   useEffect(() => {
@@ -191,7 +190,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
         await onReview({
           ...formData,
           id,
-          result,
+          result
         });
       } catch (e) {
         console.info('审核出现异常', e);
@@ -231,15 +230,15 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
     tabPosition: 'top',
     ...tabs,
     activeKey: tabActiveKey,
-    onChange: setTabActiveKey,
+    onChange: setTabActiveKey
   };
 
-  const tabPanes: Array<TabPaneProps<any>> = getTabPaneProps(review);
+  const tabPanes: Array<TabPaneProps<any>> = getTabPaneProps(reviewData);
 
   return (
     <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} onBack={navigationServices.back} {...container} >
       <ProCard tabs={newTabs}>
-        {tabPanes.map(({ tabPaneProps, descriptionsProps, columnGroups }, idx) => (
+        {tabPanes?.map(({ tabPaneProps, descriptionsProps, columnGroups }, idx) => (
           <ProCard.TabPane {...tabPaneProps}>
             <Row gutter={30}>
               <Col span={12}>
@@ -263,12 +262,12 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
                  title={`执行审核 - ${ReviewResultText[result]}`}
 
                  modalProps={{
-                   onCancel: () => setVisible(false),
+                   onCancel: () => setVisible(false)
                  }}
                  onFinish={handleReview}
                  submitter={{
                    searchConfig: {
-                     submitText: ReviewResultText[result],
+                     submitText: ReviewResultText[result]
                    }
                  }}
       >
@@ -276,4 +275,4 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
       </ModalForm>
     </PageContainer>
   );
-}));
+});

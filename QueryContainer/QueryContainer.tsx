@@ -104,9 +104,8 @@ export interface QueryContainerProps<T, U extends ParamsType> {
 
 function handleDetail(state, onDetail, detailUri) {
   if (detailUri) {
-    navigationServices.push({
-      pathname: detailUri,
-      params: state
+    navigationServices.push(detailUri, {
+      state
     });
     return;
   }
