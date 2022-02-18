@@ -7,11 +7,11 @@ import { BaseService } from '@aomi/common-service/BaseService';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 import { Button, ButtonProps, FormInstance, Modal, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { navigationServices } from '@aomi/react-router/Navigation';
 import { TableRowSelection } from '@ant-design/pro-table/es/typing';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { Stats } from './Stats';
 import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
+import { navigationServices } from '@aomi/mobx-history';
 
 export interface QueryContainerState<T> {
   selectedRowKeys: Array<string>;
@@ -104,8 +104,9 @@ export interface QueryContainerProps<T, U extends ParamsType> {
 
 function handleDetail(state, onDetail, detailUri) {
   if (detailUri) {
-    navigationServices.push(detailUri, {
-      state
+    navigationServices.push({
+      pathname: detailUri,
+      params: state
     });
     return;
   }
@@ -114,7 +115,10 @@ function handleDetail(state, onDetail, detailUri) {
 
 function handleAdd(state, onAdd, addUri) {
   if (addUri) {
-    navigationServices.push(addUri, { state });
+    navigationServices.push({
+      pathname: addUri,
+      params: state
+    });
     return;
   }
   onAdd && onAdd(state);
@@ -122,7 +126,10 @@ function handleAdd(state, onAdd, addUri) {
 
 function handleEdit(state, onEdit, editUri) {
   if (editUri) {
-    navigationServices.push(editUri, { state });
+    navigationServices.push({
+      pathname: editUri,
+      params: state
+    });
     return;
   }
   onEdit && onEdit(state);
@@ -355,7 +362,7 @@ export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(
 
     return (
       <PageContainer style={{ whiteSpace: 'nowrap' }}
-                     onBack={navigationServices.back}
+                     onBack={navigationServices.goBack}
                      {...container}
       >
         <ProTable rowKey="id"
