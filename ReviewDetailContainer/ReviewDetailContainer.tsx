@@ -15,13 +15,13 @@ import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
 import { ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewService/zh-cn';
 import { ReviewStatus } from '@aomi/common-service/ReviewService/ReviewStatus';
 import { Review } from '@aomi/common-service/ReviewService/Review';
-import { navigationServices } from '@aomi/react-router/Navigation';
 import { ProCardTabPaneProps } from '@ant-design/pro-card/es/type';
 import { ModalForm } from '@ant-design/pro-form';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory';
 import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
 import { defaultFields } from '../ReviewContainer/ReviewContainer';
+import { navigationServices } from '@aomi/mobx-history';
 
 export type TabPaneProps<T> = {
   tabPaneProps: ProCardTabPaneProps
@@ -173,7 +173,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   useEffect(() => {
     if (!reviewData) {
       console.warn('没有发现详情数据.自动返回上一页');
-      navigationServices.back();
+      navigationServices.goBack();
     }
   }, []);
 
@@ -236,7 +236,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   const tabPanes: Array<TabPaneProps<any>> = getTabPaneProps(reviewData);
 
   return (
-    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} onBack={navigationServices.back} {...container} >
+    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} onBack={navigationServices.goBack} {...container} >
       <ProCard tabs={newTabs}>
         {tabPanes?.map(({ tabPaneProps, descriptionsProps, columnGroups }, idx) => (
           <ProCard.TabPane {...tabPaneProps}>
