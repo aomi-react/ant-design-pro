@@ -281,7 +281,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     children
   } = inProps;
 
-  const { pathname = '', state: params = undefined } = (location as any) || {};
+  const { pathname = '', params = undefined } = (location as any) || {};
 
   const pageOptions = {
     created: pathname.endsWith('create'),
