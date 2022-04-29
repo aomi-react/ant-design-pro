@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { Progress } from 'antd';
 import { ModalForm } from '@ant-design/pro-form';
 import { ProColumns } from '@ant-design/pro-table/lib/typing';
@@ -59,7 +59,7 @@ const COMMON_COLUMNS: Array<ProColumns> = [
   {
     title: '审核状态',
     dataIndex: 'status',
-    valueEnum: ReviewStatusText,
+    valueEnum: ReviewStatusText
   },
   {
     title: '审核进度',
@@ -106,39 +106,39 @@ const COMMON_COLUMNS: Array<ProColumns> = [
 
       return result;
     },
-    search: false,
+    search: false
   },
   {
     title: '审核结果',
     dataIndex: 'result',
-    valueEnum: ReviewResultText,
+    valueEnum: ReviewResultText
   },
   {
     title: '审核结果说明',
     dataIndex: 'resultDescribe',
-    search: false,
+    search: false
   },
   {
     title: '创建时间',
     dataIndex: 'createAt',
     valueType: 'dateTime',
-    search: false,
+    search: false
   },
   {
     title: '创建时间',
     dataIndex: 'createAtRange',
     valueType: 'dateRange',
     hideInTable: true
-  },
+  }
 ];
 
 export const defaultFields = [{
   label: '审核结果说明',
   name: 'resultDescribe',
-  required: true,
+  required: true
 }];
 
-export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = function ReviewContainer(props) {
+export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = function ReviewContainer(props: PropsWithChildren<ReviewContainerProps<any, any>>) {
   const {
     reviewAuthorities, reviewTitle = '', onReview, columns = [],
     getColumns,
@@ -156,7 +156,7 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
 
   const table = {
     ...argsTable,
-    columns: getColumns ? getColumns(COMMON_COLUMNS) : columns.concat(COMMON_COLUMNS),
+    columns: getColumns ? getColumns(COMMON_COLUMNS) : columns.concat(COMMON_COLUMNS)
   };
 
   function getActionButtonProps({ selectedRows }): Array<ActionButtonProps> {
@@ -184,7 +184,7 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
             review
           });
         },
-        authorities: reviewAuthorities,
+        authorities: reviewAuthorities
       },
       {
         children: '拒绝',
@@ -199,8 +199,8 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
             review
           });
         },
-        authorities: reviewAuthorities,
-      },
+        authorities: reviewAuthorities
+      }
     ];
   }
 
@@ -212,7 +212,7 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
     if (onReview) {
       await onReview({
         ...formData,
-        ...state,
+        ...state
       });
     }
     setState({ visible: false, id: '', result: ReviewResult.REJECTED, review: null });
@@ -224,15 +224,15 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
         visible={state.visible}
         title={`${reviewTitle ? `${reviewTitle} -` : ''}${ReviewResultText[state.result]}`}
         modalProps={{
-          onCancel: handleCancel,
+          onCancel: handleCancel
         }}
         onFinish={handleOk}
         submitter={{
           searchConfig: {
             resetText: '取消',
-            submitText: ReviewResultText[state.result],
+            submitText: ReviewResultText[state.result]
           },
-          submitButtonProps: {},
+          submitButtonProps: {}
         }}>
         {getReviewFieldGroups ? (getReviewFieldGroups(state.review as any, state.result, defaultFields) || []).map((group, index) => renderFieldGroup(group, index)) : defaultFields.map((field, index) => renderField(field, index))}
       </ModalForm>

@@ -227,7 +227,7 @@ function getActionButtons({
   );
 }
 
-export const QueryContainer: React.FC<QueryContainerProps<any, any>> = observer(forwardRef<any, React.PropsWithChildren<QueryContainerProps<any, any>>>(function QueryContainer(inProps, ref) {
+export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProps<any, any>>> = observer(forwardRef<any, React.PropsWithChildren<QueryContainerProps<any, any>>>(function QueryContainer(inProps, ref) {
     const {
       onDetail, detailUri,
       onAdd, addUri, addAuthorities,

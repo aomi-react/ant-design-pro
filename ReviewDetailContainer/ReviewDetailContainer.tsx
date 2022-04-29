@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { useLocation } from 'react-router-dom';
 
@@ -137,7 +137,7 @@ function renderHeader<T>({ describe, histories, reviewProcess, result, status }:
 /**
  * 审核详情页面
  */
-export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = observer(function ReviewDetailContainer(inProps) {
+export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = observer(function ReviewDetailContainer(inProps: PropsWithChildren<ReviewDetailContainerProps<any>>) {
   const {
     container,
 
