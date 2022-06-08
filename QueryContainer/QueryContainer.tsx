@@ -5,21 +5,27 @@ import ProTable, { ProTableProps } from '@ant-design/pro-table';
 import { ParamsType } from '@ant-design/pro-provider';
 import { BaseService } from '@aomi/common-service/BaseService';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
-import { Button, ButtonProps, FormInstance, Modal, TablePaginationConfig } from 'antd';
+import { Button, ButtonProps, FormInstance, Modal, Popconfirm, PopconfirmProps, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { TableRowSelection } from '@ant-design/pro-table/es/typing';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { Stats } from './Stats';
 import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
 import { navigationServices } from '@aomi/mobx-history';
+import { RowSelectMethod } from 'antd/lib/table/interface';
 
 export interface QueryContainerState<T> {
   selectedRowKeys: Array<string>;
   selectedRows: Array<T>;
+  rowSelectMethod: RowSelectMethod
 }
 
 export type ActionButtonProps = ButtonProps & {
   authorities?: string | Array<string> | boolean
+  /**
+   * 气泡确认框参数
+   */
+  popconfirmProps?: PopconfirmProps
 }
 
 export interface QueryContainerProps<T, U extends ParamsType> {
@@ -151,11 +157,24 @@ function handleDel(state, onDel, service: BaseService<any>, setSelectedRows, set
   }
 }
 
+function renderActionButton({ authorities, popconfirmProps, onClick, ...item }, idx) {
+  if (popconfirmProps) {
+    return (
+      <Popconfirm {...popconfirmProps} onConfirm={onClick}>
+        <Button key={idx} {...item}/>
+      </Popconfirm>
+    );
+  }
+
+  return (<Button key={idx} {...item} onClick={onClick}/>);
+}
+
 function getActionButtons({
                             selectedRows,
                             setSelectedRows,
                             selectedRowKeys,
                             setSelectedRowKeys,
+                            rowSelectMethod,
                             onDetail, detailUri,
                             onAdd, addUri, addAuthorities,
                             onEdit, editUri, editAuthorities, editDisabled,
@@ -164,7 +183,7 @@ function getActionButtons({
                             renderActionButtons,
                             getActionButtonProps
                           }) {
-  const state = { selectedRows, selectedRowKeys };
+  const state = { selectedRows, selectedRowKeys, rowSelectMethod };
   const newActionButtons: Array<React.ReactNode> = [];
   if (renderActionButtons) {
     console.warn(`[Aomi React Pro Ant Design] renderActionButtons 方法已经过时,请使用 getActionButtonProps`);
@@ -213,6 +232,9 @@ function getActionButtons({
     danger: true,
     onClick: () => handleDel(state, onDel, service, setSelectedRows, setSelectedRowKeys),
     disabled: selectedRowKeys.length <= 0,
+    popconfirmProps: {
+      title: '您确定要删除该条数据吗?'
+    },
     children: (
       <>
         <DeleteOutlined/> {'删除'}
@@ -221,9 +243,7 @@ function getActionButtons({
   });
 
   return newActionButtons.concat(
-    buttonProps.filter(item => item.authorities ? hasAuthorities(item.authorities) : true).map(({ authorities, ...item }, idx) => (
-      <Button key={idx} {...item}/>
-    ))
+    buttonProps.filter(item => item.authorities ? hasAuthorities(item.authorities) : true).map(renderActionButton)
   );
 }
 
@@ -251,6 +271,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
 
     const [selectedRows, setSelectedRows] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [rowSelectMethod, setRowSelectMethod] = useState();
     const [detailModalProps, setDetailModalProps] = useState({ visible: false, record: {} });
 
     const form = useRef<FormInstance>();
@@ -314,12 +335,13 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
     };
 
 
-    function handleRowSelected(selectedRowKeys, selectedRows) {
+    function handleRowSelected(selectedRowKeys, selectedRows, info) {
       setSelectedRows(selectedRows);
       setSelectedRowKeys(selectedRowKeys);
+      setRowSelectMethod(info.type);
 
       if (rowSelection && rowSelection.onChange) {
-        rowSelection.onChange(selectedRows, selectedRows);
+        rowSelection.onChange(selectedRows, selectedRows, info);
       }
     }
 
@@ -384,7 +406,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
                   rowSelection={newRowSelection}
                   toolbar={{
                     actions: getActionButtons({
-                      selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys,
+                      selectedRows, setSelectedRows, selectedRowKeys, setSelectedRowKeys, rowSelectMethod,
                       onDetail, detailUri,
                       onAdd, addUri, addAuthorities,
                       onEdit, editUri, editAuthorities, editDisabled,
