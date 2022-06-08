@@ -61,7 +61,7 @@ export type Field = {
   /**
    * form list props 当 subFieldGroups 存在时有效
    */
-  formListProps?: Omit<ProFormListProps, 'name' | 'children'>
+  formListProps?: Omit<ProFormListProps<any>, 'name' | 'children'>
   /**
    * 编辑时禁用
    */
