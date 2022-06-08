@@ -271,7 +271,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
 
     const [selectedRows, setSelectedRows] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-    const [rowSelectMethod, setRowSelectMethod] = useState();
+    const [rowSelectMethod, setRowSelectMethod] = useState<RowSelectMethod>();
     const [detailModalProps, setDetailModalProps] = useState({ visible: false, record: {} });
 
     const form = useRef<FormInstance>();
@@ -335,7 +335,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
     };
 
 
-    function handleRowSelected(selectedRowKeys, selectedRows, info) {
+    function handleRowSelected(selectedRowKeys, selectedRows, info: { type: RowSelectMethod }) {
       setSelectedRows(selectedRows);
       setSelectedRowKeys(selectedRowKeys);
       setRowSelectMethod(info.type);
