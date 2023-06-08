@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Field } from '../PersistContainer';
+import { Field } from '../PersistContainer/index';
 import {
   ProFormCaptcha,
   ProFormCheckbox,
@@ -19,12 +19,12 @@ import {
   ProFormUploadButton,
   ProFormUploadDragger
 } from '@ant-design/pro-form';
-import { ProFormAutoComplete } from './ProFormAutoComplete';
+import { ProFormAutoComplete } from './ProFormAutoComplete/index';
 import { createProFormField } from './createProFormField';
-import { ProFormCascader } from './ProFormCascader';
-import { ProFormInputFeeRate } from './ProFormInputFeeRate';
-import { ProFormTransfer } from './ProFormTransfer';
-import { ProFormInputNumber } from './ProFormInputNumber';
+import { ProFormCascader } from './ProFormCascader/index';
+import { ProFormInputFeeRate } from './ProFormInputFeeRate/index';
+import { ProFormTransfer } from './ProFormTransfer/index';
+import { ProFormInputNumber } from './ProFormInputNumber/index';
 
 export function renderText(props) {
   return (

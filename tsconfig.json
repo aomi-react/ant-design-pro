@@ -15,8 +15,13 @@
       "dom",
       "es2018"
     ],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "outDir": "es"
   },
+  "include": [
+    "src"
+  ],
   "exclude": [
     "node_modules",
     "build",

@@ -1,13 +1,18 @@
 {
   "name": "@aomi/react-pro-ant-design",
   "version": "2.0.0-Alpha.0",
-  "main": "index.js",
   "repository": "git@github.com:aomi-web/react-pro-ant-design.git",
   "author": "sean <sean.snow@live.com>",
   "license": "MIT",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "files": [
+    "lib",
+    "es"
+  ],
   "scripts": {
     "clean": "find . -path \"./node_modules\" -prune -o -name \"*.js\" -o -name \"*.js.map\" -o -name \"*.d.ts\" |xargs rm -f | echo ''",
-    "build": "tsc -d",
+    "build": "tsc -d && tsc --project tsconfig.cjs.json",
     "watch": "tsc -d && tsc -w",
     "prepublishOnly": "yarn build"
   },

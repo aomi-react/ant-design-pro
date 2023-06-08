@@ -5,9 +5,9 @@ import { ProColumns } from '@ant-design/pro-table/lib/typing';
 
 import { ResourceReviewStatusText, ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewService/zh-cn';
 
-import { ActionButtonProps, QueryContainer, QueryContainerProps } from '../QueryContainer';
+import { ActionButtonProps, QueryContainer, QueryContainerProps } from '../QueryContainer/index';
 import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
-import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
+import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer/index';
 import { Review } from '@aomi/common-service/ReviewService/Review';
 import { ReviewStatus } from '@aomi/common-service/ReviewService/ReviewStatus';
 import {ParamsType} from "@ant-design/pro-provider";

@@ -18,7 +18,7 @@ import { ProCardTabPaneProps } from "@ant-design/pro-card/es/typing";
 import { ModalForm } from '@ant-design/pro-form';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory';
-import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
+import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer/index';
 import { defaultFields } from '../ReviewContainer/ReviewContainer';
 import {AntDesignProContext} from "../provider";
 
