@@ -1,6 +1,5 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
 import { observer } from 'mobx-react';
-import { useLocation } from 'react-router-dom';
 
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
@@ -15,13 +14,13 @@ import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
 import { ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewService/zh-cn';
 import { ReviewStatus } from '@aomi/common-service/ReviewService/ReviewStatus';
 import { Review } from '@aomi/common-service/ReviewService/Review';
-import { ProCardTabPaneProps } from '@ant-design/pro-card/es/type';
+import { ProCardTabPaneProps } from "@ant-design/pro-card/es/typing";
 import { ModalForm } from '@ant-design/pro-form';
 import { hasAuthorities } from '@aomi/utils/hasAuthorities';
 import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory';
 import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
 import { defaultFields } from '../ReviewContainer/ReviewContainer';
-import { navigationServices } from '@aomi/mobx-history';
+import {AntDesignProContext} from "../provider";
 
 export type TabPaneProps<T> = {
   tabPaneProps: ProCardTabPaneProps
@@ -138,6 +137,9 @@ function renderHeader<T>({ describe, histories, reviewProcess, result, status }:
  * 审核详情页面
  */
 export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = observer(function ReviewDetailContainer(inProps: PropsWithChildren<ReviewDetailContainerProps<any>>) {
+
+  const context = useContext(AntDesignProContext);
+
   const {
     container,
 
@@ -161,10 +163,10 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
 
   let reviewData: Review<any>;
 
-  const location = useLocation();
+  const location = context?.location;
 
   if (fromQueryContainer) {
-    const { selectedRows = [] }: any = location.state || {};
+    const { selectedRows = [] }: any = location?.getParams() || {};
     reviewData = selectedRows[0];
   } else {
     reviewData = review as any;
@@ -173,7 +175,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   useEffect(() => {
     if (!reviewData) {
       console.warn('没有发现详情数据.自动返回上一页');
-      navigationServices.goBack();
+      context?.location.goBack()
     }
   }, []);
 
@@ -236,7 +238,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   const tabPanes: Array<TabPaneProps<any>> = getTabPaneProps(reviewData);
 
   return (
-    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} onBack={navigationServices.goBack} {...container} >
+    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} onBack={context?.location.goBack} {...container} >
       <ProCard tabs={newTabs}>
         {tabPanes?.map(({ tabPaneProps, descriptionsProps, columnGroups }, idx) => (
           <ProCard.TabPane {...tabPaneProps}>

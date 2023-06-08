@@ -1,9 +1,7 @@
-import React, { PropsWithChildren, useEffect } from 'react';
+import React, {PropsWithChildren, useContext, useEffect} from 'react';
 import { observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
 import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
 import ProForm, { ProFormDependency, ProFormItemProps, ProFormList, ProFormListProps, ProFormProps, StepFormProps, StepsForm, StepsFormProps } from '@ant-design/pro-form';
-import { GroupProps } from '@ant-design/pro-form/es/interface';
 import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
 import ProCard, { ProCardProps } from '@ant-design/pro-card';
 
@@ -11,7 +9,8 @@ import { renderFormItem } from '../Form/renderFormItem';
 import { Rule } from 'rc-field-form/lib/interface';
 import { ObjectUtils } from '@aomi/utils/ObjectUtils';
 import { FormInstance } from 'antd';
-import { navigationServices } from '@aomi/mobx-history';
+import {GroupProps} from "@ant-design/pro-form/es/typing";
+import {AntDesignProContext} from "../provider";
 
 export type FieldType = 'text'
   | 'password'
@@ -256,7 +255,11 @@ export function renderFieldGroup({ fields, ...props }, index, pageOptions: PageO
 /**
  * 新增、编辑页面
  */
-export const PersistContainer: React.FC<PersistContainerProps> = observer(withRouter(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
+export const PersistContainer: React.FC<PersistContainerProps> = observer(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
+
+  const context = useContext(AntDesignProContext);
+
+
   const {
 
     createTitle,
@@ -276,12 +279,13 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
     onFinish,
     getInitialValues,
 
-    location,
-
     children
   } = inProps;
 
-  const { pathname = '', params = undefined } = (location as any) || {};
+  // const { pathname = '', params = undefined } = (context.location as any) || {};
+
+  const params = context?.location?.getParams()
+  const pathname = context?.location.getPathname() ?? ''
 
   const pageOptions = {
     created: pathname.endsWith('create'),
@@ -291,7 +295,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
   useEffect(() => {
     if (pageOptions.updated && !params) {
       console.warn('进入更新页面,但是没有发现需要编辑的数据.自动返回上一页');
-      navigationServices.goBack();
+      context?.location.goBack()
     }
   }, []);
 
@@ -319,7 +323,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
   const subtitle = pageOptions.created ? createSubTitle : editSubTitle;
 
   return (
-    <PageContainer title={title} subTitle={subtitle} onBack={navigationServices.goBack} {...container}>
+    <PageContainer title={title} subTitle={subtitle} onBack={context?.location.goBack} {...container}>
       <ProCard bordered={false} {...card}>
         {formType === FormType.DEFAULT && (
           <ProForm {...formProps} onFinish={handleFinish} initialValues={initialValues}>
@@ -339,4 +343,4 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(withRo
       {children}
     </PageContainer>
   );
-}));
+});

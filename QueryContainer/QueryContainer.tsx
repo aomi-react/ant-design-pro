@@ -1,18 +1,19 @@
-import React, { forwardRef, ReactElement, useRef, useState } from 'react';
-import { observer } from 'mobx-react';
-import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
-import ProTable, { ProTableProps } from '@ant-design/pro-table';
-import { ParamsType } from '@ant-design/pro-provider';
-import { BaseService } from '@aomi/common-service/BaseService';
-import { ObjectUtils } from '@aomi/utils/ObjectUtils';
-import { Button, ButtonProps, FormInstance, Modal, Popconfirm, PopconfirmProps, TablePaginationConfig } from 'antd';
-import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { TableRowSelection } from '@ant-design/pro-table/es/typing';
-import { hasAuthorities } from '@aomi/utils/hasAuthorities';
-import { Stats } from './Stats';
-import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
-import { navigationServices } from '@aomi/mobx-history';
-import { RowSelectMethod } from 'antd/lib/table/interface';
+import React, {forwardRef, useContext, useRef, useState} from 'react';
+import {observer} from 'mobx-react';
+import {PageContainer, PageContainerProps} from '@ant-design/pro-layout';
+import ProTable, {ProTableProps} from '@ant-design/pro-table';
+import {ParamsType} from '@ant-design/pro-provider';
+import {BaseService} from '@aomi/common-service/BaseService';
+import {ObjectUtils} from '@aomi/utils/ObjectUtils';
+import {Button, ButtonProps, FormInstance, Modal, Popconfirm, PopconfirmProps, TablePaginationConfig} from 'antd';
+import {DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {TableRowSelection} from '@ant-design/pro-table/es/typing';
+import {hasAuthorities} from '@aomi/utils/hasAuthorities';
+import {Stats} from './Stats';
+import ProDescriptions, {ProDescriptionsProps} from '@ant-design/pro-descriptions';
+// import { navigationServices } from '@aomi/mobx-history';
+import {RowSelectMethod} from 'antd/lib/table/interface';
+import {AntDesignProContext, Location} from "../provider";
 
 export interface QueryContainerState<T> {
   selectedRowKeys: Array<string>;
@@ -85,13 +86,6 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   detailProps?: Array<ProDescriptionsProps> | ((record) => Array<ProDescriptionsProps>);
 
   /**
-   * 渲染动作组按钮
-   * 组件当前State值
-   * @param state
-   * @deprecated 请使用{@link getActionButtonProps}
-   */
-  renderActionButtons?: (state: QueryContainerState<T>) => Array<ReactElement>;
-  /**
    * 获取按钮组件的props
    * @param state 页面状态参数
    */
@@ -108,9 +102,9 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   statsProps?: ProDescriptionsProps;
 }
 
-function handleDetail(state, onDetail, detailUri) {
+function handleDetail(location: Location, state, onDetail, detailUri) {
   if (detailUri) {
-    navigationServices.push({
+    location.navigate({
       pathname: detailUri,
       params: state
     });
@@ -119,9 +113,9 @@ function handleDetail(state, onDetail, detailUri) {
   onDetail && onDetail(state);
 }
 
-function handleAdd(state, onAdd, addUri) {
+function handleAdd(location: Location, state, onAdd, addUri) {
   if (addUri) {
-    navigationServices.push({
+    location.navigate({
       pathname: addUri,
       params: state
     });
@@ -130,9 +124,9 @@ function handleAdd(state, onAdd, addUri) {
   onAdd && onAdd(state);
 }
 
-function handleEdit(state, onEdit, editUri) {
+function handleEdit(location: Location, state, onEdit, editUri) {
   if (editUri) {
-    navigationServices.push({
+    location.navigate({
       pathname: editUri,
       params: state
     });
@@ -142,7 +136,7 @@ function handleEdit(state, onEdit, editUri) {
 }
 
 function handleDel(state, onDel, service: BaseService<any>, setSelectedRows, setSelectedRowKeys) {
-  const { selectedRowKeys } = state;
+  const {selectedRowKeys} = state;
   const keys = selectedRowKeys.length === 1 ? selectedRowKeys[0] : selectedRowKeys;
 
   function handleResetRowKeys() {
@@ -153,11 +147,11 @@ function handleDel(state, onDel, service: BaseService<any>, setSelectedRows, set
   if (onDel) {
     onDel(keys, state, handleResetRowKeys);
   } else if (service) {
-    service.del(keys, { state, resetSelectedRows: handleResetRowKeys });
+    service.del(keys, {state, resetSelectedRows: handleResetRowKeys});
   }
 }
 
-function renderActionButton({ authorities, popconfirmProps, onClick, ...item }, idx) {
+function renderActionButton({authorities, popconfirmProps, onClick, ...item}, idx) {
   if (popconfirmProps) {
     return (
       <Popconfirm {...popconfirmProps} onConfirm={onClick}>
@@ -180,15 +174,10 @@ function getActionButtons({
                             onEdit, editUri, editAuthorities, editDisabled,
                             onDel, delAuthorities,
                             service,
-                            renderActionButtons,
-                            getActionButtonProps
+                            getActionButtonProps,
+                            location
                           }) {
-  const state = { selectedRows, selectedRowKeys, rowSelectMethod };
-  const newActionButtons: Array<React.ReactNode> = [];
-  if (renderActionButtons) {
-    console.warn(`[Aomi React Pro Ant Design] renderActionButtons 方法已经过时,请使用 getActionButtonProps`);
-    newActionButtons.push(...renderActionButtons(state));
-  }
+  const state = {selectedRows, selectedRowKeys, rowSelectMethod};
 
   const buttonProps: Array<ActionButtonProps> = [];
   getActionButtonProps && buttonProps.push(...getActionButtonProps(state));
@@ -196,7 +185,7 @@ function getActionButtons({
   (onDetail || detailUri) && buttonProps.push({
     type: 'primary',
     disabled: selectedRowKeys.length !== 1,
-    onClick: () => handleDetail(state, onDetail, detailUri),
+    onClick: () => handleDetail(location, state, onDetail, detailUri),
     children: (
       <>
         <InfoCircleOutlined/> {'详情'}
@@ -207,7 +196,7 @@ function getActionButtons({
   (onAdd || addUri) && buttonProps.push({
     authorities: addAuthorities,
     type: 'primary',
-    onClick: () => handleAdd(state, onAdd, addUri),
+    onClick: () => handleAdd(location, state, onAdd, addUri),
     children: (
       <>
         <PlusOutlined/> {'新增'}
@@ -219,7 +208,7 @@ function getActionButtons({
     authorities: editAuthorities,
     disabled: editDisabled ? editDisabled(state) : selectedRowKeys.length !== 1,
     type: 'primary',
-    onClick: () => handleEdit(state, onEdit, editUri),
+    onClick: () => handleEdit(location, state, onEdit, editUri),
     children: (
       <>
         <EditOutlined/> {'编辑'}
@@ -242,9 +231,7 @@ function getActionButtons({
     )
   });
 
-  return newActionButtons.concat(
-    buttonProps.filter(item => item.authorities ? hasAuthorities(item.authorities) : true).map(renderActionButton)
-  );
+  return buttonProps.filter(item => item.authorities ? hasAuthorities(item.authorities) : true).map(renderActionButton)
 }
 
 export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProps<any, any>>> = observer(forwardRef<any, React.PropsWithChildren<QueryContainerProps<any, any>>>(function QueryContainer(inProps, ref) {
@@ -253,7 +240,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
       onAdd, addUri, addAuthorities,
       onEdit, editUri, editAuthorities, editDisabled,
       onDel, delAuthorities,
-      renderActionButtons, getActionButtonProps,
+      getActionButtonProps,
 
 
       container,
@@ -269,16 +256,18 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
       children
     } = inProps;
 
+    const context = useContext(AntDesignProContext);
+
     const [selectedRows, setSelectedRows] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [rowSelectMethod, setRowSelectMethod] = useState<RowSelectMethod>();
-    const [detailModalProps, setDetailModalProps] = useState({ visible: false, record: {} });
+    const [detailModalProps, setDetailModalProps] = useState({visible: false, record: {}});
 
     const form = useRef<FormInstance>();
 
-    const { loading, page } = service || {};
+    const {loading, page} = service || {};
 
-    const { rowSelection, pagination, search = {}, options, toolbar, columns = [], ...other } = table || {};
+    const {rowSelection, pagination, search = {}, options, toolbar, columns = [], ...other} = table || {};
 
     const newRowSelection: TableRowSelection = {
       type: 'radio',
@@ -318,14 +307,15 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
         render: (text, record, _) => [
           <a
             key="detail"
-            onClick={() => setDetailModalProps({ visible: true, record })}>
+            onClick={() => setDetailModalProps({visible: true, record})}>
             {'详情'}
           </a>
         ]
       }];
     }
     if (showStats) {
-      tableProps.tableExtraRender = () => <Stats dataSource={{ ...page, ...(page as any)?.value }} columns={statsColumns} {...statsProps}/>;
+      tableProps.tableExtraRender = () => <Stats dataSource={{...page, ...(page as any)?.value}}
+                                                 columns={statsColumns} {...statsProps}/>;
     }
 
     // search
@@ -355,7 +345,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
           page: params.current - 1,
           size: params.pageSize
         });
-        const { page } = service;
+        const {page} = service;
         return {
           data: page.content,
           success: true,
@@ -373,7 +363,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
 
     async function handleReset() {
       const value = form.current?.getFieldsValue();
-      await handleSearch({ pageSize: newPagination.defaultPageSize, current: newPagination.defaultCurrent, ...value });
+      await handleSearch({pageSize: newPagination.defaultPageSize, current: newPagination.defaultCurrent, ...value});
     }
 
     async function handleReload() {
@@ -383,8 +373,8 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
     }
 
     return (
-      <PageContainer style={{ whiteSpace: 'nowrap' }}
-                     onBack={navigationServices.goBack}
+      <PageContainer style={{whiteSpace: 'nowrap'}}
+                     onBack={context?.location.goBack}
                      {...container}
       >
         <ProTable rowKey="id"
@@ -401,7 +391,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
                   request={handleSearch}
                   onReset={handleReset}
                   pagination={newPagination}
-                  options={{ fullScreen: true, reload: handleReload, ...options }}
+                  options={{fullScreen: true, reload: handleReload, ...options}}
                   search={newSearch}
                   rowSelection={newRowSelection}
                   toolbar={{
@@ -412,14 +402,14 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
                       onEdit, editUri, editAuthorities, editDisabled,
                       onDel, delAuthorities,
                       service,
-                      renderActionButtons,
-                      getActionButtonProps
+                      getActionButtonProps,
+                      location: context?.location
                     }),
                     ...toolbar
                   }}
                   {...tableProps}
         />
-        <Modal visible={detailModalProps.visible} onCancel={() => setDetailModalProps({ visible: false, record: {} })}
+        <Modal open={detailModalProps.visible} onCancel={() => setDetailModalProps({visible: false, record: {}})}
                width="80%"
         >
           {(typeof detailProps === 'function' ? detailProps(detailModalProps.record) : detailProps)?.map((item, index) => (

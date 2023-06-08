@@ -10,8 +10,9 @@ import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
 import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer';
 import { Review } from '@aomi/common-service/ReviewService/Review';
 import { ReviewStatus } from '@aomi/common-service/ReviewService/ReviewStatus';
+import {ParamsType} from "@ant-design/pro-provider";
 
-export type ReviewContainerProps<T, U> = {
+export type ReviewContainerProps<T, U extends ParamsType> = {
   /**
    * 审核标题
    */
