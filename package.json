@@ -1,6 +1,6 @@
 {
   "name": "@aomi/react-pro-ant-design",
-  "version": "2.0.0-Alpha.2",
+  "version": "2.0.0-Alpha.3",
   "repository": "git@github.com:aomi-web/react-pro-ant-design.git",
   "author": "sean <sean.snow@live.com>",
   "license": "MIT",
@@ -11,8 +11,9 @@
     "es"
   ],
   "scripts": {
-    "clean": "find . -path \"./node_modules\" -prune -o -name \"*.js\" -o -name \"*.js.map\" -o -name \"*.d.ts\" |xargs rm -f | echo ''",
-    "build": "tsc -d && tsc --project tsconfig.cjs.json",
+    "clean1": "find . -path \"./node_modules\" -prune -o -name \"*.js\" -o -name \"*.js.map\" -o -name \"*.d.ts\" |xargs rm -f | echo ''",
+    "clean": "rm -rf es lib",
+    "build": "rm -rf es lib && tsc -d && tsc --project tsconfig.cjs.json",
     "watch": "tsc -d && tsc -w",
     "prepublishOnly": "yarn build"
   },
