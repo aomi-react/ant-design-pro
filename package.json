@@ -7,6 +7,68 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "es/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./es/index.js",
+      "require": "./lib/index.js"
+    },
+    "./Form/ProFormAutoComplete": {
+      "import": "./es/Form/ProFormAutoComplete/index.js",
+      "require": "./lib/Form/ProFormAutoComplete/index.js"
+    },
+    "./Form/ProFormCascader": {
+      "import": "./es/Form/ProFormCascader/index.js",
+      "require": "./lib/Form/ProFormCascader/index.js"
+    },
+    "./Form/ProFormInputFeeRate": {
+      "import": "./es/Form/ProFormInputFeeRate/index.js",
+      "require": "./lib/Form/ProFormInputFeeRate/index.js"
+    },
+    "./Form/ProFormInputNumber": {
+      "import": "./es/Form/ProFormInputNumber/index.js",
+      "require": "./lib/Form/ProFormInputNumber/index.js"
+    },
+    "./Form/ProFormTransfer": {
+      "import": "./es/Form/ProFormTransfer/index.js",
+      "require": "./lib/Form/ProFormTransfer/index.js"
+    },
+    "./Form/ProFormTreeSelect": {
+      "import": "./es/Form/ProFormTreeSelect/index.js",
+      "require": "./lib/Form/ProFormTreeSelect/index.js"
+    },
+    "./Form/createProFormField": {
+      "import": "./es/Form/createProFormField.js",
+      "require": "./lib/Form/createProFormField.js"
+    },
+    "./Form/renderFormItem": {
+      "import": "./es/Form/renderFormItem.js",
+      "require": "./lib/Form/renderFormItem.js"
+    },
+    "./Form": {
+      "import": "./es/Form/index.js",
+      "require": "./lib/Form/index.js"
+    },
+    "./PersistContainer": {
+      "import": "./es/PersistContainer/index.js",
+      "require": "./lib/PersistContainer/index.js"
+    },
+    "./QueryContainer": {
+      "import": "./es/QueryContainer/index.js",
+      "require": "./lib/QueryContainer/index.js"
+    },
+    "./ReviewContainer": {
+      "import": "./es/ReviewContainer/index.js",
+      "require": "./lib/ReviewContainer/index.js"
+    },
+    "./ReviewDetailContainer": {
+      "import": "./es/ReviewDetailContainer/index.js",
+      "require": "./lib/ReviewDetailContainer/index.js"
+    },
+    "./provider": {
+      "import": "./es/provider.js",
+      "require": "./lib/provider.js"
+    }
+  },
   "files": [
     "lib",
     "es"
