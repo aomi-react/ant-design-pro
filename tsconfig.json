@@ -4,6 +4,7 @@
     "target": "esnext",
     "sourceMap": true,
     "jsx": "react",
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "strictNullChecks": true,
@@ -13,7 +14,8 @@
     "allowSyntheticDefaultImports": true,
     "lib": [
       "dom",
-      "es2018"
+      "es2018",
+      "es2021.intl"
     ],
     "skipLibCheck": true,
     "rootDir": "src",
@@ -27,8 +29,5 @@
     "build",
     "scripts",
     "jest",
-    "tools",
-    "webpack.config.js",
-    "postcss.config.js"
   ]
 }
