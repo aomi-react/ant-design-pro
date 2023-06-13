@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { Field } from '../PersistContainer/index';
+import React, {ReactNode} from 'react';
+import {Field} from '../PersistContainer';
 import {
   ProFormCaptcha,
   ProFormCheckbox,
@@ -7,7 +7,8 @@ import {
   ProFormDateRangePicker,
   ProFormDateTimePicker,
   ProFormDateTimeRangePicker,
-  ProFormDigit, ProFormMoney,
+  ProFormDigit,
+  ProFormMoney,
   ProFormRadio,
   ProFormRate,
   ProFormSelect,
@@ -19,12 +20,10 @@ import {
   ProFormUploadButton,
   ProFormUploadDragger
 } from '@ant-design/pro-form';
-import { ProFormAutoComplete } from './ProFormAutoComplete/index';
-import { createProFormField } from './createProFormField';
-import { ProFormCascader } from './ProFormCascader/index';
-import { ProFormInputFeeRate } from './ProFormInputFeeRate/index';
-import { ProFormTransfer } from './ProFormTransfer/index';
-import { ProFormInputNumber } from './ProFormInputNumber/index';
+import {ProFormAutoComplete} from './ProFormAutoComplete';
+import {createProFormField} from './createProFormField';
+import {ProFormCascader} from './ProFormCascader';
+import {ProFormTransfer} from './ProFormTransfer';
 
 export function renderText(props) {
   return (
@@ -133,7 +132,7 @@ export function renderUploadButton(props) {
  * @param options select option 支持对象，对象的key作为 option value，对象value作为option label
  * @param props
  */
-export function renderSelect({ fieldProps = {}, ...props }: any) {
+export function renderSelect({fieldProps = {}, ...props}: any) {
   const newFieldProps = {
     ...fieldProps
   };
@@ -155,7 +154,7 @@ export function renderMoney(props) {
   );
 }
 
-export function renderAutoComplete({ fieldProps = {}, ...props }: any) {
+export function renderAutoComplete({fieldProps = {}, ...props}: any) {
   const newFieldProps = {
     ...fieldProps
   };
@@ -165,7 +164,7 @@ export function renderAutoComplete({ fieldProps = {}, ...props }: any) {
   );
 }
 
-export function renderCascader({ fieldProps = {}, ...props }: any) {
+export function renderCascader({fieldProps = {}, ...props}: any) {
   const newFieldProps = {
     ...fieldProps
   };
@@ -175,15 +174,6 @@ export function renderCascader({ fieldProps = {}, ...props }: any) {
   );
 }
 
-export function renderFeeRate({ fieldProps = {}, ...props }: any) {
-  const newFieldProps = {
-    ...fieldProps
-  };
-
-  return (
-    <ProFormInputFeeRate {...props} fieldProps={newFieldProps}/>
-  );
-}
 
 export function renderTransfer(props) {
   return (
@@ -191,16 +181,10 @@ export function renderTransfer(props) {
   );
 }
 
-export function renderInputNumber(props) {
-  return (
-    <ProFormInputNumber {...props}/>
-  );
-}
-
-export function renderFormItem({ type = 'text', render, ...props }: Field) {
+export function renderFormItem({type = 'text', render, ...props}: Field) {
   let element: ReactNode = undefined;
   if (render) {
-    const ProFormCustom = createProFormField<any>({ render });
+    const ProFormCustom = createProFormField<any>({render});
     return (
       <ProFormCustom {...props}/>
     );
@@ -272,14 +256,8 @@ export function renderFormItem({ type = 'text', render, ...props }: Field) {
     case 'cascader':
       element = renderCascader(props);
       break;
-    case 'feeRate':
-      element = renderFeeRate(props);
-      break;
     case 'transfer':
       element = renderTransfer(props);
-      break;
-    case 'number':
-      element = renderInputNumber(props);
       break;
   }
   return element;
