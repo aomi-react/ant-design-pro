@@ -3,7 +3,7 @@ import ProField from '@ant-design/pro-field';
 import { ProFieldValueObjectType, ProFieldValueType } from '@ant-design/pro-utils';
 import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
 import { ProFormItemProps } from '@ant-design/pro-form';
-import { createField } from '@ant-design/pro-form/es/BaseForm';
+import { createField } from '@ant-design/pro-form/lib/BaseForm';
 
 
 export type Args = {
