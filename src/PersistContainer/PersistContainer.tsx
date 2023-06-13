@@ -1,16 +1,25 @@
 import React, {PropsWithChildren, useContext, useEffect} from 'react';
-import { observer } from 'mobx-react';
-import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
-import ProForm, { ProFormDependency, ProFormItemProps, ProFormList, ProFormListProps, ProFormProps, StepFormProps, StepsForm, StepsFormProps } from '@ant-design/pro-form';
-import { ProFieldFCRenderProps } from '@ant-design/pro-provider';
-import ProCard, { ProCardProps } from '@ant-design/pro-card';
+import {observer} from 'mobx-react';
+import {PageContainer, PageContainerProps} from '@ant-design/pro-layout';
+import ProForm, {
+  ProFormDependency,
+  ProFormItemProps,
+  ProFormList,
+  ProFormListProps,
+  ProFormProps,
+  StepFormProps,
+  StepsForm,
+  StepsFormProps,
+} from '@ant-design/pro-form';
+import {ProFieldFCRenderProps} from '@ant-design/pro-provider';
+import ProCard, {ProCardProps} from '@ant-design/pro-card';
 
-import { renderFormItem } from '../Form/renderFormItem';
-import { Rule } from 'rc-field-form/lib/interface';
-import { ObjectUtils } from '@aomi/utils/ObjectUtils';
-import { FormInstance } from 'antd';
-import {GroupProps} from "@ant-design/pro-form/es/typing";
+import {renderFormItem} from '../Form';
+import {Rule} from 'rc-field-form/lib/interface';
+import {ObjectUtils} from '@aomi/utils/ObjectUtils';
+import {FormInstance} from 'antd';
 import {AntDesignProContext} from "../provider";
+import {GroupProps} from "@ant-design/pro-form/es/typing";
 
 export type FieldType = 'text'
   | 'password'
@@ -37,8 +46,6 @@ export type FieldType = 'text'
   | 'autoComplete'
   | 'cascader'
   | 'transfer'
-  | 'feeRate'
-  | 'number'
 
 export type Field = {
   /**
@@ -184,8 +191,19 @@ export type PersistContainerProps = {
  * @param index 下标
  * @param pageOptions 页面参数
  */
-export function renderField(args: Field, index, pageOptions: PageOptions = { created: true, updated: false }) {
-  const { renderDependencyField, renderField: renderFieldComponent, subFieldGroups, dependencyName, formListProps, createHidden, editDisabled, whitespace = true, rules = [], ...field } = args;
+export function renderField(args: Field, index, pageOptions: PageOptions = {created: true, updated: false}) {
+  const {
+    renderDependencyField,
+    renderField: renderFieldComponent,
+    subFieldGroups,
+    dependencyName,
+    formListProps,
+    createHidden,
+    editDisabled,
+    whitespace = true,
+    rules = [],
+    ...field
+  } = args;
 
   if (createHidden && pageOptions.created) {
     return undefined;
@@ -193,7 +211,7 @@ export function renderField(args: Field, index, pageOptions: PageOptions = { cre
 
   const newRules: Rule[] = [...rules];
   if (field.required) {
-    newRules.push({ required: true, message: `${field.label} 是必填字段` });
+    newRules.push({required: true, message: `${field.label} 是必填字段`});
   }
   if (whitespace && ['text', 'textarea'].includes(field.type || '')) {
     newRules.push({
@@ -244,7 +262,10 @@ export function renderField(args: Field, index, pageOptions: PageOptions = { cre
  * @param index 组所有
  * @param pageOptions 页面选项
  */
-export function renderFieldGroup({ fields, ...props }, index, pageOptions: PageOptions = { created: true, updated: false }) {
+export function renderFieldGroup({fields, ...props}, index, pageOptions: PageOptions = {
+  created: true,
+  updated: false
+}) {
   return (
     <ProForm.Group size={16} {...props} key={index}>
       {fields.map((item, idx) => renderField(item, idx, pageOptions))}
@@ -332,7 +353,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(functi
         )}
         {formType === FormType.STEP && (
           <StepsForm {...formProps as StepsFormProps} onFinish={handleFinish}>
-            {stepsFieldGroups.map(({ fieldGroups = [], ...item }, index) => (
+            {stepsFieldGroups.map(({fieldGroups = [], ...item}, index) => (
               <StepsForm.StepForm initialValues={initialValues}  {...item} key={index}>
                 {fieldGroups.map((group, idx) => renderFieldGroup(group, idx, pageOptions))}
               </StepsForm.StepForm>
