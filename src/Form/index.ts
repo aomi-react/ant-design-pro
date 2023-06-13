@@ -1,7 +1,5 @@
 export * from './ProFormAutoComplete'
 export * from './ProFormCascader'
-export * from './ProFormInputFeeRate'
-export * from './ProFormInputNumber'
 export * from './ProFormTransfer'
 export * from './ProFormTreeSelect'
 export * from './createProFormField'
