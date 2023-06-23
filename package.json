@@ -10,7 +10,7 @@
     ".": {
       "import": "./es/index.js",
       "types": "./es/index.d.ts",
-      "require": "./lib/index.js",
+      "require": "./lib/index.js"
     },
     "./Form/ProFormAutoComplete": {
       "import": "./es/Form/ProFormAutoComplete/index.js",
