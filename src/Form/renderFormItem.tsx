@@ -20,7 +20,7 @@ import {
   ProFormUploadButton,
   ProFormUploadDragger,
   ProFormCascader,
-  ProFormTreeSelect,
+  ProFormTreeSelect, ProFormSegmented,
 } from '@ant-design/pro-form';
 import {ProFormAutoComplete} from './ProFormAutoComplete';
 import {createProFormField} from './createProFormField';
@@ -142,6 +142,7 @@ export function renderSelect({fieldProps = {}, ...props}: any) {
     <ProFormSelect fieldProps={newFieldProps} {...props}/>
   );
 }
+
 export function renderTreeSelect({fieldProps = {}, ...props}: any) {
   const newFieldProps = {
     ...fieldProps
@@ -189,6 +190,12 @@ export function renderTransfer(props) {
   return (
     <ProFormTransfer {...props}/>
   );
+}
+
+export function renderSegmented(props) {
+  return (
+    <ProFormSegmented {...props}/>
+  )
 }
 
 export function renderFormItem({type = 'text', render, ...props}: Field) {
@@ -256,7 +263,7 @@ export function renderFormItem({type = 'text', render, ...props}: Field) {
       break;
     case 'treeSelect':
       element = renderTreeSelect(props);
-        break;
+      break;
     case 'digit':
       element = renderDigit(props);
       break;
@@ -271,6 +278,9 @@ export function renderFormItem({type = 'text', render, ...props}: Field) {
       break;
     case 'transfer':
       element = renderTransfer(props);
+      break;
+    case 'segmented':
+      element = renderSegmented(props);
       break;
   }
   return element;

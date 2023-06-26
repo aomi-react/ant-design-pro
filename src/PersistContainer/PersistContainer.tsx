@@ -43,6 +43,7 @@ export type FieldType = 'text'
   | 'digit'
   | 'money'
   | 'cascader'
+  | 'segmented'
 
   // 自定义组件
   | 'autoComplete'
