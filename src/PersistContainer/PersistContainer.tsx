@@ -16,7 +16,7 @@ import ProCard, {ProCardProps} from '@ant-design/pro-card';
 
 import {renderFormItem} from '../Form';
 import {Rule} from 'rc-field-form/lib/interface';
-import {ObjectUtils} from '@aomi/utils/ObjectUtils';
+import {ObjectUtils} from '@aomi/utils';
 import {FormInstance} from 'antd';
 import {AntDesignProContext} from "../provider";
 import {GroupProps} from "@ant-design/pro-form/es/typing";

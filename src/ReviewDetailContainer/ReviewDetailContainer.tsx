@@ -1,25 +1,26 @@
 import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
-import { observer } from 'mobx-react';
+import {observer} from 'mobx-react';
 
-import { PageContainer, PageContainerProps } from '@ant-design/pro-layout';
-import ProDescriptions, { ProDescriptionsProps } from '@ant-design/pro-descriptions';
-import ProCard, { ProCardTabsProps } from '@ant-design/pro-card';
+import {PageContainer, PageContainerProps} from '@ant-design/pro-layout';
+import ProDescriptions, {ProDescriptionsProps} from '@ant-design/pro-descriptions';
+import ProCard, {ProCardTabsProps} from '@ant-design/pro-card';
 
-import { Button, Col, Row, Steps, Typography } from 'antd';
-import { ObjectUtils } from '@aomi/utils/ObjectUtils';
-import { MomentDateUtil } from '@aomi/utils/MomentDateUtil';
-import { MehOutlined, SmileOutlined } from '@ant-design/icons';
-import Common from '@aomi/common-service/constants/Common';
-import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
-import { ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewService/zh-cn';
-import { ReviewStatus } from '@aomi/common-service/ReviewService/ReviewStatus';
-import { Review } from '@aomi/common-service/ReviewService/Review';
-import { ProCardTabPaneProps } from "@ant-design/pro-card/es/typing";
-import { ModalForm } from '@ant-design/pro-form';
-import { hasAuthorities } from '@aomi/utils/hasAuthorities';
-import { ReviewHistory } from '@aomi/common-service/ReviewService/ReviewHistory';
-import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer/index';
-import { defaultFields } from '../ReviewContainer/ReviewContainer';
+import {Button, Col, Row, Steps, Typography} from 'antd';
+import {hasAuthorities, MomentDateUtil, ObjectUtils} from '@aomi/utils';
+import {MehOutlined, SmileOutlined} from '@ant-design/icons';
+import {
+  Common,
+  Review,
+  ReviewHistory,
+  ReviewResult,
+  ReviewResultText,
+  ReviewStatus,
+  ReviewStatusText
+} from '@aomi/common-service';
+import {ProCardTabPaneProps} from "@ant-design/pro-card/es/typing";
+import {ModalForm} from '@ant-design/pro-form';
+import {Field, FieldGroup, renderField, renderFieldGroup} from '../PersistContainer';
+import {defaultFields} from '../ReviewContainer/ReviewContainer';
 import {AntDesignProContext} from "../provider";
 
 export type TabPaneProps<T> = {
@@ -35,7 +36,9 @@ export type TabPaneProps<T> = {
    * @param after 是否是变更后
    * @param review 审核对象数据
    */
-  columnGroups?: Array<ProDescriptionsProps<T> & { render?: (options: { before?: boolean, after?: boolean, review: T }) => React.ReactNode }>
+  columnGroups?: Array<ProDescriptionsProps<T> & {
+    render?: (options: { before?: boolean, after?: boolean, review: T }) => React.ReactNode
+  }>
 }
 
 export type ReviewDetailContainerProps<T> = {
@@ -78,11 +81,11 @@ export type ReviewDetailContainerProps<T> = {
 }
 
 
-function renderHeader<T>({ describe, histories, reviewProcess, result, status }: Review<T>) {
+function renderHeader<T>({describe, histories, reviewProcess, result, status}: Review<T>) {
 
   const first = histories[0];
 
-  const { chain = [] } = reviewProcess || {};
+  const {chain = []} = reviewProcess || {};
 
   return (
     <>
@@ -91,7 +94,7 @@ function renderHeader<T>({ describe, histories, reviewProcess, result, status }:
         <Steps.Step status="finish"
                     title={describe}
                     description={
-                      <div style={{ fontSize: 12 }}>
+                      <div style={{fontSize: 12}}>
                         <div>{ObjectUtils.getValue(first, 'user.name')}</div>
                         <div>{first.describe}</div>
                         <div>{MomentDateUtil.format(first.reviewAt, Common.DATETIME_FORMAT)}</div>
@@ -99,13 +102,13 @@ function renderHeader<T>({ describe, histories, reviewProcess, result, status }:
                     }
 
         />
-        {chain.map(({ describe, roleName, userName }, index) => {
+        {chain.map(({describe, roleName, userName}, index) => {
           const h = histories.length > index + 1 ? histories[index + 1] : null;
           let d, s;
           if (h) {
             s = h.result === ReviewResult.RESOLVE ? 'finish' : 'error';
             d = (
-              <div style={{ fontSize: 12 }}>
+              <div style={{fontSize: 12}}>
                 <div>{ObjectUtils.getValue(h, 'user.name')}</div>
                 <div>{`${ReviewResultText[h.result]}原因: ${h.describe}`}</div>
                 <div>{MomentDateUtil.format(h.reviewAt, Common.DATETIME_FORMAT)}</div>
@@ -123,9 +126,10 @@ function renderHeader<T>({ describe, histories, reviewProcess, result, status }:
             />
           );
         })}
-        <Steps.Step status={status === ReviewStatus.FINISH ? (result === ReviewResult.RESOLVE ? 'finish' : 'error') : 'wait'}
-                    title={ReviewStatusText.FINISH}
-                    icon={result === ReviewResult.REJECTED ? <MehOutlined/> : <SmileOutlined/>}
+        <Steps.Step
+          status={status === ReviewStatus.FINISH ? (result === ReviewResult.RESOLVE ? 'finish' : 'error') : 'wait'}
+          title={ReviewStatusText.FINISH}
+          icon={result === ReviewResult.REJECTED ? <MehOutlined/> : <SmileOutlined/>}
         />
       </Steps>
     </>
@@ -166,7 +170,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   const location = context?.location;
 
   if (fromQueryContainer) {
-    const { selectedRows = [] }: any = location?.getParams() || {};
+    const {selectedRows = []}: any = location?.getParams() || {};
     reviewData = selectedRows[0];
   } else {
     reviewData = review as any;
@@ -184,7 +188,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   }
 
 
-  const { id, before, after, status } = reviewData;
+  const {id, before, after, status} = reviewData;
 
   async function handleReview(formData) {
     if (onReview) {
@@ -238,21 +242,26 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   const tabPanes: Array<TabPaneProps<any>> = getTabPaneProps(reviewData);
 
   return (
-    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)} onBack={context?.location.goBack} {...container} >
+    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)}
+                   onBack={context?.location.goBack} {...container} >
       <ProCard tabs={newTabs}>
-        {tabPanes?.map(({ tabPaneProps, descriptionsProps, columnGroups }, idx) => (
+        {tabPanes?.map(({tabPaneProps, descriptionsProps, columnGroups}, idx) => (
           <ProCard.TabPane {...tabPaneProps}>
             <Row gutter={30}>
               <Col span={12}>
                 {before && <Typography.Title level={4}>{'变更前'}</Typography.Title>}
-                {before && columnGroups?.map(({ render, ...item }, index) => (
-                  render ? render({ before: true, review: reviewData }) : <ProDescriptions column={2} dataSource={before} {...descriptionsProps} key={index} {...item} editable={undefined}/>
+                {before && columnGroups?.map(({render, ...item}, index) => (
+                  render ? render({before: true, review: reviewData}) :
+                    <ProDescriptions column={2} dataSource={before} {...descriptionsProps} key={index} {...item}
+                                     editable={undefined}/>
                 ))}
               </Col>
               <Col span={before ? 12 : 24}>
                 <Typography.Title level={4}>{'变更后'}</Typography.Title>
-                {after && columnGroups?.map(({ render, ...item }, index) => (
-                  render ? render({ after: true, review: reviewData }) : <ProDescriptions column={before ? 2 : 4} dataSource={after} {...descriptionsProps} key={index} {...item}/>
+                {after && columnGroups?.map(({render, ...item}, index) => (
+                  render ? render({after: true, review: reviewData}) :
+                    <ProDescriptions column={before ? 2 : 4} dataSource={after} {...descriptionsProps}
+                                     key={index} {...item}/>
                 ))}
               </Col>
             </Row>

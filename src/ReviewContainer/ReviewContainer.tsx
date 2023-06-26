@@ -1,15 +1,19 @@
-import React, { PropsWithChildren, useState } from 'react';
-import { Progress } from 'antd';
-import { ModalForm } from '@ant-design/pro-form';
-import { ProColumns } from '@ant-design/pro-table/lib/typing';
+import React, {PropsWithChildren, useState} from 'react';
+import {Progress} from 'antd';
+import {ModalForm} from '@ant-design/pro-form';
+import {ProColumns} from '@ant-design/pro-table/lib/typing';
 
-import { ResourceReviewStatusText, ReviewResultText, ReviewStatusText } from '@aomi/common-service/ReviewService/zh-cn';
+import {
+  ResourceReviewStatusText,
+  Review,
+  ReviewResult,
+  ReviewResultText,
+  ReviewStatus,
+  ReviewStatusText
+} from '@aomi/common-service';
 
-import { ActionButtonProps, QueryContainer, QueryContainerProps } from '../QueryContainer/index';
-import { ReviewResult } from '@aomi/common-service/ReviewService/ReviewResult';
-import { Field, FieldGroup, renderField, renderFieldGroup } from '../PersistContainer/index';
-import { Review } from '@aomi/common-service/ReviewService/Review';
-import { ReviewStatus } from '@aomi/common-service/ReviewService/ReviewStatus';
+import {ActionButtonProps, QueryContainer, QueryContainerProps} from '../QueryContainer';
+import {Field, FieldGroup, renderField, renderFieldGroup} from '../PersistContainer';
 import {ParamsType} from "@ant-design/pro-provider";
 
 export type ReviewContainerProps<T, U extends ParamsType> = {
