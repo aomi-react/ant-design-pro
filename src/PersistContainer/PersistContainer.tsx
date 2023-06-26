@@ -39,12 +39,13 @@ export type FieldType = 'text'
   | 'uploadDragger'
   | 'uploadButton'
   | 'select'
+  | 'treeSelect'
   | 'digit'
   | 'money'
+  | 'cascader'
 
   // 自定义组件
   | 'autoComplete'
-  | 'cascader'
   | 'transfer'
 
 export type Field = {
@@ -347,7 +348,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(functi
     <PageContainer title={title} subTitle={subtitle} onBack={context?.location.goBack} {...container}>
       <ProCard bordered={false} {...card}>
         {formType === FormType.DEFAULT && (
-          <ProForm {...formProps} onFinish={handleFinish} initialValues={initialValues}>
+          <ProForm scrollToFirstError {...formProps} onFinish={handleFinish} initialValues={initialValues}>
             {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
           </ProForm>
         )}

@@ -17,30 +17,10 @@
       "types": "./es/Form/ProFormAutoComplete/index.d.ts",
       "require": "./lib/Form/ProFormAutoComplete/index.js"
     },
-    "./Form/ProFormCascader": {
-      "import": "./es/Form/ProFormCascader/index.js",
-      "types": "./es/Form/ProFormCascader/index.d.ts",
-      "require": "./lib/Form/ProFormCascader/index.js"
-    },
-    "./Form/ProFormInputFeeRate": {
-      "import": "./es/Form/ProFormInputFeeRate/index.js",
-      "types": "./es/Form/ProFormInputFeeRate/index.d.ts",
-      "require": "./lib/Form/ProFormInputFeeRate/index.js"
-    },
-    "./Form/ProFormInputNumber": {
-      "import": "./es/Form/ProFormInputNumber/index.js",
-      "types": "./es/Form/ProFormInputNumber/index.d.ts",
-      "require": "./lib/Form/ProFormInputNumber/index.js"
-    },
     "./Form/ProFormTransfer": {
       "import": "./es/Form/ProFormTransfer/index.js",
       "types": "./es/Form/ProFormTransfer/index.d.ts",
       "require": "./lib/Form/ProFormTransfer/index.js"
-    },
-    "./Form/ProFormTreeSelect": {
-      "import": "./es/Form/ProFormTreeSelect/index.js",
-      "types": "./es/Form/ProFormTreeSelect/index.d.ts",
-      "require": "./lib/Form/ProFormTreeSelect/index.js"
     },
     "./Form/createProFormField": {
       "import": "./es/Form/createProFormField.js",

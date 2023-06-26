@@ -18,11 +18,12 @@ import {
   ProFormTextArea,
   ProFormTimePicker,
   ProFormUploadButton,
-  ProFormUploadDragger
+  ProFormUploadDragger,
+  ProFormCascader,
+  ProFormTreeSelect,
 } from '@ant-design/pro-form';
 import {ProFormAutoComplete} from './ProFormAutoComplete';
 import {createProFormField} from './createProFormField';
-import {ProFormCascader} from './ProFormCascader';
 import {ProFormTransfer} from './ProFormTransfer';
 
 export function renderText(props) {
@@ -141,6 +142,15 @@ export function renderSelect({fieldProps = {}, ...props}: any) {
     <ProFormSelect fieldProps={newFieldProps} {...props}/>
   );
 }
+export function renderTreeSelect({fieldProps = {}, ...props}: any) {
+  const newFieldProps = {
+    ...fieldProps
+  };
+
+  return (
+    <ProFormTreeSelect fieldProps={newFieldProps} {...props}/>
+  );
+}
 
 export function renderDigit(props) {
   return (
@@ -244,6 +254,9 @@ export function renderFormItem({type = 'text', render, ...props}: Field) {
     case 'select':
       element = renderSelect(props);
       break;
+    case 'treeSelect':
+      element = renderTreeSelect(props);
+        break;
     case 'digit':
       element = renderDigit(props);
       break;
