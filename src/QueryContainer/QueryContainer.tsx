@@ -99,6 +99,8 @@ export interface QueryContainerProps<T, U extends ParamsType> {
   showStats?: boolean;
   statsColumns?: ProDescriptionsProps['columns'];
   statsProps?: ProDescriptionsProps;
+
+  defaultSearchParams?: Record<any, any>
 }
 
 function handleDetail(location: Location, state, onDetail, detailUri) {
@@ -251,7 +253,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
       statsProps,
 
       detailProps,
-
+      defaultSearchParams = {},
       children
     } = inProps;
 
@@ -338,6 +340,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
       console.log('查询查询', params, sort, filter);
       if (service) {
         await service.query({
+          ...defaultSearchParams,
           pageSize: newPagination.defaultPageSize,
           current: newPagination.defaultCurrent,
           ...params,
