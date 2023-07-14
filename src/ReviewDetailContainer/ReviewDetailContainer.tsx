@@ -167,10 +167,9 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
 
   let reviewData: Review<any>;
 
-  const location = context?.location;
 
   if (fromQueryContainer) {
-    const {selectedRows = []}: any = location?.getParams() || {};
+    const {selectedRows = []}: any = context?.getParams() || {};
     reviewData = selectedRows[0];
   } else {
     reviewData = review as any;
@@ -179,7 +178,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   useEffect(() => {
     if (!reviewData) {
       console.warn('没有发现详情数据.自动返回上一页');
-      context?.location.goBack()
+      context?.goBack()
     }
   }, []);
 
@@ -243,7 +242,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
 
   return (
     <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)}
-                   onBack={context?.location.goBack} {...container} >
+                   onBack={context?.goBack} {...container} >
       <ProCard tabs={newTabs}>
         {tabPanes?.map(({tabPaneProps, descriptionsProps, columnGroups}, idx) => (
           <ProCard.TabPane {...tabPaneProps}>

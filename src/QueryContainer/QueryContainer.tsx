@@ -376,7 +376,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
 
     return (
       <PageContainer style={{whiteSpace: 'nowrap'}}
-                     onBack={context?.location.goBack}
+                     onBack={context?.goBack}
                      {...container}
       >
         <ProTable rowKey="id"
@@ -405,7 +405,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
                       onDel, delAuthorities,
                       service,
                       getActionButtonProps,
-                      location: context?.location
+                      location: context
                     }),
                     ...toolbar
                   }}

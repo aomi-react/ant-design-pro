@@ -85,7 +85,7 @@ const COMMON_COLUMNS: Array<ProColumns> = [
         pstatus = 'active';
       }
 
-      return <Progress percent={proportion} width={35} type="line" status={pstatus}/>;
+      return <Progress percent={proportion} size={35} type="line" status={pstatus}/>;
     },
     search: false
   },
@@ -226,7 +226,7 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
   return (
     <QueryContainer table={table} {...args} getActionButtonProps={getActionButtonProps}>
       <ModalForm
-        visible={state.visible}
+        open={state.visible}
         title={`${reviewTitle ? `${reviewTitle} -` : ''}${ReviewResultText[state.result]}`}
         modalProps={{
           onCancel: handleCancel

@@ -307,8 +307,8 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(functi
 
   // const { pathname = '', params = undefined } = (context.location as any) || {};
 
-  const params = context?.location?.getParams()
-  const pathname = context?.location.getPathname() ?? ''
+  const params = context?.getParams()
+  const pathname = context?.getPathname() ?? ''
 
   const pageOptions = {
     created: pathname.endsWith('create'),
@@ -318,7 +318,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(functi
   useEffect(() => {
     if (pageOptions.updated && !params) {
       console.warn('进入更新页面,但是没有发现需要编辑的数据.自动返回上一页');
-      context?.location.goBack()
+      context?.goBack()
     }
   }, []);
 
@@ -346,7 +346,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(functi
   const subtitle = pageOptions.created ? createSubTitle : editSubTitle;
 
   return (
-    <PageContainer title={title} subTitle={subtitle} onBack={context?.location.goBack} {...container}>
+    <PageContainer title={title} subTitle={subtitle} onBack={context?.goBack} {...container}>
       <ProCard bordered={false} {...card}>
         {formType === FormType.DEFAULT && (
           <ProForm scrollToFirstError {...formProps} onFinish={handleFinish} initialValues={initialValues}>

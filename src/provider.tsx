@@ -10,20 +10,22 @@ export type Location = {
 }
 
 export type AntDesignProProviderValue = {
-  location: Location
+  navigate: (args: { pathname: string, params?: any }) => void
+  goBack: () => void
+
+  getParams: () => any
+  getPathname: () => string
 }
 
 export const AntDesignProContext = React.createContext<AntDesignProProviderValue>({
-  location: {
-    navigate() {
-    },
-    goBack() {
-    },
-    getParams() {
-    },
-    getPathname() {
-      return ''
-    }
+  navigate() {
+  },
+  goBack() {
+  },
+  getParams() {
+  },
+  getPathname() {
+    return ''
   }
 })
 
