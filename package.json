@@ -1,12 +1,66 @@
 {
   "name": "@aomi/react-pro-ant-design",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "repository": "git@github.com:aomi-web/react-pro-ant-design.git",
   "author": "sean <sean.snow@live.com>",
   "license": "MIT",
-  "main": "lib/index.js",
-  "module": "es/index.js",
-  "types": "es/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./es/index.js",
+      "types": "./es/index.d.ts",
+      "require": "./lib/index.js"
+    },
+    "./Form/ProFormAutoComplete": {
+      "import": "./es/Form/ProFormAutoComplete/index.js",
+      "types": "./es/Form/ProFormAutoComplete/index.d.ts",
+      "require": "./lib/Form/ProFormAutoComplete/index.js"
+    },
+    "./Form/ProFormTransfer": {
+      "import": "./es/Form/ProFormTransfer/index.js",
+      "types": "./es/Form/ProFormTransfer/index.d.ts",
+      "require": "./lib/Form/ProFormTransfer/index.js"
+    },
+    "./Form/createProFormField": {
+      "import": "./es/Form/createProFormField.js",
+      "types": "./es/Form/createProFormField.d.ts",
+      "require": "./lib/Form/createProFormField.js"
+    },
+    "./Form/renderFormItem": {
+      "import": "./es/Form/renderFormItem.js",
+      "types": "./es/Form/renderFormItem.d.ts",
+      "require": "./lib/Form/renderFormItem.js"
+    },
+    "./Form": {
+      "import": "./es/Form/index.js",
+      "types": "./es/Form/index.d.ts",
+      "require": "./lib/Form/index.js"
+    },
+    "./PersistContainer": {
+      "import": "./es/PersistContainer/index.js",
+      "types": "./es/PersistContainer/index.d.ts",
+      "require": "./lib/PersistContainer/index.js"
+    },
+    "./QueryContainer": {
+      "import": "./es/QueryContainer/index.js",
+      "types": "./es/QueryContainer/index.d.ts",
+      "require": "./lib/QueryContainer/index.js"
+    },
+    "./ReviewContainer": {
+      "import": "./es/ReviewContainer/index.js",
+      "types": "./es/ReviewContainer/index.d.ts",
+      "require": "./lib/ReviewContainer/index.js"
+    },
+    "./ReviewDetailContainer": {
+      "import": "./es/ReviewDetailContainer/index.js",
+      "types": "./es/ReviewDetailContainer/index.d.ts",
+      "require": "./lib/ReviewDetailContainer/index.js"
+    },
+    "./provider": {
+      "import": "./es/provider.js",
+      "types": "./es/provider.d.ts",
+      "require": "./lib/provider.js"
+    }
+  },
   "files": [
     "lib",
     "es"
@@ -20,21 +74,21 @@
   },
   "devDependencies": {
     "@ant-design/icons": "^5.1.4",
-    "@ant-design/pro-card": "^2.5.2",
-    "@ant-design/pro-descriptions": "^2.4.2",
-    "@ant-design/pro-field": "^2.10.2",
-    "@ant-design/pro-form": "^2.14.2",
-    "@ant-design/pro-layout": "^7.15.2",
-    "@ant-design/pro-table": "^3.8.2",
+    "@ant-design/pro-card": "^2.5.4",
+    "@ant-design/pro-descriptions": "^2.4.4",
+    "@ant-design/pro-field": "^2.10.4",
+    "@ant-design/pro-form": "^2.15.0",
+    "@ant-design/pro-layout": "^7.16.0",
+    "@ant-design/pro-table": "^3.9.0",
     "@aomi/common-service": "1.0.6",
     "@aomi/react-antd": "^1.0.0-Alpha.12",
     "@aomi/utils": "^1.0.10",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
-    "antd": "^5.6.3",
-    "mobx-react": "^7.6.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "antd": "^5.7.0",
+    "mobx-react": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.6"
   }
 }

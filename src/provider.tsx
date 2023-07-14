@@ -9,14 +9,25 @@ export type Location = {
   getPathname: () => string
 }
 
-export type AntDesignProProviderProps = {
+export type AntDesignProProviderValue = {
   location: Location
-
 }
 
-export const AntDesignProContext = React.createContext<AntDesignProProviderProps | null>(null)
+export const AntDesignProContext = React.createContext<AntDesignProProviderValue>({
+  location: {
+    navigate() {
+    },
+    goBack() {
+    },
+    getParams() {
+    },
+    getPathname() {
+      return ''
+    }
+  }
+})
 
-export function AntDesignProProvider({children, ...value}: React.PropsWithChildren<AntDesignProProviderProps>) {
+export function AntDesignProProvider({children, ...value}: React.PropsWithChildren<AntDesignProProviderValue>) {
   return <AntDesignProContext.Provider value={value}>
     {children}
   </AntDesignProContext.Provider>
