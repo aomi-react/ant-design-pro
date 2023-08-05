@@ -203,10 +203,10 @@
     resize-observer-polyfill "^1.5.1"
     throttle-debounce "^5.0.0"
 
-"@aomi/common-service@1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@aomi/common-service/-/common-service-1.0.6.tgz#f5921fa54d0c0968ee850c48bdd8edc77382f6ca"
-  integrity sha512-dzGlUixnquxvDBBu0wxWIaIL8774MOS5dr9BONckpXqn8ybD+z0Sc370CXxjCJz9qmcdDjWaAML7KhGb78q/Qw==
+"@aomi/common-service@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@aomi/common-service/-/common-service-1.0.7.tgz#04f0872fe96c7d6a49db7de91493ff929097c1e4"
+  integrity sha512-SYTMUfKc6E5A8XL2boYmQoqNhTKNRgyznjLef9AlNgzxaJxfQLq0czaOUl2GDsn95yclrHJs797GD5e980AoDg==
   dependencies:
     object-path "^0.11.8"
 

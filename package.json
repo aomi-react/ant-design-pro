@@ -81,7 +81,7 @@
     "@ant-design/pro-form": "^2.15.0",
     "@ant-design/pro-layout": "^7.16.0",
     "@ant-design/pro-table": "^3.9.0",
-    "@aomi/common-service": "1.0.6",
+    "@aomi/common-service": "^1.0.7",
     "@aomi/react-antd": "^1.0.0-Alpha.12",
     "@aomi/utils": "^1.0.10",
     "@types/react": "^18.2.15",
