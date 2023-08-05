@@ -12,6 +12,8 @@
     "noUnusedParameters": false,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationDir": "types",
     "lib": [
       "dom",
       "es2018",

@@ -7,63 +7,64 @@
   "exports": {
     ".": {
       "import": "./es/index.js",
-      "types": "./es/index.d.ts",
+      "types": "./types/index.d.ts",
       "require": "./lib/index.js"
     },
     "./Form/ProFormAutoComplete": {
       "import": "./es/Form/ProFormAutoComplete/index.js",
-      "types": "./es/Form/ProFormAutoComplete/index.d.ts",
+      "types": "./types/Form/ProFormAutoComplete/index.d.ts",
       "require": "./lib/Form/ProFormAutoComplete/index.js"
     },
     "./Form/ProFormTransfer": {
       "import": "./es/Form/ProFormTransfer/index.js",
-      "types": "./es/Form/ProFormTransfer/index.d.ts",
+      "types": "./types/Form/ProFormTransfer/index.d.ts",
       "require": "./lib/Form/ProFormTransfer/index.js"
     },
     "./Form/createProFormField": {
       "import": "./es/Form/createProFormField.js",
-      "types": "./es/Form/createProFormField.d.ts",
+      "types": "./types/Form/createProFormField.d.ts",
       "require": "./lib/Form/createProFormField.js"
     },
     "./Form/renderFormItem": {
       "import": "./es/Form/renderFormItem.js",
-      "types": "./es/Form/renderFormItem.d.ts",
+      "types": "./types/Form/renderFormItem.d.ts",
       "require": "./lib/Form/renderFormItem.js"
     },
     "./Form": {
       "import": "./es/Form/index.js",
-      "types": "./es/Form/index.d.ts",
+      "types": "./types/Form/index.d.ts",
       "require": "./lib/Form/index.js"
     },
     "./PersistContainer": {
       "import": "./es/PersistContainer/index.js",
-      "types": "./es/PersistContainer/index.d.ts",
+      "types": "./types/PersistContainer/index.d.ts",
       "require": "./lib/PersistContainer/index.js"
     },
     "./QueryContainer": {
       "import": "./es/QueryContainer/index.js",
-      "types": "./es/QueryContainer/index.d.ts",
+      "types": "./types/QueryContainer/index.d.ts",
       "require": "./lib/QueryContainer/index.js"
     },
     "./ReviewContainer": {
       "import": "./es/ReviewContainer/index.js",
-      "types": "./es/ReviewContainer/index.d.ts",
+      "types": "./types/ReviewContainer/index.d.ts",
       "require": "./lib/ReviewContainer/index.js"
     },
     "./ReviewDetailContainer": {
       "import": "./es/ReviewDetailContainer/index.js",
-      "types": "./es/ReviewDetailContainer/index.d.ts",
+      "types": "./types/ReviewDetailContainer/index.d.ts",
       "require": "./lib/ReviewDetailContainer/index.js"
     },
     "./provider": {
       "import": "./es/provider.js",
-      "types": "./es/provider.d.ts",
+      "types": "./types/provider.d.ts",
       "require": "./lib/provider.js"
     }
   },
   "files": [
     "lib",
-    "es"
+    "es",
+    "types"
   ],
   "scripts": {
     "clean1": "find . -path \"./node_modules\" -prune -o -name \"*.js\" -o -name \"*.js.map\" -o -name \"*.d.ts\" |xargs rm -f | echo ''",
