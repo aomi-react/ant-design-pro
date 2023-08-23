@@ -5,7 +5,16 @@ import ProTable, {ProTableProps} from '@ant-design/pro-table';
 import {ParamsType} from '@ant-design/pro-provider';
 import {BaseService} from '@aomi/common-service';
 import {hasAuthorities, ObjectUtils} from '@aomi/utils';
-import {Button, ButtonProps, FormInstance, Modal, Popconfirm, PopconfirmProps, TablePaginationConfig} from 'antd';
+import {
+  Button,
+  ButtonProps,
+  FormInstance,
+  Modal,
+  ModalProps,
+  Popconfirm,
+  PopconfirmProps,
+  TablePaginationConfig
+} from 'antd';
 import {DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {TableRowSelection} from '@ant-design/pro-table/es/typing';
 import {Stats} from './Stats';
@@ -83,6 +92,11 @@ export interface QueryContainerProps<T, U extends ParamsType> {
    * 详情显示属性,在column中显示详情按钮
    */
   detailProps?: Array<ProDescriptionsProps> | ((record) => Array<ProDescriptionsProps>);
+
+  /**
+   * 模态框属性配置
+   */
+  detailModalProps?: ModalProps
 
   /**
    * 获取按钮组件的props
@@ -254,6 +268,8 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
 
       detailProps,
       defaultSearchParams = {},
+      detailModalProps = {},
+
       children
     } = inProps;
 
@@ -262,7 +278,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
     const [selectedRows, setSelectedRows] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [rowSelectMethod, setRowSelectMethod] = useState<RowSelectMethod>();
-    const [detailModalProps, setDetailModalProps] = useState({visible: false, record: {}});
+    const [detailConfig, setDetailConfig] = useState({visible: false, record: {}});
 
     const form = useRef<FormInstance>();
 
@@ -308,7 +324,7 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
         render: (text, record, _) => [
           <a
             key="detail"
-            onClick={() => setDetailModalProps({visible: true, record})}>
+            onClick={() => setDetailConfig({visible: true, record})}>
             {'详情'}
           </a>
         ]
@@ -411,11 +427,13 @@ export const QueryContainer: React.FC<React.PropsWithChildren<QueryContainerProp
                   }}
                   {...tableProps}
         />
-        <Modal open={detailModalProps.visible} onCancel={() => setDetailModalProps({visible: false, record: {}})}
+        <Modal open={detailConfig.visible}
+               onCancel={() => setDetailConfig({visible: false, record: {}})}
                width="80%"
+               {...detailModalProps}
         >
-          {(typeof detailProps === 'function' ? detailProps(detailModalProps.record) : detailProps)?.map((item, index) => (
-            <ProDescriptions dataSource={detailModalProps.record} column={4} {...item}
+          {(typeof detailProps === 'function' ? detailProps(detailConfig.record) : detailProps)?.map((item, index) => (
+            <ProDescriptions dataSource={detailConfig.record} column={4} {...item}
                              key={index}/>
           ))}
         </Modal>
