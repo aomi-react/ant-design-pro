@@ -1,192 +1,193 @@
-import React, {PropsWithChildren, useContext, useEffect} from 'react';
-import {observer} from 'mobx-react';
-import {PageContainer, PageContainerProps} from '@ant-design/pro-layout';
+import React, { PropsWithChildren, useContext, useEffect } from "react";
+import { observer } from "mobx-react";
+import { PageContainer, PageContainerProps } from "@ant-design/pro-layout";
 import ProForm, {
-    ProFormDependency,
-    ProFormItemProps,
-    ProFormList,
-    ProFormListProps,
-    ProFormProps,
-    StepFormProps,
-    StepsForm,
-    StepsFormProps,
-} from '@ant-design/pro-form';
-import {ProFieldFCRenderProps} from '@ant-design/pro-provider';
-import ProCard, {ProCardProps} from '@ant-design/pro-card';
+  ProFormDependency,
+  ProFormFieldProps,
+  ProFormItemProps,
+  ProFormList,
+  ProFormListProps,
+  ProFormProps,
+  StepFormProps,
+  StepsForm,
+  StepsFormProps,
+} from "@ant-design/pro-form";
+import ProCard, { ProCardProps } from "@ant-design/pro-card";
 
-import {renderFormItem} from '../Form';
-import {Rule} from 'rc-field-form/lib/interface';
-import {ObjectUtils} from '@aomi/utils';
-import {FormInstance} from 'antd';
-import {AntDesignProContext} from "../provider";
-import {ProFormGroupProps} from "@ant-design/pro-form/es/typing";
+import { renderFormField } from "../Form";
+import { Rule } from "rc-field-form/lib/interface";
+import { ObjectUtils } from "@aomi/utils";
+import { FormInstance } from "antd";
+import { AntDesignProContext } from "../provider";
+import { ProFormGroupProps } from "@ant-design/pro-form/es/typing";
 
+export type FieldType =
+  | "text"
+  | "password"
+  | "captcha"
+  | "datePicker"
+  | "dateTimePicker"
+  | "dateRangePicker"
+  | "dateTimeRangePicker"
+  | "timePicker"
+  | "timeRangePicker"
+  | "textArea"
+  | "checkbox"
+  | "radioGroup"
+  | "switch"
+  | "rate"
+  | "slider"
+  | "uploadDragger"
+  | "uploadButton"
+  | "select"
+  | "treeSelect"
+  | "digit"
+  | "money"
+  | "cascader"
+  | "segmented"
 
-export type FieldType = 'text'
-    | 'password'
-    | 'captcha'
-    | 'datePicker'
-    | 'dateTimePicker'
-    | 'dateRangePicker'
-    | 'dateTimeRangePicker'
-    | 'timePicker'
-    | 'timeRangePicker'
-    | 'textArea'
-    | 'checkbox'
-    | 'radioGroup'
-    | 'switch'
-    | 'rate'
-    | 'slider'
-    | 'uploadDragger'
-    | 'uploadButton'
-    | 'select'
-    | 'treeSelect'
-    | 'digit'
-    | 'money'
-    | 'cascader'
-    | 'segmented'
-
-    // 自定义组件
-    | 'autoComplete'
-    | 'transfer'
+  // 自定义组件
+  | "autoComplete"
+  | "transfer";
 
 export type Field = {
-    /**
-     * 字段类型
-     */
-    type?: FieldType
-    /**
-     * 字段名称
-     */
-    name: string | Array<string | number>
-    /**
-     * 依赖的字段名称
-     */
-    dependencyName?: Array<string | Array<string | number>>
-    /**
-     * 数组字段配置
-     */
-    subFieldGroups?: Array<FieldGroup>
-    /**
-     * form list props 当 subFieldGroups 存在时有效
-     */
-    formListProps?: Omit<ProFormListProps<any>, 'name' | 'children'>
-    /**
-     * 编辑时禁用
-     */
-    editDisabled?: boolean
+  /**
+   * 字段类型
+   */
+  type?: FieldType;
+  /**
+   * 字段名称
+   */
+  name: string | Array<string | number>;
+  /**
+   * 依赖的字段名称
+   */
+  dependencyName?: Array<string | Array<string | number>>;
+  /**
+   * 数组字段配置
+   */
+  subFieldGroups?: Array<FieldGroup>;
+  /**
+   * form list props 当 subFieldGroups 存在时有效
+   */
+  formListProps?: Omit<ProFormListProps<any>, "name" | "children">;
+  /**
+   * 编辑时禁用
+   */
+  editDisabled?: boolean;
 
-    /**
-     * 新增时隐藏
-     */
-    createHidden?: boolean
+  /**
+   * 新增时隐藏
+   */
+  createHidden?: boolean;
 
-    /**
-     * 是否允许留空白
-     * 默认true
-     */
-    whitespace?: boolean
+  /**
+   * 是否允许留空白
+   * 默认true
+   */
+  whitespace?: boolean;
 
-    /**
-     * 自定渲染整个字段
-     * @param args 当前字段配置信息
-     * @param pageOptions 页面提供的参数
-     */
-    renderField?: (args: Field, pageOptions: any) => React.ReactNode
+  /**
+   * 自定渲染整个字段
+   * @param args 当前字段配置信息
+   * @param pageOptions 页面提供的参数
+   */
+  renderField?: (args: Field, pageOptions: any) => React.ReactNode;
 
-    /**
-     * 渲染带有依赖关系的字段
-     * 使用ProFormDependency组件包裹
-     * 当使用该值时,dependencyName 字段必填
-     * @param args 当前field参数
-     * @param pageOptions 页面参数
-     * @param dependencyFieldValues 依赖的字段值
-     */
-    renderDependencyField?: <Values>(args: Field, pageOptions: any, dependencyFieldValues: Record<string, any>, form: FormInstance<Values>) => React.ReactNode
+  /**
+   * 渲染带有依赖关系的字段
+   * 使用ProFormDependency组件包裹
+   * 当使用该值时,dependencyName 字段必填
+   * @param args 当前field参数
+   * @param pageOptions 页面参数
+   * @param dependencyFieldValues 依赖的字段值
+   */
+  renderDependencyField?: <Values>(
+    args: Field,
+    pageOptions: any,
+    dependencyFieldValues: Record<string, any>,
+    form: FormInstance<Values>
+  ) => React.ReactNode;
 
-    /**
-     * 自定义渲染field
-     */
-    render?: ((text: any, props: ProFieldFCRenderProps, dom: JSX.Element) => JSX.Element) | undefined;
-
-    /**
-     * 各个组件对应的props,请根据type参考对应的组件属性
-     */
-    [key: string]: any
-} & Omit<ProFormItemProps, 'type'>
+  /**
+   * 自定义渲染field的相关属性，提供以后根据属性自动渲染
+   */
+  proFormFieldProps?: ProFormFieldProps;
+} & Omit<ProFormItemProps, "type">;
 
 export type FieldGroup = {
-    fields: Array<Field>
-} & ProFormGroupProps
+  fields: Array<Field>;
+} & ProFormGroupProps;
 
 export type PageOptions = {
-    created: boolean
-    updated: boolean
-}
+  created: boolean;
+  updated: boolean;
+};
 
-export type StepsFieldGroup = StepFormProps & { fieldGroups?: Array<FieldGroup> };
+export type StepsFieldGroup = StepFormProps & {
+  fieldGroups?: Array<FieldGroup>;
+};
 
 export enum FormType {
-    /**
-     * 默认表单
-     */
-    DEFAULT,
-    /**
-     * 分步表单
-     */
-    STEP
+  /**
+   * 默认表单
+   */
+  DEFAULT,
+  /**
+   * 分步表单
+   */
+  STEP,
 }
 
 export type PersistContainerProps = {
+  createTitle?: React.ReactNode | false;
+  createSubTitle?: React.ReactNode | false;
 
-    createTitle?: React.ReactNode | false;
-    createSubTitle?: React.ReactNode | false;
+  editTitle?: React.ReactNode | false;
+  editSubTitle?: React.ReactNode | false;
 
-    editTitle?: React.ReactNode | false;
-    editSubTitle?: React.ReactNode | false;
+  /**
+   * 创建合并的数据删除 id 字段
+   */
+  createRemoveId?: boolean;
 
-    /**
-     * 创建合并的数据删除 id 字段
-     */
-    createRemoveId?: boolean
+  /**
+   * page container props
+   */
+  container?: PageContainerProps;
 
-    /**
-     * page container props
-     */
-    container?: PageContainerProps
+  /**
+   * 卡片属性
+   */
+  card?: ProCardProps;
 
-    /**
-     * 卡片属性
-     */
-    card?: ProCardProps
+  /**
+   * 表单类型
+   * 单个表单和分布表单
+   */
+  formType?: FormType;
 
-    /**
-     * 表单类型
-     * 单个表单和分布表单
-     */
-    formType?: FormType
+  /**
+   * 表单props
+   */
+  formProps?: Omit<ProFormProps, "onFinish"> | Omit<StepsFormProps, "onFinish">;
 
-    /**
-     * 表单props
-     */
-    formProps?: Omit<ProFormProps, 'onFinish'> | Omit<StepsFormProps, 'onFinish'>
+  /**
+   * 表单字段信息
+   */
+  fieldGroups?: Array<FieldGroup>;
 
-    /**
-     * 表单字段信息
-     */
-    fieldGroups?: Array<FieldGroup>
+  /**
+   * 分步表单字段信息
+   */
+  stepsFieldGroups?: Array<StepsFieldGroup>;
 
-    /**
-     * 分步表单字段信息
-     */
-    stepsFieldGroups?: Array<StepsFieldGroup>
+  onFinish: (values, pageOptions: PageOptions) => Promise<void>;
 
-    onFinish: (values, pageOptions: PageOptions) => Promise<void>
+  getInitialValues?: (data: { params: any; pageOptions: PageOptions }) => any;
 
-    getInitialValues?: (data: { params: any, pageOptions: PageOptions }) => any
-
-    location?: Location
-}
+  location?: Location;
+};
 
 /**
  * 渲染一个字段
@@ -194,68 +195,79 @@ export type PersistContainerProps = {
  * @param index 下标
  * @param pageOptions 页面参数
  */
-export function renderField(args: Field, index, pageOptions: PageOptions = {created: true, updated: false}) {
-    const {
-        renderDependencyField,
-        renderField: renderFieldComponent,
-        subFieldGroups,
-        dependencyName,
-        formListProps,
-        createHidden,
-        editDisabled,
-        whitespace = true,
-        rules = [],
-        ...field
-    } = args;
+export function renderField(
+  args: Field,
+  index,
+  pageOptions: PageOptions = { created: true, updated: false }
+) {
+  const {
+    renderDependencyField,
+    renderField: renderFieldComponent,
+    subFieldGroups,
+    dependencyName,
+    formListProps,
+    createHidden,
+    editDisabled,
+    whitespace = true,
+    rules = [],
+    ...field
+  } = args;
 
-    if (createHidden && pageOptions.created) {
-        return undefined;
-    }
+  if (createHidden && pageOptions.created) {
+    return undefined;
+  }
 
-    const newRules: Rule[] = [...rules];
-    if (field.required) {
-        newRules.push({required: true, message: `${field.label} 是必填字段`});
-    }
-    if (whitespace && ['text', 'textarea'].includes(field.type || '')) {
-        newRules.push({
-            whitespace
-        });
-    }
+  const newRules: Rule[] = [...rules];
+  if (field.required) {
+    newRules.push({ required: true, message: `${field.label} 是必填字段` });
+  }
+  if (whitespace && ["text", "textarea"].includes(field.type || "")) {
+    newRules.push({
+      whitespace,
+    });
+  }
 
-    const fieldOptions: Field = {
-        width: 'md',
-        disabled: pageOptions.updated && editDisabled,
-        rules: newRules,
-        ...field
-    };
+  const fieldOptions: Field = {
+    width: "md",
+    disabled: pageOptions.updated && editDisabled,
+    rules: newRules,
+    ...field,
+  };
 
-    if (renderDependencyField) {
-        return (
-            <ProFormDependency name={dependencyName || []} key={index}>
-                {(dependencyFieldValues, form) => renderDependencyField(fieldOptions, pageOptions, dependencyFieldValues, form)}
-            </ProFormDependency>
-        );
-    }
-
-    if (renderFieldComponent) {
-        return (
-            <React.Fragment key={index}>
-                {renderFieldComponent(fieldOptions, pageOptions)}
-            </React.Fragment>
-        );
-    }
-    if (Array.isArray(subFieldGroups) && subFieldGroups.length > 0) {
-        return (
-            <ProFormList key={index} {...formListProps} name={field.name || 'list'}>
-                {subFieldGroups.map((item, idx) => renderFieldGroup(item, idx, pageOptions))}
-            </ProFormList>
-        );
-    }
+  if (renderDependencyField) {
     return (
-        <React.Fragment key={index}>
-            {renderFormItem(fieldOptions)}
-        </React.Fragment>
+      <ProFormDependency name={dependencyName || []} key={index}>
+        {(dependencyFieldValues, form) =>
+          renderDependencyField(
+            fieldOptions,
+            pageOptions,
+            dependencyFieldValues,
+            form
+          )
+        }
+      </ProFormDependency>
     );
+  }
+
+  if (renderFieldComponent) {
+    return (
+      <React.Fragment key={index}>
+        {renderFieldComponent(fieldOptions, pageOptions)}
+      </React.Fragment>
+    );
+  }
+  if (Array.isArray(subFieldGroups) && subFieldGroups.length > 0) {
+    return (
+      <ProFormList key={index} {...formListProps} name={field.name || "list"}>
+        {subFieldGroups.map((item, idx) =>
+          renderFieldGroup(item, idx, pageOptions)
+        )}
+      </ProFormList>
+    );
+  }
+  return (
+    <React.Fragment key={index}>{renderFormField(fieldOptions)}</React.Fragment>
+  );
 }
 
 /**
@@ -265,106 +277,135 @@ export function renderField(args: Field, index, pageOptions: PageOptions = {crea
  * @param index 组所有
  * @param pageOptions 页面选项
  */
-export function renderFieldGroup({fields, ...props}, index, pageOptions: PageOptions = {
+export function renderFieldGroup(
+  { fields, ...props },
+  index,
+  pageOptions: PageOptions = {
     created: true,
-    updated: false
-}) {
-    return (
-        <ProForm.Group size={16} {...props} key={index}>
-            {fields.map((item, idx) => renderField(item, idx, pageOptions))}
-        </ProForm.Group>
-    );
+    updated: false,
+  }
+) {
+  return (
+    <ProForm.Group size={16} {...props} key={index}>
+      {fields.map((item, idx) => renderField(item, idx, pageOptions))}
+    </ProForm.Group>
+  );
 }
 
 /**
  * 新增、编辑页面
  */
-export const PersistContainer: React.FC<PersistContainerProps> = observer(function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
-
+export const PersistContainer: React.FC<PersistContainerProps> = observer(
+  function PersistContainer(inProps: PropsWithChildren<PersistContainerProps>) {
     const context = useContext(AntDesignProContext);
 
-
     const {
+      createTitle,
+      createSubTitle,
+      editTitle,
+      editSubTitle,
 
-        createTitle,
-        createSubTitle,
-        editTitle,
-        editSubTitle,
+      createRemoveId = true,
 
-        createRemoveId = true,
+      container,
+      card,
+      formType = FormType.DEFAULT,
+      formProps,
+      fieldGroups = [],
+      stepsFieldGroups = [],
 
-        container,
-        card,
-        formType = FormType.DEFAULT,
-        formProps,
-        fieldGroups = [],
-        stepsFieldGroups = [],
+      onFinish,
+      getInitialValues,
 
-        onFinish,
-        getInitialValues,
-
-        children
+      children,
     } = inProps;
 
     // const { pathname = '', params = undefined } = (context.location as any) || {};
 
-    const params = context?.getParams()
-    const pathname = context?.getPathname() ?? ''
+    const params = context?.getParams();
+    const pathname = context?.getPathname() ?? "";
 
     const pageOptions = {
-        created: pathname.endsWith('create'),
-        updated: pathname.endsWith('update')
+      created: pathname.endsWith("create"),
+      updated: pathname.endsWith("update"),
     };
 
     useEffect(() => {
-        if (pageOptions.updated && !params) {
-            console.warn('进入更新页面,但是没有发现需要编辑的数据.自动返回上一页');
-            context?.goBack()
-        }
+      if (pageOptions.updated && !params) {
+        console.warn("进入更新页面,但是没有发现需要编辑的数据.自动返回上一页");
+        context?.goBack();
+      }
     }, []);
 
     let initialValues = {};
     if (getInitialValues) {
-        initialValues = getInitialValues({
-            params: params || {},
-            pageOptions
+      initialValues =
+        getInitialValues({
+          params: params || {},
+          pageOptions,
         }) || {};
     } else if (Array.isArray(params?.selectedRows)) {
-        initialValues = params.selectedRows[0] || {};
+      initialValues = params.selectedRows[0] || {};
     } else {
-        initialValues = params || {};
+      initialValues = params || {};
     }
     if (pageOptions.created && createRemoveId) {
-        console.info('新增页面,移除初始化数据中的ID字段');
-        Reflect.deleteProperty(initialValues, 'id');
+      console.info("新增页面,移除初始化数据中的ID字段");
+      Reflect.deleteProperty(initialValues, "id");
     }
 
     async function handleFinish(values) {
-        onFinish && await onFinish(ObjectUtils.deepmerge(initialValues, values), pageOptions);
+      onFinish &&
+        (await onFinish(
+          ObjectUtils.deepmerge(initialValues, values),
+          pageOptions
+        ));
     }
 
     const title = pageOptions.created ? createTitle : editTitle;
     const subtitle = pageOptions.created ? createSubTitle : editSubTitle;
 
     return (
-        <PageContainer title={title} subTitle={subtitle} onBack={context?.goBack} {...container}>
-            <ProCard bordered={false} {...card}>
-                {formType === FormType.DEFAULT && (
-                    <ProForm scrollToFirstError {...formProps} onFinish={handleFinish} initialValues={initialValues}>
-                        {fieldGroups.map((item, index) => renderFieldGroup(item, index, pageOptions))}
-                    </ProForm>
-                )}
-                {formType === FormType.STEP && (
-                    <StepsForm {...formProps as StepsFormProps} onFinish={handleFinish}>
-                        {stepsFieldGroups.map(({fieldGroups = [], ...item}, index) => (
-                            <StepsForm.StepForm initialValues={initialValues}  {...item} key={index}>
-                                {fieldGroups.map((group, idx) => renderFieldGroup(group, idx, pageOptions))}
-                            </StepsForm.StepForm>
-                        ))}
-                    </StepsForm>
-                )}
-            </ProCard>
-            {children}
-        </PageContainer>
+      <PageContainer
+        title={title}
+        subTitle={subtitle}
+        onBack={context?.goBack}
+        {...container}
+      >
+        <ProCard bordered={false} {...card}>
+          {formType === FormType.DEFAULT && (
+            <ProForm
+              scrollToFirstError
+              {...formProps}
+              onFinish={handleFinish}
+              initialValues={initialValues}
+            >
+              {fieldGroups.map((item, index) =>
+                renderFieldGroup(item, index, pageOptions)
+              )}
+            </ProForm>
+          )}
+          {formType === FormType.STEP && (
+            <StepsForm
+              {...(formProps as StepsFormProps)}
+              onFinish={handleFinish}
+            >
+              {stepsFieldGroups.map(({ fieldGroups = [], ...item }, index) => (
+                <StepsForm.StepForm
+                  initialValues={initialValues}
+                  {...item}
+                  key={index}
+                >
+                  {fieldGroups.map((group, idx) =>
+                    renderFieldGroup(group, idx, pageOptions)
+                  )}
+                </StepsForm.StepForm>
+              ))}
+            </StepsForm>
+          )}
+        </ProCard>
+        {children}
+      </PageContainer>
     );
-});
+  }
+);

@@ -1,5 +1,5 @@
-import React, {ReactNode} from 'react';
-import {Field} from '../PersistContainer';
+import React, { ReactNode } from "react";
+import { Field } from "../PersistContainer";
 import {
   ProFormCaptcha,
   ProFormCheckbox,
@@ -20,112 +20,79 @@ import {
   ProFormUploadButton,
   ProFormUploadDragger,
   ProFormCascader,
-  ProFormTreeSelect, ProFormSegmented,
-} from '@ant-design/pro-form';
-import {ProFormAutoComplete} from './ProFormAutoComplete';
-import {createProFormField} from './createProFormField';
-import {ProFormTransfer} from './ProFormTransfer';
+  ProFormTreeSelect,
+  ProFormSegmented,
+  ProFormField,
+} from "@ant-design/pro-form";
+import { ProFormAutoComplete } from "./ProFormAutoComplete";
+import { ProFormTransfer } from "./ProFormTransfer";
 
 export function renderText(props) {
-  return (
-    <ProFormText {...props}/>
-  );
+  return <ProFormText {...props} />;
 }
 
 export function renderPassword(props) {
-  return (
-    <ProFormText.Password {...props}/>
-  );
+  return <ProFormText.Password {...props} />;
 }
 
 export function renderCaptcha(props) {
-  return (
-    <ProFormCaptcha {...props}/>
-  );
+  return <ProFormCaptcha {...props} />;
 }
 
 export function renderDatePicker(props) {
-  return (
-    <ProFormDatePicker {...props}/>
-  );
+  return <ProFormDatePicker {...props} />;
 }
 
 export function renderDateTimePicker(props) {
-  return (
-    <ProFormDateTimePicker {...props}/>
-  );
+  return <ProFormDateTimePicker {...props} />;
 }
 
 export function renderDateRangePicker(props) {
-  return (
-    <ProFormDateRangePicker {...props}/>
-  );
+  return <ProFormDateRangePicker {...props} />;
 }
 
 export function renderDateTimeRangePicker(props) {
-  return (
-    <ProFormDateTimeRangePicker {...props}/>
-  );
+  return <ProFormDateTimeRangePicker {...props} />;
 }
 
 export function renderTimePicker(props) {
-  return (
-    <ProFormTimePicker {...props}/>
-  );
+  return <ProFormTimePicker {...props} />;
 }
 
 export function renderTimeRangePicker(props) {
-  return (
-    <ProFormTimePicker.RangePicker {...props}/>
-  );
+  return <ProFormTimePicker.RangePicker {...props} />;
 }
 
 export function renderTextArea(props) {
-  return (
-    <ProFormTextArea {...props}/>
-  );
+  return <ProFormTextArea {...props} />;
 }
 
 export function renderCheckbox(props) {
-  return (
-    <ProFormCheckbox {...props}/>
-  );
+  return <ProFormCheckbox {...props} />;
 }
 
 export function renderRadioGroup(props) {
-  return (
-    <ProFormRadio.Group {...props}/>
-  );
+  return <ProFormRadio.Group {...props} />;
 }
 
 export function renderSwitch(props) {
-  return (
-    <ProFormSwitch {...props}/>
-  );
+  return <ProFormSwitch {...props} />;
 }
 
 export function renderRate(props) {
-  return (
-    <ProFormRate {...props}/>
-  );
+  return <ProFormRate {...props} />;
 }
 
 export function renderSlider(props) {
-  return (
-    <ProFormSlider {...props}/>
-  );
+  return <ProFormSlider {...props} />;
 }
 
 export function renderUploadDragger(props) {
-  return (
-    <ProFormUploadDragger {...props}/>
-  );
+  return <ProFormUploadDragger {...props} />;
 }
 
 export function renderUploadButton(props) {
-  return (
-    <ProFormUploadButton {...props}/>
-  );
+  return <ProFormUploadButton {...props} />;
 }
 
 /**
@@ -133,153 +100,144 @@ export function renderUploadButton(props) {
  * @param options select option 支持对象，对象的key作为 option value，对象value作为option label
  * @param props
  */
-export function renderSelect({fieldProps = {}, ...props}: any) {
+export function renderSelect({ fieldProps = {}, ...props }: any) {
   const newFieldProps = {
-    ...fieldProps
+    ...fieldProps,
   };
 
-  return (
-    <ProFormSelect fieldProps={newFieldProps} {...props}/>
-  );
+  return <ProFormSelect fieldProps={newFieldProps} {...props} />;
 }
 
-export function renderTreeSelect({fieldProps = {}, ...props}: any) {
+export function renderTreeSelect({ fieldProps = {}, ...props }: any) {
   const newFieldProps = {
-    ...fieldProps
+    ...fieldProps,
   };
 
-  return (
-    <ProFormTreeSelect fieldProps={newFieldProps} {...props}/>
-  );
+  return <ProFormTreeSelect fieldProps={newFieldProps} {...props} />;
 }
 
 export function renderDigit(props) {
-  return (
-    <ProFormDigit {...props}/>
-  );
+  return <ProFormDigit {...props} />;
 }
 
 export function renderMoney(props) {
-  return (
-    <ProFormMoney {...props}/>
-  );
+  return <ProFormMoney {...props} />;
 }
 
-export function renderAutoComplete({fieldProps = {}, ...props}: any) {
+export function renderAutoComplete({ fieldProps = {}, ...props }: any) {
   const newFieldProps = {
-    ...fieldProps
+    ...fieldProps,
   };
 
-  return (
-    <ProFormAutoComplete {...props} fieldProps={newFieldProps}/>
-  );
+  return <ProFormAutoComplete {...props} fieldProps={newFieldProps} />;
 }
 
-export function renderCascader({fieldProps = {}, ...props}: any) {
+export function renderCascader({ fieldProps = {}, ...props }: any) {
   const newFieldProps = {
-    ...fieldProps
+    ...fieldProps,
   };
 
-  return (
-    <ProFormCascader {...props} fieldProps={newFieldProps}/>
-  );
+  return <ProFormCascader {...props} fieldProps={newFieldProps} />;
 }
-
 
 export function renderTransfer(props) {
-  return (
-    <ProFormTransfer {...props}/>
-  );
+  return <ProFormTransfer {...props} />;
 }
 
 export function renderSegmented(props) {
-  return (
-    <ProFormSegmented {...props}/>
-  )
+  return <ProFormSegmented {...props} />;
 }
 
-export function renderFormItem({type = 'text', render, ...props}: Field) {
+export function renderFormField({
+  type = "text",
+  proFormFieldProps,
+  renderField,
+  renderDependencyField,
+  subFieldGroups,
+  ...props
+}: Field) {
   let element: ReactNode = undefined;
-  if (render) {
-    const ProFormCustom = createProFormField<any>({render});
-    return (
-      <ProFormCustom {...props}/>
-    );
+  if (proFormFieldProps) {
+    // const ProFormCustom = createProFormField<any>({render});
+    // return (
+    //   <ProFormCustom {...props}/>
+    // );
+    return <ProFormField {...props} {...proFormFieldProps} />;
   }
   switch (type) {
-    case 'text':
+    case "text":
       element = renderText(props);
       break;
-    case 'password':
+    case "password":
       element = renderPassword(props);
       break;
-    case 'captcha':
+    case "captcha":
       element = renderCaptcha(props);
       break;
-    case 'datePicker':
+    case "datePicker":
       element = renderDatePicker(props);
       break;
-    case 'dateTimePicker':
+    case "dateTimePicker":
       element = renderDateTimePicker(props);
       break;
-    case 'dateRangePicker':
+    case "dateRangePicker":
       element = renderDateRangePicker(props);
       break;
-    case 'dateTimeRangePicker':
+    case "dateTimeRangePicker":
       element = renderDateTimeRangePicker(props);
       break;
-    case 'timePicker':
+    case "timePicker":
       element = renderTimePicker(props);
       break;
-    case 'timeRangePicker':
+    case "timeRangePicker":
       element = renderTimeRangePicker(props);
       break;
-    case 'textArea':
+    case "textArea":
       element = renderTextArea(props);
       break;
-    case 'checkbox':
+    case "checkbox":
       element = renderCheckbox(props);
       break;
-    case 'radioGroup':
+    case "radioGroup":
       element = renderRadioGroup(props);
       break;
-    case 'switch':
+    case "switch":
       element = renderSwitch(props);
       break;
-    case 'rate':
+    case "rate":
       element = renderRate(props);
       break;
-    case 'slider':
+    case "slider":
       element = renderSlider(props);
       break;
-    case 'uploadDragger':
+    case "uploadDragger":
       element = renderUploadDragger(props);
       break;
-    case 'uploadButton':
+    case "uploadButton":
       element = renderUploadButton(props);
       break;
-    case 'select':
+    case "select":
       element = renderSelect(props);
       break;
-    case 'treeSelect':
+    case "treeSelect":
       element = renderTreeSelect(props);
       break;
-    case 'digit':
+    case "digit":
       element = renderDigit(props);
       break;
-    case 'money':
+    case "money":
       element = renderMoney(props);
       break;
-    case 'autoComplete':
+    case "autoComplete":
       element = renderAutoComplete(props);
       break;
-    case 'cascader':
+    case "cascader":
       element = renderCascader(props);
       break;
-    case 'transfer':
+    case "transfer":
       element = renderTransfer(props);
       break;
-    case 'segmented':
+    case "segmented":
       element = renderSegmented(props);
       break;
   }
