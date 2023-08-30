@@ -74,22 +74,22 @@
     "prepublishOnly": "yarn build"
   },
   "devDependencies": {
-    "@ant-design/icons": "^5.1.4",
-    "@ant-design/pro-card": "^2.5.4",
-    "@ant-design/pro-descriptions": "^2.4.4",
-    "@ant-design/pro-field": "^2.10.4",
-    "@ant-design/pro-form": "^2.15.0",
-    "@ant-design/pro-layout": "^7.16.0",
-    "@ant-design/pro-table": "^3.9.0",
-    "@aomi/common-service": "^1.0.7",
-    "@aomi/react-antd": "^1.0.0-Alpha.12",
+    "@ant-design/icons": "^5.2.5",
+    "@ant-design/pro-card": "^2.5.14",
+    "@ant-design/pro-descriptions": "^2.5.2",
+    "@ant-design/pro-field": "^2.12.3",
+    "@ant-design/pro-form": "^2.18.4",
+    "@ant-design/pro-layout": "^7.16.11",
+    "@ant-design/pro-table": "^3.12.1",
+    "@aomi/common-service": "^1.0.9",
+    "@aomi/react-antd": "^1.0.3",
     "@aomi/utils": "^1.0.10",
-    "@types/react": "^18.2.15",
+    "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
-    "antd": "^5.7.0",
-    "mobx-react": "^9.0.0",
+    "antd": "^5.8.5",
+    "mobx-react": "^9.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   }
 }
