@@ -20,6 +20,8 @@ import { ObjectUtils } from "@aomi/utils";
 import { FormInstance } from "antd";
 import { AntDesignProContext } from "../provider";
 import { ProFormGroupProps } from "@ant-design/pro-form/es/typing";
+import { ListFieldOptions } from "./list-item";
+import { PageOptions } from "./page";
 
 export type FieldType =
   | "text"
@@ -104,7 +106,7 @@ export type Field = {
    */
   renderDependencyField?: <Values>(
     args: Field,
-    pageOptions: any,
+    pageOptions: PageOptions,
     dependencyFieldValues: Record<string, any>,
     form: FormInstance<Values>
   ) => React.ReactNode;
@@ -116,13 +118,25 @@ export type Field = {
 } & Omit<ProFormItemProps, "type">;
 
 export type FieldGroup = {
+  /**
+   * 字段信息数据
+   */
   fields: Array<Field>;
-} & ProFormGroupProps;
-
-export type PageOptions = {
-  created: boolean;
-  updated: boolean;
-};
+  /**
+   * 自定义渲染group标题
+   * @param title 标题dom
+   * @param props group ProFormBaseGroupProps
+   * @param options
+   */
+  titleRender?: (
+    title: React.ReactNode,
+    props: any,
+    options: {
+      pageOptions: PageOptions;
+      listFieldOptions?: ListFieldOptions;
+    }
+  ) => React.ReactNode;
+} & Omit<ProFormGroupProps, "titleRender">;
 
 export type StepsFieldGroup = StepFormProps & {
   fieldGroups?: Array<FieldGroup>;
@@ -259,9 +273,19 @@ export function renderField(
   if (Array.isArray(subFieldGroups) && subFieldGroups.length > 0) {
     return (
       <ProFormList key={index} {...formListProps} name={field.name || "list"}>
-        {subFieldGroups.map((item, idx) =>
-          renderFieldGroup(item, idx, pageOptions)
-        )}
+        {(meta, idx, action, count) => {
+          return subFieldGroups.map((item, idx) =>
+            renderFieldGroup(item, idx, {
+              pageOptions,
+              listFieldOptions: {
+                meta,
+                index: idx,
+                action,
+                count,
+              },
+            })
+          );
+        }}
       </ProFormList>
     );
   }
@@ -273,20 +297,42 @@ export function renderField(
 /**
  * 渲染ProForm.Group
  * @param fields 字段
+ * @param titleRender
  * @param props 其他额皮质
- * @param index 组所有
+ * @param index 组索引
  * @param pageOptions 页面选项
+ * @param listFieldOptions 数组字段选项
  */
 export function renderFieldGroup(
-  { fields, ...props },
-  index,
-  pageOptions: PageOptions = {
-    created: true,
-    updated: false,
+  { fields, titleRender, ...props }: FieldGroup,
+  index: number,
+  {
+    pageOptions = {
+      created: true,
+      updated: false,
+    },
+    listFieldOptions,
+  }: {
+    pageOptions: PageOptions;
+    listFieldOptions?: ListFieldOptions;
   }
 ) {
+  function titleRenderWrapper(t: any, p: any) {
+    return titleRender
+      ? titleRender(t, p, {
+          pageOptions,
+          listFieldOptions,
+        })
+      : t;
+  }
+
   return (
-    <ProForm.Group size={16} {...props} key={index}>
+    <ProForm.Group
+      size={16}
+      {...props}
+      titleRender={titleRenderWrapper}
+      key={index}
+    >
       {fields.map((item, idx) => renderField(item, idx, pageOptions))}
     </ProForm.Group>
   );
@@ -381,7 +427,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(
               initialValues={initialValues}
             >
               {fieldGroups.map((item, index) =>
-                renderFieldGroup(item, index, pageOptions)
+                renderFieldGroup(item, index, { pageOptions })
               )}
             </ProForm>
           )}
@@ -397,7 +443,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(
                   key={index}
                 >
                   {fieldGroups.map((group, idx) =>
-                    renderFieldGroup(group, idx, pageOptions)
+                    renderFieldGroup(group, idx, { pageOptions })
                   )}
                 </StepsForm.StepForm>
               ))}
