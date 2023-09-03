@@ -1,7 +1,7 @@
-import React, {PropsWithChildren, useState} from 'react';
-import {Progress} from 'antd';
-import {ModalForm} from '@ant-design/pro-form';
-import {ProColumns} from '@ant-design/pro-table/lib/typing';
+import React, { PropsWithChildren, useState } from "react";
+import { Progress } from "antd";
+import { ModalForm } from "@ant-design/pro-form";
+import { ProColumns } from "@ant-design/pro-table/lib/typing";
 
 import {
   ResourceReviewStatusText,
@@ -9,12 +9,21 @@ import {
   ReviewResult,
   ReviewResultText,
   ReviewStatus,
-  ReviewStatusText
-} from '@aomi/common-service';
+  ReviewStatusText,
+} from "@aomi/common-service";
 
-import {ActionButtonProps, QueryContainer, QueryContainerProps} from '../QueryContainer';
-import {Field, FieldGroup, renderField, renderFieldGroup} from '../PersistContainer';
-import {ParamsType} from "@ant-design/pro-provider";
+import {
+  ActionButtonProps,
+  QueryContainer,
+  QueryContainerProps,
+} from "../QueryContainer";
+import {
+  Field,
+  FieldGroup,
+  renderField,
+  renderFieldGroup,
+} from "../PersistContainer";
+import { ParamsType } from "@ant-design/pro-provider";
 
 export type ReviewContainerProps<T, U extends ParamsType> = {
   /**
@@ -31,7 +40,7 @@ export type ReviewContainerProps<T, U extends ParamsType> = {
    */
   columns?: ProColumns<T, U>[];
 
-  getColumns?: (defaultColumns: ProColumns<T, U>[]) => ProColumns<T, U>[]
+  getColumns?: (defaultColumns: ProColumns<T, U>[]) => ProColumns<T, U>[];
 
   /**
    * 获取审核表单字段
@@ -39,62 +48,67 @@ export type ReviewContainerProps<T, U extends ParamsType> = {
    * @param result 审核结果
    * @param defaultFields 默认字段
    */
-  getReviewFieldGroups?: (review: Review<T>, result: ReviewResult, defaultFields: Array<Field>) => Array<FieldGroup>
+  getReviewFieldGroups?: (
+    review: Review<T>,
+    result: ReviewResult,
+    defaultFields: Array<Field>
+  ) => Array<FieldGroup>;
 
   /**
    * 获取动作按钮
    * @param review 审核记录信息
    */
-  getActionButtonProps?: (review: Review<T>) => Array<ActionButtonProps>
-
-} & Omit<QueryContainerProps<T, U>, 'getActionButtonProps'>;
+  getActionButtonProps?: (review: Review<T>) => Array<ActionButtonProps>;
+} & Omit<QueryContainerProps<T, U>, "getActionButtonProps">;
 
 const COMMON_COLUMNS: Array<ProColumns> = [
   {
-    title: '资源状态',
-    dataIndex: 'resourceReviewStatus',
+    title: "资源状态",
+    dataIndex: "resourceReviewStatus",
     valueEnum: ResourceReviewStatusText,
-    search: false
+    search: false,
   },
   {
-    title: '变更说明',
-    dataIndex: 'describe',
-    search: false
+    title: "变更说明",
+    dataIndex: "describe",
+    search: false,
   },
   {
-    title: '审核状态',
-    dataIndex: 'status',
-    valueEnum: ReviewStatusText
+    title: "审核状态",
+    dataIndex: "status",
+    valueEnum: ReviewStatusText,
   },
   {
-    title: '审核进度',
-    dataIndex: 'currentReviewUserIndex',
+    title: "审核进度",
+    dataIndex: "currentReviewUserIndex",
     renderText: (currentReviewUserIndex, { reviewProcess, status, result }) => {
       let proportion = 100;
-      let pstatus: any = 'active';
+      let pstatus: any = "active";
 
       if (reviewProcess && reviewProcess.chain) {
-        proportion = (currentReviewUserIndex / reviewProcess.chain.length) * 100;
+        proportion =
+          (currentReviewUserIndex / reviewProcess.chain.length) * 100;
       }
 
       if (result === ReviewResult.RESOLVE) {
-        pstatus = 'success';
+        pstatus = "success";
       } else if (result === ReviewResult.REJECTED) {
-        pstatus = 'exception';
+        pstatus = "exception";
       } else if (status === ReviewStatus.WAIT) {
-        pstatus = 'active';
+        pstatus = "active";
       }
 
-      return <Progress percent={proportion} size={35} type="line" status={pstatus}/>;
+      return (
+        <Progress percent={proportion} size={35} type="line" status={pstatus} />
+      );
     },
-    search: false
+    search: false,
   },
   {
-    title: '当前审核人员或角色',
-    dataIndex: 'reviewProcess',
+    title: "当前审核人员或角色",
+    dataIndex: "reviewProcess",
     renderText: (reviewProcess, data) => {
-      if (!reviewProcess)
-        return '-';
+      if (!reviewProcess) return "-";
       const { chain } = reviewProcess;
       const item = chain[data.currentReviewUserIndex];
       const { describe, role, user } = (item || {}) as any;
@@ -111,89 +125,103 @@ const COMMON_COLUMNS: Array<ProColumns> = [
 
       return result;
     },
-    search: false
+    search: false,
   },
   {
-    title: '审核结果',
-    dataIndex: 'result',
-    valueEnum: ReviewResultText
+    title: "审核结果",
+    dataIndex: "result",
+    valueEnum: ReviewResultText,
   },
   {
-    title: '审核结果说明',
-    dataIndex: 'resultDescribe',
-    search: false
+    title: "审核结果说明",
+    dataIndex: "resultDescribe",
+    search: false,
   },
   {
-    title: '创建时间',
-    dataIndex: 'createAt',
-    valueType: 'dateTime',
-    search: false
+    title: "创建时间",
+    dataIndex: "createAt",
+    valueType: "dateTime",
+    search: false,
   },
   {
-    title: '创建时间',
-    dataIndex: 'createAtRange',
-    valueType: 'dateRange',
-    hideInTable: true
-  }
+    title: "创建时间",
+    dataIndex: "createAtRange",
+    valueType: "dateRange",
+    hideInTable: true,
+  },
 ];
 
-export const defaultFields = [{
-  label: '审核结果说明',
-  name: 'resultDescribe',
-  required: true
-}];
+export const defaultFields = [
+  {
+    label: "审核结果说明",
+    name: "resultDescribe",
+    required: true,
+  },
+];
 
-export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = function ReviewContainer(props: PropsWithChildren<ReviewContainerProps<any, any>>) {
+export const ReviewContainer: React.FC<
+  ReviewContainerProps<any, any>
+> = function ReviewContainer(
+  props: PropsWithChildren<ReviewContainerProps<any, any>>
+) {
   const {
-    reviewAuthorities, reviewTitle = '', onReview, columns = [],
+    reviewAuthorities,
+    reviewTitle = "",
+    onReview,
+    columns = [],
     getColumns,
     getReviewFieldGroups,
     getActionButtonProps: argsGetActionButtonProps,
-    table: argsTable, ...args
+    table: argsTable,
+    ...args
   } = props;
 
   const [state, setState] = useState({
     visible: false,
     result: ReviewResult.REJECTED,
-    id: '',
-    review: null
+    id: "",
+    review: null,
   });
 
   const table = {
     ...argsTable,
-    columns: getColumns ? getColumns(COMMON_COLUMNS) : columns.concat(COMMON_COLUMNS)
+    columns: getColumns
+      ? getColumns(COMMON_COLUMNS)
+      : columns.concat(COMMON_COLUMNS),
   };
 
   function getActionButtonProps({ selectedRows }): Array<ActionButtonProps> {
     const review = selectedRows[0];
     let disabled = false;
     if (review) {
-      if (review.status === 'FINISH') {
+      if (review.status === "FINISH") {
         disabled = true;
       }
     } else {
       disabled = true;
     }
-    const userButtons = argsGetActionButtonProps ? argsGetActionButtonProps(review) : [];
+    const userButtons = argsGetActionButtonProps
+      ? argsGetActionButtonProps(review)
+      : [];
     return [
       ...userButtons,
       {
-        children: '同意',
-        type: 'primary',
+        children: "同意",
+        type: "primary",
         disabled,
         onClick: () => {
           setState({
             visible: true,
             result: ReviewResult.RESOLVE,
             id: selectedRows[0].id,
-            review
+            review,
           });
         },
-        authorities: reviewAuthorities
+        authorities: reviewAuthorities,
       },
       {
-        children: '拒绝',
-        type: 'primary',
+        children: "拒绝",
+        type: "primary",
         disabled,
         danger: true,
         onClick: () => {
@@ -201,11 +229,11 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
             visible: true,
             result: ReviewResult.REJECTED,
             id: selectedRows[0].id,
-            review
+            review,
           });
         },
-        authorities: reviewAuthorities
-      }
+        authorities: reviewAuthorities,
+      },
     ];
   }
 
@@ -217,29 +245,56 @@ export const ReviewContainer: React.FC<ReviewContainerProps<any, any>> = functio
     if (onReview) {
       await onReview({
         ...formData,
-        ...state
+        ...state,
       });
     }
-    setState({ visible: false, id: '', result: ReviewResult.REJECTED, review: null });
+    setState({
+      visible: false,
+      id: "",
+      result: ReviewResult.REJECTED,
+      review: null,
+    });
   }
 
   return (
-    <QueryContainer table={table} {...args} getActionButtonProps={getActionButtonProps}>
+    <QueryContainer
+      table={table}
+      {...args}
+      getActionButtonProps={getActionButtonProps}
+    >
       <ModalForm
         open={state.visible}
-        title={`${reviewTitle ? `${reviewTitle} -` : ''}${ReviewResultText[state.result]}`}
+        title={`${reviewTitle ? `${reviewTitle} -` : ""}${
+          ReviewResultText[state.result]
+        }`}
         modalProps={{
-          onCancel: handleCancel
+          onCancel: handleCancel,
         }}
         onFinish={handleOk}
         submitter={{
           searchConfig: {
-            resetText: '取消',
-            submitText: ReviewResultText[state.result]
+            resetText: "取消",
+            submitText: ReviewResultText[state.result],
           },
-          submitButtonProps: {}
-        }}>
-        {getReviewFieldGroups ? (getReviewFieldGroups(state.review as any, state.result, defaultFields) || []).map((group, index) => renderFieldGroup(group, index)) : defaultFields.map((field, index) => renderField(field, index))}
+          submitButtonProps: {},
+        }}
+      >
+        {getReviewFieldGroups
+          ? (
+              getReviewFieldGroups(
+                state.review as any,
+                state.result,
+                defaultFields
+              ) || []
+            ).map((group, index) =>
+              renderFieldGroup(group, index, {
+                pageOptions: {
+                  created: true,
+                  updated: false,
+                },
+              })
+            )
+          : defaultFields.map((field, index) => renderField(field, index))}
       </ModalForm>
     </QueryContainer>
   );

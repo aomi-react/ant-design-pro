@@ -1,13 +1,20 @@
-import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
-import {observer} from 'mobx-react';
+import React, {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { observer } from "mobx-react";
 
-import {PageContainer, PageContainerProps} from '@ant-design/pro-layout';
-import ProDescriptions, {ProDescriptionsProps} from '@ant-design/pro-descriptions';
-import ProCard, {ProCardTabsProps} from '@ant-design/pro-card';
+import { PageContainer, PageContainerProps } from "@ant-design/pro-layout";
+import ProDescriptions, {
+  ProDescriptionsProps,
+} from "@ant-design/pro-descriptions";
+import ProCard, { ProCardTabsProps } from "@ant-design/pro-card";
 
-import {Button, Col, Row, Steps, Typography} from 'antd';
-import {hasAuthorities, MomentDateUtil, ObjectUtils} from '@aomi/utils';
-import {MehOutlined, SmileOutlined} from '@ant-design/icons';
+import { Button, Col, Row, Steps, Typography } from "antd";
+import { hasAuthorities, MomentDateUtil, ObjectUtils } from "@aomi/utils";
+import { MehOutlined, SmileOutlined } from "@ant-design/icons";
 import {
   Common,
   Review,
@@ -15,18 +22,23 @@ import {
   ReviewResult,
   ReviewResultText,
   ReviewStatus,
-  ReviewStatusText
-} from '@aomi/common-service';
-import {ProCardTabPaneProps} from "@ant-design/pro-card/es/typing";
-import {ModalForm} from '@ant-design/pro-form';
-import {Field, FieldGroup, renderField, renderFieldGroup} from '../PersistContainer';
-import {defaultFields} from '../ReviewContainer/ReviewContainer';
-import {AntDesignProContext} from "../provider";
+  ReviewStatusText,
+} from "@aomi/common-service";
+import { ProCardTabPaneProps } from "@ant-design/pro-card/es/typing";
+import { ModalForm } from "@ant-design/pro-form";
+import {
+  Field,
+  FieldGroup,
+  renderField,
+  renderFieldGroup,
+} from "../PersistContainer";
+import { defaultFields } from "../ReviewContainer/ReviewContainer";
+import { AntDesignProContext } from "../provider";
 
 export type TabPaneProps<T> = {
-  tabPaneProps: ProCardTabPaneProps
+  tabPaneProps: ProCardTabPaneProps;
 
-  descriptionsProps?: Omit<ProDescriptionsProps<T>, 'columns'>,
+  descriptionsProps?: Omit<ProDescriptionsProps<T>, "columns">;
   /**
    * Descriptions 配置 加自定义render配置
    * 自定义渲染整个内容
@@ -36,112 +48,145 @@ export type TabPaneProps<T> = {
    * @param after 是否是变更后
    * @param review 审核对象数据
    */
-  columnGroups?: Array<ProDescriptionsProps<T> & {
-    render?: (options: { before?: boolean, after?: boolean, review: T }) => React.ReactNode
-  }>
-}
+  columnGroups?: Array<
+    ProDescriptionsProps<T> & {
+      render?: (options: {
+        before?: boolean;
+        after?: boolean;
+        review: T;
+      }) => React.ReactNode;
+    }
+  >;
+};
 
 export type ReviewDetailContainerProps<T> = {
   /**
    * 页面容器props
    */
-  container?: PageContainerProps
+  container?: PageContainerProps;
 
   /**
    * 是否是从查询页面跳转到该页面
    * 默认为true
    */
-  fromQueryContainer?: boolean
+  fromQueryContainer?: boolean;
 
   /**
    * 以tab形式展示数据
    */
-  tabs?: ProCardTabsProps
+  tabs?: ProCardTabsProps;
   /**
    * 初始化激活的tab
    */
-  tabActiveKey: string
+  tabActiveKey: string;
 
-  getTabPaneProps: (review: Review<T>) => Array<TabPaneProps<T>>
+  getTabPaneProps: (review: Review<T>) => Array<TabPaneProps<T>>;
 
   /**
    * 审核需需要的权限
    */
-  authorities?: Array<string>
+  authorities?: Array<string>;
 
   /**
    * 处理审核
    * @param reviewHistory
    */
-  onReview?: (reviewHistory: ReviewHistory & { id: string }) => Promise<void>
+  onReview?: (reviewHistory: ReviewHistory & { id: string }) => Promise<void>;
 
-  review?: Review<T>
+  review?: Review<T>;
 
-  getReviewFieldGroups?: (review: Review<T>, result: ReviewResult, defaultFields: Array<Field>) => Array<FieldGroup>
-}
+  getReviewFieldGroups?: (
+    review: Review<T>,
+    result: ReviewResult,
+    defaultFields: Array<Field>
+  ) => Array<FieldGroup>;
+};
 
-
-function renderHeader<T>({describe, histories, reviewProcess, result, status}: Review<T>) {
-
+function renderHeader<T>({
+  describe,
+  histories,
+  reviewProcess,
+  result,
+  status,
+}: Review<T>) {
   const first = histories[0];
 
-  const {chain = []} = reviewProcess || {};
+  const { chain = [] } = reviewProcess || {};
 
   return (
     <>
       {/*{renderDescriptions(headerDescriptions)}*/}
       <Steps>
-        <Steps.Step status="finish"
-                    title={describe}
-                    description={
-                      <div style={{fontSize: 12}}>
-                        <div>{ObjectUtils.getValue(first, 'user.name')}</div>
-                        <div>{first.describe}</div>
-                        <div>{MomentDateUtil.format(first.reviewAt, Common.DATETIME_FORMAT)}</div>
-                      </div>
-                    }
-
+        <Steps.Step
+          status="finish"
+          title={describe}
+          description={
+            <div style={{ fontSize: 12 }}>
+              <div>{ObjectUtils.getValue(first, "user.name")}</div>
+              <div>{first.describe}</div>
+              <div>
+                {MomentDateUtil.format(first.reviewAt, Common.DATETIME_FORMAT)}
+              </div>
+            </div>
+          }
         />
-        {chain.map(({describe, roleName, userName}, index) => {
+        {chain.map(({ describe, roleName, userName }, index) => {
           const h = histories.length > index + 1 ? histories[index + 1] : null;
           let d, s;
           if (h) {
-            s = h.result === ReviewResult.RESOLVE ? 'finish' : 'error';
+            s = h.result === ReviewResult.RESOLVE ? "finish" : "error";
             d = (
-              <div style={{fontSize: 12}}>
-                <div>{ObjectUtils.getValue(h, 'user.name')}</div>
+              <div style={{ fontSize: 12 }}>
+                <div>{ObjectUtils.getValue(h, "user.name")}</div>
                 <div>{`${ReviewResultText[h.result]}原因: ${h.describe}`}</div>
-                <div>{MomentDateUtil.format(h.reviewAt, Common.DATETIME_FORMAT)}</div>
+                <div>
+                  {MomentDateUtil.format(h.reviewAt, Common.DATETIME_FORMAT)}
+                </div>
               </div>
             );
           } else {
-            s = result === ReviewResult.REJECTED ? 'error' : 'wait';
-            d = [roleName, userName].join('/');
+            s = result === ReviewResult.REJECTED ? "error" : "wait";
+            d = [roleName, userName].join("/");
           }
           return (
-            <Steps.Step status={s}
-                        title={describe}
-                        description={d}
-                        key={index}
+            <Steps.Step
+              status={s}
+              title={describe}
+              description={d}
+              key={index}
             />
           );
         })}
         <Steps.Step
-          status={status === ReviewStatus.FINISH ? (result === ReviewResult.RESOLVE ? 'finish' : 'error') : 'wait'}
+          status={
+            status === ReviewStatus.FINISH
+              ? result === ReviewResult.RESOLVE
+                ? "finish"
+                : "error"
+              : "wait"
+          }
           title={ReviewStatusText.FINISH}
-          icon={result === ReviewResult.REJECTED ? <MehOutlined/> : <SmileOutlined/>}
+          icon={
+            result === ReviewResult.REJECTED ? (
+              <MehOutlined />
+            ) : (
+              <SmileOutlined />
+            )
+          }
         />
       </Steps>
     </>
   );
 }
 
-
 /**
  * 审核详情页面
  */
-export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = observer(function ReviewDetailContainer(inProps: PropsWithChildren<ReviewDetailContainerProps<any>>) {
-
+export const ReviewDetailContainer: React.FC<
+  ReviewDetailContainerProps<any>
+> = observer(function ReviewDetailContainer(
+  inProps: PropsWithChildren<ReviewDetailContainerProps<any>>
+) {
   const context = useContext(AntDesignProContext);
 
   const {
@@ -158,7 +203,7 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
     fromQueryContainer = true,
 
     children,
-    getReviewFieldGroups
+    getReviewFieldGroups,
   } = inProps;
 
   const [tabActiveKey, setTabActiveKey] = useState(initTabActiveKey);
@@ -167,9 +212,8 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
 
   let reviewData: Review<any>;
 
-
   if (fromQueryContainer) {
-    const {selectedRows = []}: any = context?.getParams() || {};
+    const { selectedRows = [] }: any = context?.getParams() || {};
     reviewData = selectedRows[0];
   } else {
     reviewData = review as any;
@@ -177,17 +221,16 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
 
   useEffect(() => {
     if (!reviewData) {
-      console.warn('没有发现详情数据.自动返回上一页');
-      context?.goBack()
+      console.warn("没有发现详情数据.自动返回上一页");
+      context?.goBack();
     }
   }, []);
 
   if (!reviewData) {
-    return <div/>;
+    return <div />;
   }
 
-
-  const {id, before, after, status} = reviewData;
+  const { id, before, after, status } = reviewData;
 
   async function handleReview(formData) {
     if (onReview) {
@@ -195,10 +238,10 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
         await onReview({
           ...formData,
           id,
-          result
+          result,
         });
       } catch (e) {
-        console.info('审核出现异常', e);
+        console.info("审核出现异常", e);
         return;
       }
     }
@@ -208,80 +251,116 @@ export const ReviewDetailContainer: React.FC<ReviewDetailContainerProps<any>> = 
   const extra: any = [];
   if (hasAuthorities(authorities) && status !== ReviewStatus.FINISH) {
     extra.push(
-      <Button key="0"
-              danger
-              type="primary"
-              onClick={() => {
-                setVisible(true);
-                setResult(ReviewResult.REJECTED);
-              }}
+      <Button
+        key="0"
+        danger
+        type="primary"
+        onClick={() => {
+          setVisible(true);
+          setResult(ReviewResult.REJECTED);
+        }}
       >
         {ReviewResultText.REJECTED}
       </Button>,
-      <Button key="1"
-              type="primary"
-              onClick={() => {
-                setVisible(true);
-                setResult(ReviewResult.RESOLVE);
-              }}
+      <Button
+        key="1"
+        type="primary"
+        onClick={() => {
+          setVisible(true);
+          setResult(ReviewResult.RESOLVE);
+        }}
       >
         {ReviewResultText.RESOLVE}
       </Button>
     );
   }
 
-
   const newTabs: ProCardTabsProps = {
-    tabPosition: 'top',
+    tabPosition: "top",
     ...tabs,
     activeKey: tabActiveKey,
-    onChange: setTabActiveKey
+    onChange: setTabActiveKey,
   };
 
   const tabPanes: Array<TabPaneProps<any>> = getTabPaneProps(reviewData);
 
   return (
-    <PageContainer subTitle={reviewData.describe} extra={extra} content={renderHeader(reviewData)}
-                   onBack={context?.goBack} {...container} >
+    <PageContainer
+      subTitle={reviewData.describe}
+      extra={extra}
+      content={renderHeader(reviewData)}
+      onBack={context?.goBack}
+      {...container}
+    >
       <ProCard tabs={newTabs}>
-        {tabPanes?.map(({tabPaneProps, descriptionsProps, columnGroups}, idx) => (
-          <ProCard.TabPane {...tabPaneProps}>
-            <Row gutter={30}>
-              <Col span={12}>
-                {before && <Typography.Title level={4}>{'变更前'}</Typography.Title>}
-                {before && columnGroups?.map(({render, ...item}, index) => (
-                  render ? render({before: true, review: reviewData}) :
-                    <ProDescriptions column={2} dataSource={before} {...descriptionsProps} key={index} {...item}
-                                     editable={undefined}/>
-                ))}
-              </Col>
-              <Col span={before ? 12 : 24}>
-                <Typography.Title level={4}>{'变更后'}</Typography.Title>
-                {after && columnGroups?.map(({render, ...item}, index) => (
-                  render ? render({after: true, review: reviewData}) :
-                    <ProDescriptions column={before ? 2 : 4} dataSource={after} {...descriptionsProps}
-                                     key={index} {...item}/>
-                ))}
-              </Col>
-            </Row>
-          </ProCard.TabPane>
-        ))}
+        {tabPanes?.map(
+          ({ tabPaneProps, descriptionsProps, columnGroups }, idx) => (
+            <ProCard.TabPane {...tabPaneProps}>
+              <Row gutter={30}>
+                <Col span={12}>
+                  {before && (
+                    <Typography.Title level={4}>{"变更前"}</Typography.Title>
+                  )}
+                  {before &&
+                    columnGroups?.map(({ render, ...item }, index) =>
+                      render ? (
+                        render({ before: true, review: reviewData })
+                      ) : (
+                        <ProDescriptions
+                          column={2}
+                          dataSource={before}
+                          {...descriptionsProps}
+                          key={index}
+                          {...item}
+                          editable={undefined}
+                        />
+                      )
+                    )}
+                </Col>
+                <Col span={before ? 12 : 24}>
+                  <Typography.Title level={4}>{"变更后"}</Typography.Title>
+                  {after &&
+                    columnGroups?.map(({ render, ...item }, index) =>
+                      render ? (
+                        render({ after: true, review: reviewData })
+                      ) : (
+                        <ProDescriptions
+                          column={before ? 2 : 4}
+                          dataSource={after}
+                          {...descriptionsProps}
+                          key={index}
+                          {...item}
+                        />
+                      )
+                    )}
+                </Col>
+              </Row>
+            </ProCard.TabPane>
+          )
+        )}
       </ProCard>
       {children}
-      <ModalForm visible={visible}
-                 title={`执行审核 - ${ReviewResultText[result]}`}
-
-                 modalProps={{
-                   onCancel: () => setVisible(false)
-                 }}
-                 onFinish={handleReview}
-                 submitter={{
-                   searchConfig: {
-                     submitText: ReviewResultText[result]
-                   }
-                 }}
+      <ModalForm
+        open={visible}
+        title={`执行审核 - ${ReviewResultText[result]}`}
+        modalProps={{
+          onCancel: () => setVisible(false),
+        }}
+        onFinish={handleReview}
+        submitter={{
+          searchConfig: {
+            submitText: ReviewResultText[result],
+          },
+        }}
       >
-        {getReviewFieldGroups ? (getReviewFieldGroups(reviewData, result, defaultFields) || []).map((group, index) => renderFieldGroup(group, index)) : defaultFields.map((field, index) => renderField(field, index))}
+        {getReviewFieldGroups
+          ? (getReviewFieldGroups(reviewData, result, defaultFields) || []).map(
+              (group, index) =>
+                renderFieldGroup(group, index, {
+                  pageOptions: { created: true, updated: false },
+                })
+            )
+          : defaultFields.map((field, index) => renderField(field, index))}
       </ModalForm>
     </PageContainer>
   );
