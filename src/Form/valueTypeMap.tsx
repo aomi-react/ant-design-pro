@@ -14,7 +14,12 @@ export const valueTypeMap: Record<string, ProRenderFieldPropsType> = {
   transfer: {
     renderFormItem(text, props) {
       return (
-        <Transfer {...props} {...props.fieldProps} targetKeys={props.value} />
+        <Transfer
+          {...props}
+          {...props.fieldProps}
+          targetKeys={props.value}
+          render={props.fieldProps.transferRender}
+        />
       );
     },
   },
