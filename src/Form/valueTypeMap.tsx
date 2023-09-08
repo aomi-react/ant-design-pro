@@ -8,16 +8,16 @@ import { AutoComplete, Transfer } from "antd";
 export const valueTypeMap: Record<string, ProRenderFieldPropsType> = {
   autoComplete: {
     renderFormItem(text, props) {
-      return <AutoComplete {...props} {...props.fieldProps} />;
+      return <AutoComplete value={text} {...props} {...props.fieldProps} />;
     },
   },
   transfer: {
     renderFormItem(text, props) {
       return (
         <Transfer
+          targetKeys={text}
           {...props}
           {...props.fieldProps}
-          targetKeys={props.value}
           render={props.fieldProps.transferRender}
         />
       );
