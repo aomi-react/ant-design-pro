@@ -4,7 +4,6 @@ import { PageContainer, PageContainerProps } from "@ant-design/pro-layout";
 import ProForm, {
   ProFormDependency,
   ProFormFieldProps,
-  ProFormItemProps,
   ProFormList,
   ProFormListProps,
   ProFormProps,
@@ -24,39 +23,21 @@ import { ListFieldOptions } from "./list-item";
 import { PageOptions } from "./page";
 
 export type FieldType =
-  | "text"
-  | "password"
-  | "captcha"
-  | "datePicker"
-  | "dateTimePicker"
-  | "dateRangePicker"
-  | "dateTimeRangePicker"
-  | "timePicker"
-  | "timeRangePicker"
-  | "textArea"
-  | "checkbox"
-  | "radioGroup"
-  | "switch"
-  | "rate"
-  | "slider"
-  | "uploadDragger"
-  | "uploadButton"
-  | "select"
-  | "treeSelect"
-  | "digit"
-  | "money"
-  | "cascader"
-  | "segmented"
-
-  // 自定义组件
+  | ProFormFieldProps["valueType"]
+  // 自定义组件, 和valueTypeMap中对应
   | "autoComplete"
   | "transfer";
 
 export type Field = {
   /**
    * 字段类型
+   * @deprecated 使用 valueType
    */
   type?: FieldType;
+  /**
+   * 值类型
+   */
+  valueType?: FieldType;
   /**
    * 字段名称
    */
@@ -111,11 +92,11 @@ export type Field = {
     form: FormInstance<Values>
   ) => React.ReactNode;
 
-  /**
-   * 自定义渲染field的相关属性，提供以后根据属性自动渲染
-   */
-  proFormFieldProps?: ProFormFieldProps;
-} & Omit<ProFormItemProps, "type">;
+  // /**
+  //  * 自定义渲染field的相关属性，提供以后根据属性自动渲染
+  //  */
+  // proFormFieldProps?: ProFormFieldProps;
+} & Omit<ProFormFieldProps, "valueType">;
 
 export type FieldGroup = {
   /**

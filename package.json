@@ -30,10 +30,10 @@
       "types": "./types/Form/renderFormItem.d.ts",
       "require": "./lib/Form/renderFormItem.js"
     },
-    "./Form": {
-      "import": "./es/Form/index.js",
-      "types": "./types/Form/index.d.ts",
-      "require": "./lib/Form/index.js"
+    "./Form/*": {
+      "import": "./es/Form/*.js",
+      "types": "./types/Form/*.d.ts",
+      "require": "./lib/Form/*.js"
     },
     "./PersistContainer": {
       "import": "./es/PersistContainer/index.js",
