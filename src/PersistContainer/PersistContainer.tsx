@@ -13,7 +13,7 @@ import ProForm, {
 } from "@ant-design/pro-form";
 import ProCard, { ProCardProps } from "@ant-design/pro-card";
 
-import { renderFormField } from "../Form";
+import { renderFormField } from "../Form/renderFormItem";
 import { Rule } from "rc-field-form/lib/interface";
 import { ObjectUtils } from "@aomi/utils";
 import { FormInstance } from "antd";
