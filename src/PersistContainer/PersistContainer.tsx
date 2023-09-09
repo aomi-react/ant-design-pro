@@ -271,6 +271,10 @@ export function renderField(
     ...field,
   };
   if (grid) {
+    fieldOptions.fieldProps = {
+      style: { width: "100%" },
+      ...fieldOptions.fieldProps,
+    };
     fieldOptions.colProps = {
       ...defaultColProps,
       ...fieldOptions.colProps,
