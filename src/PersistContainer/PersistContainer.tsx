@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import { PageContainer, PageContainerProps } from "@ant-design/pro-layout";
 import ProForm, {
   ProFormDependency,
-  ProFormFieldProps,
   ProFormList,
   ProFormListProps,
   ProFormProps,
@@ -18,12 +17,18 @@ import { Rule } from "rc-field-form/lib/interface";
 import { ObjectUtils } from "@aomi/utils";
 import { FormInstance } from "antd";
 import { AntDesignProContext } from "../provider";
-import { ProFormGroupProps } from "@ant-design/pro-form/es/typing";
+import {
+  ProFormFieldItemProps,
+  ProFormGroupProps,
+} from "@ant-design/pro-form/es/typing";
 import { ListFieldOptions } from "./list-item";
 import { PageOptions } from "./page";
+import { ProFormItemProps } from "@ant-design/pro-form/es/components";
 
 export type FieldType =
-  | ProFormFieldProps["valueType"]
+  | ProFormItemProps["valueType"]
+  | "uploadDragger"
+  | "uploadButton"
   // 自定义组件, 和valueTypeMap中对应
   | "autoComplete"
   | "transfer";
@@ -96,7 +101,7 @@ export type Field = {
   //  * 自定义渲染field的相关属性，提供以后根据属性自动渲染
   //  */
   // proFormFieldProps?: ProFormFieldProps;
-} & Omit<ProFormFieldProps, "valueType">;
+} & ProFormFieldItemProps;
 
 export type FieldGroup = {
   /**
