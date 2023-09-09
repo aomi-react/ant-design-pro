@@ -112,11 +112,17 @@ export type FieldGroup = {
   titleRender?: (
     title: React.ReactNode,
     props: any,
-    options: {
-      pageOptions: PageOptions;
-      listFieldOptions?: ListFieldOptions;
-    }
+    options: RenderFieldGroupOption
   ) => React.ReactNode;
+
+  /**
+   * 默认组件宽度 当grid为false时生效
+   */
+  defaultWidth?: Field["width"];
+  /**
+   * 默认组件col配置 当grid为true时生效
+   */
+  defaultColProps?: Field["colProps"];
 } & Omit<ProFormGroupProps, "titleRender">;
 
 export type StepsFieldGroup = StepFormProps & {
@@ -168,6 +174,15 @@ export type PersistContainerProps = {
   formProps?: Omit<ProFormProps, "onFinish"> | Omit<StepsFormProps, "onFinish">;
 
   /**
+   * 默认组件宽度 当grid为false时生效
+   */
+  defaultWidth?: Field["width"];
+  /**
+   * 默认组件col配置 当grid为true时生效
+   */
+  defaultColProps?: Field["colProps"];
+
+  /**
    * 表单字段信息
    */
   fieldGroups?: Array<FieldGroup>;
@@ -184,16 +199,44 @@ export type PersistContainerProps = {
   location?: Location;
 };
 
+export type RenderFieldOption = {
+  pageOptions?: PageOptions;
+  /**
+   * 开启grid布局
+   */
+  grid?: boolean;
+  /**
+   * 默认列配置，grid为true时生效
+   */
+  defaultColProps?: Field["colProps"];
+  /**
+   * 默认宽度，grid为false时生效
+   * 默认值 md
+   */
+  defaultWidth?: Field["width"];
+};
+
 /**
  * 渲染一个字段
  * @param args 字段参数
  * @param index 下标
  * @param pageOptions 页面参数
+ * @param grid 是否使用grid布局
+ * @param defaultWidth 默认宽度
+ * @param defaultColProps 默认col
  */
 export function renderField(
   args: Field,
-  index,
-  pageOptions: PageOptions = { created: true, updated: false }
+  index: number,
+  {
+    pageOptions = { created: true, updated: false },
+    grid = false,
+
+    defaultWidth = "md",
+    defaultColProps = {
+      span: 8,
+    },
+  }: RenderFieldOption
 ) {
   const {
     renderDependencyField,
@@ -223,11 +266,19 @@ export function renderField(
   }
 
   const fieldOptions: Field = {
-    width: "md",
     disabled: pageOptions.updated && editDisabled,
     rules: newRules,
     ...field,
   };
+  if (grid) {
+    fieldOptions.colProps = {
+      ...defaultColProps,
+      ...fieldOptions.colProps,
+    };
+  } else if (!Reflect.has(fieldOptions, "width")) {
+    // 不包含width 字段，设置默认width
+    fieldOptions.width = defaultWidth;
+  }
 
   if (renderDependencyField) {
     return (
@@ -275,36 +326,35 @@ export function renderField(
   );
 }
 
+export type RenderFieldGroupOption = RenderFieldOption & {
+  listFieldOptions?: ListFieldOptions;
+};
+
 /**
  * 渲染ProForm.Group
  * @param fields 字段
  * @param titleRender
  * @param props 其他额皮质
  * @param index 组索引
- * @param pageOptions 页面选项
- * @param listFieldOptions 数组字段选项
+ * @param options 页面选项
  */
 export function renderFieldGroup(
-  { fields, titleRender, ...props }: FieldGroup,
+  { fields, titleRender, defaultWidth, defaultColProps, ...props }: FieldGroup,
   index: number,
-  {
-    pageOptions = {
-      created: true,
-      updated: false,
-    },
-    listFieldOptions,
-  }: {
-    pageOptions: PageOptions;
-    listFieldOptions?: ListFieldOptions;
-  }
+  options: RenderFieldGroupOption
 ) {
+  const newOptions = {
+    ...options,
+  };
+  if (!Reflect.has(newOptions, "defaultWidth")) {
+    newOptions.defaultWidth = defaultWidth;
+  }
+  if (!Reflect.has(newOptions, "defaultColProps")) {
+    newOptions.defaultColProps = defaultColProps;
+  }
+
   function titleRenderWrapper(t: any, p: any) {
-    return titleRender
-      ? titleRender(t, p, {
-          pageOptions,
-          listFieldOptions,
-        })
-      : t;
+    return titleRender ? titleRender(t, p, newOptions) : t;
   }
 
   return (
@@ -314,7 +364,7 @@ export function renderFieldGroup(
       titleRender={titleRenderWrapper}
       key={index}
     >
-      {fields.map((item, idx) => renderField(item, idx, pageOptions))}
+      {fields.map((item, idx) => renderField(item, idx, newOptions))}
     </ProForm.Group>
   );
 }
@@ -340,6 +390,8 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(
       formProps,
       fieldGroups = [],
       stepsFieldGroups = [],
+      defaultWidth,
+      defaultColProps,
 
       onFinish,
       getInitialValues,
@@ -408,7 +460,12 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(
               initialValues={initialValues}
             >
               {fieldGroups.map((item, index) =>
-                renderFieldGroup(item, index, { pageOptions })
+                renderFieldGroup(item, index, {
+                  pageOptions,
+                  grid: (formProps ?? ({} as any)).grid,
+                  defaultWidth,
+                  defaultColProps,
+                })
               )}
             </ProForm>
           )}
@@ -424,7 +481,12 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(
                   key={index}
                 >
                   {fieldGroups.map((group, idx) =>
-                    renderFieldGroup(group, idx, { pageOptions })
+                    renderFieldGroup(group, idx, {
+                      pageOptions,
+                      grid: (formProps ?? ({} as any)).grid,
+                      defaultWidth,
+                      defaultColProps,
+                    })
                   )}
                 </StepsForm.StepForm>
               ))}
