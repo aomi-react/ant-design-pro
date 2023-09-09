@@ -459,7 +459,7 @@ export const QueryContainer: React.FC<
         setRowSelectMethod(info.type);
 
         if (rowSelection && rowSelection.onChange) {
-          rowSelection.onChange(selectedRows, selectedRows, info);
+          rowSelection.onChange(selectedRowKeys, selectedRows, info);
         }
       }
 
