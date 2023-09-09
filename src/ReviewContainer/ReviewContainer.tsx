@@ -294,7 +294,7 @@ export const ReviewContainer: React.FC<
                 },
               })
             )
-          : defaultFields.map((field, index) => renderField(field, index))}
+          : defaultFields.map((field, index) => renderField(field, index, {}))}
       </ModalForm>
     </QueryContainer>
   );

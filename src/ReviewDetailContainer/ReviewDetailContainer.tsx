@@ -360,7 +360,7 @@ export const ReviewDetailContainer: React.FC<
                   pageOptions: { created: true, updated: false },
                 })
             )
-          : defaultFields.map((field, index) => renderField(field, index))}
+          : defaultFields.map((field, index) => renderField(field, index, {}))}
       </ModalForm>
     </PageContainer>
   );
