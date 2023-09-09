@@ -16,10 +16,14 @@ export function renderFormField({
   const newFieldProps = fieldProps ?? {};
 
   if (vt === "uploadDragger") {
-    return <ProFormUploadDragger {...props} fieldProps={newFieldProps} />;
+    return (
+      <ProFormUploadDragger {...(props as any)} fieldProps={newFieldProps} />
+    );
   }
   if (vt === "uploadButton") {
-    return <ProFormUploadButton {...props} fieldProps={newFieldProps} />;
+    return (
+      <ProFormUploadButton {...(props as any)} fieldProps={newFieldProps} />
+    );
   }
   if (vt === "transfer") {
     newFieldProps.transferRender = newFieldProps.render;
