@@ -73,9 +73,9 @@ export type Field = {
   /**
    * 自定渲染整个字段
    * @param args 当前字段配置信息
-   * @param pageOptions 页面提供的参数
+   * @param options 页面提供的参数
    */
-  renderField?: (args: Field, pageOptions: any) => React.ReactNode;
+  renderField?: (args: Field, options: RenderFieldOption) => React.ReactNode;
 
   /**
    * 渲染带有依赖关系的字段
@@ -87,9 +87,9 @@ export type Field = {
    */
   renderDependencyField?: <Values>(
     args: Field,
-    pageOptions: PageOptions,
     dependencyFieldValues: Record<string, any>,
-    form: FormInstance<Values>
+    form: FormInstance<Values>,
+    options: RenderFieldOption
   ) => React.ReactNode;
 
   // /**
@@ -228,15 +228,7 @@ export type RenderFieldOption = {
 export function renderField(
   args: Field,
   index: number,
-  {
-    pageOptions = { created: true, updated: false },
-    grid = false,
-
-    defaultWidth = "md",
-    defaultColProps = {
-      span: 8,
-    },
-  }: RenderFieldOption
+  options: RenderFieldOption
 ) {
   const {
     renderDependencyField,
@@ -250,6 +242,16 @@ export function renderField(
     rules = [],
     ...field
   } = args;
+
+  const {
+    pageOptions = { created: true, updated: false },
+    grid = false,
+
+    defaultWidth = "md",
+    defaultColProps = {
+      span: 8,
+    },
+  } = options;
 
   if (createHidden && pageOptions.created) {
     return undefined;
@@ -290,9 +292,9 @@ export function renderField(
         {(dependencyFieldValues, form) =>
           renderDependencyField(
             fieldOptions,
-            pageOptions,
             dependencyFieldValues,
-            form
+            form,
+            options
           )
         }
       </ProFormDependency>
@@ -302,7 +304,7 @@ export function renderField(
   if (renderFieldComponent) {
     return (
       <React.Fragment key={index}>
-        {renderFieldComponent(fieldOptions, pageOptions)}
+        {renderFieldComponent(fieldOptions, options)}
       </React.Fragment>
     );
   }
@@ -312,7 +314,7 @@ export function renderField(
         {(meta, idx, action, count) => {
           return subFieldGroups.map((item, idx) =>
             renderFieldGroup(item, idx, {
-              pageOptions,
+              ...options,
               listFieldOptions: {
                 meta,
                 index: idx,
