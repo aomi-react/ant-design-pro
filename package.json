@@ -1,6 +1,6 @@
 {
   "name": "@aomi/react-pro-ant-design",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "repository": "git@github.com:aomi-web/react-pro-ant-design.git",
   "author": "sean <sean.snow@live.com>",
   "license": "MIT",
@@ -8,37 +8,37 @@
     ".": {
       "import": "./es/index.js",
       "types": "./types/index.d.ts",
-      "require": "./es/index.js"
+      "require": "./lib/index.js"
     },
     "./Form/*": {
       "import": "./es/Form/*.js",
       "types": "./types/Form/*.d.ts",
-      "require": "./es/Form/*.js"
+      "require": "./lib/Form/*.js"
     },
     "./PersistContainer": {
       "import": "./es/PersistContainer/index.js",
       "types": "./types/PersistContainer/index.d.ts",
-      "require": "./es/PersistContainer/index.js"
+      "require": "./lib/PersistContainer/index.js"
     },
     "./QueryContainer": {
       "import": "./es/QueryContainer/index.js",
       "types": "./types/QueryContainer/index.d.ts",
-      "require": "./es/QueryContainer/index.js"
+      "require": "./lib/QueryContainer/index.js"
     },
     "./ReviewContainer": {
       "import": "./es/ReviewContainer/index.js",
       "types": "./types/ReviewContainer/index.d.ts",
-      "require": "./es/ReviewContainer/index.js"
+      "require": "./lib/ReviewContainer/index.js"
     },
     "./ReviewDetailContainer": {
       "import": "./es/ReviewDetailContainer/index.js",
       "types": "./types/ReviewDetailContainer/index.d.ts",
-      "require": "./es/ReviewDetailContainer/index.js"
+      "require": "./lib/ReviewDetailContainer/index.js"
     },
     "./provider": {
       "import": "./es/provider.js",
       "types": "./types/provider.d.ts",
-      "require": "./es/provider.js"
+      "require": "./lib/provider.js"
     }
   },
   "files": [
