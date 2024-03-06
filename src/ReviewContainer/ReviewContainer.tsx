@@ -10,7 +10,7 @@ import {
   ReviewResultText,
   ReviewStatus,
   ReviewStatusText,
-} from "@aomi/common-service";
+} from "@aomi/common-service/ReviewService";
 
 import {
   ActionButtonProps,

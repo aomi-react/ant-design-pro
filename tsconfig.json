@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "target": "esnext",
+    "module": "NodeNext",
+    "target": "ESNext",
     "sourceMap": true,
     "jsx": "react",
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "forceConsistentCasingInFileNames": true,
     "strictNullChecks": true,
     "noUnusedLocals": true,

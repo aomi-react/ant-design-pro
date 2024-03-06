@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import { PageContainer, PageContainerProps } from "@ant-design/pro-layout";
 import ProTable, { ProTableProps } from "@ant-design/pro-table";
 import { ParamsType } from "@ant-design/pro-provider";
-import { BaseService } from "@aomi/common-service";
 import { hasAuthorities, ObjectUtils } from "@aomi/utils";
 import {
   Button,
@@ -26,9 +25,9 @@ import { Stats } from "./Stats";
 import ProDescriptions, {
   ProDescriptionsProps,
 } from "@ant-design/pro-descriptions";
-// import { navigationServices } from '@aomi/mobx-history';
 import { RowSelectMethod } from "antd/lib/table/interface";
 import { AntDesignProContext, Location } from "../provider";
+import { BaseService } from "@aomi/common-service/BaseService";
 
 export interface QueryContainerState<T> {
   selectedRowKeys: Array<string>;

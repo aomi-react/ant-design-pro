@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
+    "target": "ES5",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "outDir": "lib"
   },
   "include": ["src"],

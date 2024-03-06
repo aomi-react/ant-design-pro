@@ -16,14 +16,13 @@ import { Button, Col, Row, Steps, Typography } from "antd";
 import { hasAuthorities, MomentDateUtil, ObjectUtils } from "@aomi/utils";
 import { MehOutlined, SmileOutlined } from "@ant-design/icons";
 import {
-  Common,
   Review,
   ReviewHistory,
   ReviewResult,
   ReviewResultText,
   ReviewStatus,
   ReviewStatusText,
-} from "@aomi/common-service";
+} from "@aomi/common-service/ReviewService";
 import { ProCardTabPaneProps } from "@ant-design/pro-card/es/typing";
 import { ModalForm } from "@ant-design/pro-form";
 import {
@@ -34,6 +33,7 @@ import {
 } from "../PersistContainer";
 import { defaultFields } from "../ReviewContainer/ReviewContainer";
 import { AntDesignProContext } from "../provider";
+import { Common } from "@aomi/common-service/constants";
 
 export type TabPaneProps<T> = {
   tabPaneProps: ProCardTabPaneProps;
