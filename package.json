@@ -66,12 +66,12 @@
     "@aomi/common-service": "^1.0.20",
     "@aomi/react-antd": "^1.0.15",
     "@aomi/utils": "^1.0.10",
-    "@types/react": "^18.2.63",
-    "@types/react-dom": "^18.2.20",
-    "antd": "^5.15.0",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "antd": "^5.15.1",
     "mobx-react": "^9.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   }
 }

@@ -374,6 +374,7 @@ export function renderFieldGroup(
   return (
     <ProForm.Group
       size={16}
+      colProps={{ span: 6 }}
       {...props}
       titleRender={titleRenderWrapper}
       key={index}
