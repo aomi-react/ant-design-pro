@@ -1,11 +1,5 @@
 import React, { Component } from "react";
-import {
-  Input,
-  Select,
-  SelectProps,
-  InputNumber,
-  InputNumberProps,
-} from "antd";
+import { Input, Select, SelectProps } from "antd";
 import {
   FeeRate,
   feeRateType,
@@ -13,6 +7,7 @@ import {
   feeRateTypeText,
 } from "@aomi/common-service/FeeRate";
 import { obj2Options } from "@aomi/react-antd/utils/OptionUtil";
+import { InputNumber, InputNumberProps } from "./InputNumber";
 
 export interface InputFeeRateProps {
   onChange?: (value: FeeRate) => void;
@@ -138,11 +133,7 @@ export class InputFeeRate extends Component<InputFeeRateProps, any> {
       default:
         col = 4;
     }
-    const numberProps = {
-      max: 99999999999.99,
-      min: 0.0,
-      precision: 2,
-    };
+
     const style = { width: `${100 / col}%` };
     return (
       <Input.Group compact {...containerProps}>
@@ -155,27 +146,32 @@ export class InputFeeRate extends Component<InputFeeRateProps, any> {
         />
         <InputNumber
           value={value}
+          type="currency"
           onChange={this.handleValueChange}
           placeholder="请输入每笔收费费率"
+          tip={(value) =>
+            `每笔收费: ${value || 0}${type === feeRateType.cap ? "元" : "%"}`
+          }
           style={style}
-          {...numberProps}
           {...valueProps}
         />
         {type !== feeRateType.cap && (
           <InputNumber
             value={min}
+            type="currency"
             onChange={this.handleMinChange}
+            tip="每笔最低收费"
             style={style}
-            {...numberProps}
             {...minProps}
           />
         )}
         {type === feeRateType.capPercentage && (
           <InputNumber
             value={max}
+            type="currency"
             onChange={this.handleMaxChange}
+            tip="每笔最高收费"
             style={style}
-            {...numberProps}
             {...maxProps}
           />
         )}
