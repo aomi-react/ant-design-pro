@@ -412,8 +412,6 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(
       children,
     } = inProps;
 
-    // const { pathname = '', params = undefined } = (context.location as any) || {};
-
     const params = context?.getParams();
     const pathname = context?.getPathname() ?? "";
 
@@ -427,7 +425,7 @@ export const PersistContainer: React.FC<PersistContainerProps> = observer(
         console.warn("进入更新页面,但是没有发现需要编辑的数据.自动返回上一页");
         context?.goBack();
       }
-    }, []);
+    }, [pageOptions, params, context]);
 
     let initialValues = {};
     if (getInitialValues) {
