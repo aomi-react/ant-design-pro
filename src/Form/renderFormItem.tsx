@@ -27,10 +27,11 @@ export function renderFormField({
     );
   }
   if (vt === "transfer") {
-    newFieldProps.transferRender = newFieldProps.render;
+    newFieldProps.transferRender =
+      newFieldProps.transferRender ?? newFieldProps.render;
   }
   if (vt === "feeRate") {
-    newFieldProps.renderFormItem = (_, config) => {
+    props.renderFormItem = (_, config) => {
       return <InputFeeRate {...fieldProps} {...config} />;
     };
   }
