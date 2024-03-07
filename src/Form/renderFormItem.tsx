@@ -28,6 +28,12 @@ export function renderFormField({
   if (vt === "transfer") {
     newFieldProps.transferRender = newFieldProps.render;
   }
+  if (props.render) {
+    console.warn(
+      `[render] is deprecated, please use [renderFormItem] instead.`,
+      props
+    );
+  }
 
   return <ProFormField valueType={vt} fieldProps={newFieldProps} {...props} />;
 }
