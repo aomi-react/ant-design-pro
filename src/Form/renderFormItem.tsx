@@ -5,6 +5,7 @@ import {
   ProFormUploadButton,
   ProFormUploadDragger,
 } from "@ant-design/pro-form";
+import { InputFeeRate } from "./InputFeeRate/InputFeeRate";
 
 export function renderFormField({
   type = "text",
@@ -27,6 +28,11 @@ export function renderFormField({
   }
   if (vt === "transfer") {
     newFieldProps.transferRender = newFieldProps.render;
+  }
+  if (vt === "feeRate") {
+    newFieldProps.renderFormItem = (_, config) => {
+      return <InputFeeRate {...fieldProps} {...config} />;
+    };
   }
   if (props.render) {
     console.warn(

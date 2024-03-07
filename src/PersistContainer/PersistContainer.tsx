@@ -32,7 +32,8 @@ export type FieldType =
   | "uploadButton"
   // 自定义组件, 和valueTypeMap中对应
   | "autoComplete"
-  | "transfer";
+  | "transfer"
+  | "feeRate";
 
 export type Field = {
   /**
