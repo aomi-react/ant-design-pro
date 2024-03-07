@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Input, Select, SelectProps } from "antd";
+import { Space, Select, SelectProps } from "antd";
 import {
   FeeRate,
   feeRateType,
@@ -136,7 +136,7 @@ export class InputFeeRate extends Component<InputFeeRateProps, any> {
 
     const style = { width: `${100 / col}%` };
     return (
-      <Input.Group compact {...containerProps}>
+      <Space.Compact block {...containerProps}>
         <Select
           options={obj2Options(feeRateTypeText)}
           onChange={this.handleTypeChange}
@@ -175,7 +175,7 @@ export class InputFeeRate extends Component<InputFeeRateProps, any> {
             {...maxProps}
           />
         )}
-      </Input.Group>
+      </Space.Compact>
     );
   }
 }
