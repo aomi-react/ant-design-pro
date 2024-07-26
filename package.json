@@ -47,7 +47,6 @@
     "types"
   ],
   "scripts": {
-    "clean1": "find . -path \"./node_modules\" -prune -o -name \"*.js\" -o -name \"*.js.map\" -o -name \"*.d.ts\" |xargs rm -f | echo ''",
     "clean": "rm -rf es lib",
     "build": "yarn esm && yarn cjs",
     "esm": "rm -rf es && tsc -d",
@@ -56,22 +55,23 @@
     "prepublishOnly": "yarn build"
   },
   "devDependencies": {
-    "@ant-design/icons": "^5.3.1",
-    "@ant-design/pro-card": "^2.5.29",
-    "@ant-design/pro-descriptions": "^2.5.33",
-    "@ant-design/pro-field": "^2.14.6",
-    "@ant-design/pro-form": "^2.24.4",
-    "@ant-design/pro-layout": "^7.17.19",
-    "@ant-design/pro-table": "^3.14.2",
-    "@aomi/common-service": "^1.0.20",
+    "@ant-design/icons": "^5.4.0",
+    "@ant-design/pro-card": "^2.8.6",
+    "@ant-design/pro-descriptions": "^2.5.49",
+    "@ant-design/pro-field": "^2.15.2",
+    "@ant-design/pro-form": "^2.28.4",
+    "@ant-design/pro-layout": "^7.19.11",
+    "@ant-design/pro-table": "^3.16.5",
+    "@aomi/common-service": "^1.0.23",
     "@aomi/react-antd": "^1.0.15",
     "@aomi/utils": "^1.0.10",
-    "@types/react": "^18.2.64",
-    "@types/react-dom": "^18.2.21",
-    "antd": "^5.15.1",
-    "mobx-react": "^9.1.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.4.2"
-  }
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "antd": "^5.19.3",
+    "mobx-react": "^9.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.4"
+  },
+  "packageManager": "yarn@1.22.22"
 }
