@@ -25,15 +25,11 @@ import {
 } from "@aomi/common-service/ReviewService";
 import { ProCardTabPaneProps } from "@ant-design/pro-card/es/typing";
 import { ModalForm } from "@ant-design/pro-form";
-import {
-  Field,
-  FieldGroup,
-  renderField,
-  renderFieldGroup,
-} from "../PersistContainer";
+
 import { defaultFields } from "../ReviewContainer/ReviewContainer";
 import { AntDesignProContext } from "../provider";
 import { Common } from "@aomi/common-service/constants";
+import { Field, FieldGroup, renderField, renderFieldGroup } from "../Form/render";
 
 export type TabPaneProps<T> = {
   tabPaneProps: ProCardTabPaneProps;

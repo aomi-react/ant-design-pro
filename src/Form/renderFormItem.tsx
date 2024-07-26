@@ -1,5 +1,5 @@
 import React from "react";
-import { Field } from "../PersistContainer";
+import { Field } from "./render";
 import {
   ProFormField,
   ProFormUploadButton,

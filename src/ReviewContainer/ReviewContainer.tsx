@@ -22,7 +22,7 @@ import {
   FieldGroup,
   renderField,
   renderFieldGroup,
-} from "../PersistContainer";
+} from "../Form/render";
 import { ParamsType } from "@ant-design/pro-provider";
 
 export type ReviewContainerProps<T, U extends ParamsType> = {
